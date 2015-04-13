@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{449AB126-FDE4-467B-A39A-32E7540FE779}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>dmspl.gui</RootNamespace>
+    <AssemblyName>dmspl.gui</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.VisualBasic.PowerPacks.Vs, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="fErpTab.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="fErpTab.Designer.cs">
+      <DependentUpon>fErpTab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="datahandler\ProductionPlan.cs" />
+    <Compile Include="datahandler\TestManyUpdates.cs" />
+    <Compile Include="DMSSession.cs" />
+    <Compile Include="DMSSessionStatus.cs" />
+    <Compile Include="fMfpTab.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="fMfpTab.Designer.cs">
+      <DependentUpon>fMfpTab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="fMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="fMain.Designer.cs">
+      <DependentUpon>fMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="fImportERP.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="fImportERP.Designer.cs">
+      <DependentUpon>fImportERP.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="fErpTab.resx">
+      <DependentUpon>fErpTab.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="fMain.resx">
+      <DependentUpon>fMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="fImportERP.resx">
+      <DependentUpon>fImportERP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="fMfpTab.resx">
+      <DependentUpon>fMfpTab.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\dmspl.common\dmspl.common.csproj">
+      <Project>{651db95e-034a-4bc2-9e64-8a00e16a4697}</Project>
+      <Name>dmspl.common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dmspl.dataimport.excel\dmspl.dataimporter.csproj">
+      <Project>{a5877d67-3f90-41e0-8626-8ae3b6aa69d2}</Project>
+      <Name>dmspl.dataimporter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dmspl.dataprovider\dmspl.dataprovider.csproj">
+      <Project>{6dc4c268-bcb0-4bc8-bc56-d50e0766ca2a}</Project>
+      <Name>dmspl.dataprovider</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\dmspl.slqcon\dmspl.datastorage.csproj">
+      <Project>{95261ac4-1ae1-4892-8633-ba7f95b7a123}</Project>
+      <Name>dmspl.datastorage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UDP_RXTX\UDP_RXTX.csproj">
+      <Project>{7b486c20-ed14-4cbd-8a3a-25fbab68633b}</Project>
+      <Name>UDP_RXTX</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

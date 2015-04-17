@@ -59,9 +59,9 @@ namespace dmspl.datastorage
             erp_DataAdapter = new DmsDatasetTableAdapters.DMS_ERPTableAdapter();
             erp_DataAdapter.Fill(dmsDataset.DMS_ERP);
 
-            userManager = new usermanager.UserManager(dmsDataset);
-            if (!userManager.Login("sli", "sli"))
-                throw new InvalidOperationException("login failed");
+     //       userManager = new usermanager.UserManager(dmsDataset);
+      //      if (!userManager.Login("sli", "sli"))
+       //         throw new InvalidOperationException("login failed");
 
             lastmode = DataStorageMode.Ready;
             mode = DataStorageMode.Init;

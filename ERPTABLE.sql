@@ -1,0 +1,56 @@
+USE [EMOS_WEB]
+GO
+
+ALTER TABLE [dbo].[DMS_ERP] DROP CONSTRAINT [FK_DMS_ERP_DMS_USR_CRE]
+GO
+
+ALTER TABLE [dbo].[DMS_ERP] DROP CONSTRAINT [FK_DMS_ERP_DMS_ERP_UPD]
+GO
+
+/****** Object:  Table [dbo].[DMS_ERP]    Script Date: 17.04.2015 15:45:12 ******/
+DROP TABLE [dbo].[DMS_ERP]
+GO
+
+/****** Object:  Table [dbo].[DMS_ERP]    Script Date: 17.04.2015 15:45:12 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[DMS_ERP](
+	[Id] [int] NOT NULL,
+	[DataSet] [nvarchar](21) NOT NULL,
+	[SkidID] [nvarchar](4) NOT NULL,
+	[DerivativeCode] [nvarchar](3) NOT NULL,
+	[Colour] [nvarchar](3) NOT NULL,
+	[BSN] [nvarchar](6) NOT NULL,
+	[Track] [nvarchar](1) NOT NULL,
+	[CSOB] [nvarchar](4) NOT NULL,
+	[CreateTimestamp] [datetime] NOT NULL,
+	[CreateUser] [bigint] NOT NULL,
+	[UpdateTimestamp] [datetime] NULL,
+	[UpdateUser] [bigint] NULL,
+ CONSTRAINT [PK_DMS_ERP] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[DMS_ERP]  WITH CHECK ADD  CONSTRAINT [FK_DMS_ERP_DMS_ERP_UPD] FOREIGN KEY([UpdateUser])
+REFERENCES [dbo].[DMS_USR] ([Id])
+GO
+
+ALTER TABLE [dbo].[DMS_ERP] CHECK CONSTRAINT [FK_DMS_ERP_DMS_ERP_UPD]
+GO
+
+ALTER TABLE [dbo].[DMS_ERP]  WITH CHECK ADD  CONSTRAINT [FK_DMS_ERP_DMS_USR_CRE] FOREIGN KEY([CreateUser])
+REFERENCES [dbo].[DMS_USR] ([Id])
+GO
+
+ALTER TABLE [dbo].[DMS_ERP] CHECK CONSTRAINT [FK_DMS_ERP_DMS_USR_CRE]
+GO
+
+

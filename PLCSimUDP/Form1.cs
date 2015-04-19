@@ -12,11 +12,30 @@ using System.Net.Sockets;
 
 namespace PLCSimUDP
 {
-    public partial class Form1 : Form
+    public partial class PLCSimUDP : Form
     {
-        public Form1()
+        UdpClient socket;
+        IPEndPoint RemoteIP;
+        System.Threading.Timer d;
+        bool petla;
+
+        public PLCSimUDP()
         {
             InitializeComponent();
+
+            public UDPComm(int port)
+        {
+            if (socket != null)
+                return;
+            socket = new UdpClient(port);
+            RemoteIP = new IPEndPoint(IPAddress.Any, 0);
+
+            socket.BeginReceive(ReceiveCallback, socket);
+            petla = true;
+            d = new System.Threading.Timer(TimerCallback, null, 0, 1000);
         }
+        }
+
+  
     }
 }

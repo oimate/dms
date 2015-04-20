@@ -8,22 +8,78 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PLCSimUDP.Properties
-{
-
-
+namespace PLCSimUDP.Properties {
+    
+    
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
-    {
-
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+        
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
-
-        public static Settings Default
-        {
-            get
-            {
+        
+        public static Settings Default {
+            get {
                 return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.0.0.0")]
+        public string LocalIP {
+            get {
+                return ((string)(this["LocalIP"]));
+            }
+            set {
+                this["LocalIP"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2000")]
+        public int LocalPort {
+            get {
+                return ((int)(this["LocalPort"]));
+            }
+            set {
+                this["LocalPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("192.168.5.2")]
+        public string RemIP {
+            get {
+                return ((string)(this["RemIP"]));
+            }
+            set {
+                this["RemIP"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2000")]
+        public int RemPort {
+            get {
+                return ((int)(this["RemPort"]));
+            }
+            set {
+                this["RemPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string MFP_Skid {
+            get {
+                return ((string)(this["MFP_Skid"]));
+            }
+            set {
+                this["MFP_Skid"] = value;
             }
         }
     }

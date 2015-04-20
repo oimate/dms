@@ -21,7 +21,7 @@ namespace PLCSimUDP
         System.Threading.Timer TimerMFP_Frame;
         object lockObj;
         bool petla;
-       public int[] MFP_Skid = new int[100];
+        public int[] MFP_Skid = new int[100];
 
 
         public PLCSimUDP()
@@ -42,17 +42,20 @@ namespace PLCSimUDP
             socket.BeginReceive(ReceiveCallback, socket);
             petla = true;
             TimerSF = new System.Threading.Timer(TimerCallback, null, 0, 1000);
-            TimerMFP_Frame = new System.Threading.Timer(TimeUpdateMFPSkid, null, 0, 2000);
-
+           TimerMFP_Frame = new System.Threading.Timer(TimeUpdateMFPSkid, null, 0, 2000);
             ServiceStatus(Status.Enabled);
             string HostName = Dns.GetHostName();
             var dnsAdresses = Dns.GetHostEntry(HostName).AddressList;
             for (int i = 0; i < dnsAdresses.Length; i++)
             {
-                string dupa = Convert.ToString(dnsAdresses[i]).Substring(0, 12);
                 if (Convert.ToString(tRemoteIP.Text).Substring(0, 10) == Convert.ToString(dnsAdresses[i]).Substring(0, 10))
                 {
                     tLocalIP.Text = Convert.ToString(dnsAdresses[i]);
+                    return;
+                }
+                else 
+                {
+                    tLocalIP.Text = "Wrong Rem IP";
                 }
             }
         }
@@ -64,12 +67,12 @@ namespace PLCSimUDP
                 lock (lockObj)
                 {
                     byte[] sendbyte = new byte[304];
-               //     MFP_Skid.Length
+                    //     MFP_Skid.Length
 
-                    socket.Send(sendbyte, sendbyte.Length, Convert.ToString(tRemoteIP.Text), Convert.ToInt32(tRemotePort.Text));
+                    //   socket.Send(sendbyte, sendbyte.Length, Convert.ToString(tRemoteIP.Text), Convert.ToInt32(tRemotePort.Text));
 
 
-                    Stat.AddValues(0, 300, 0, 0);
+                    //   Stat.AddValues(0, 300, 0, 0);
                 }
             }
         }
@@ -190,8 +193,8 @@ namespace PLCSimUDP
                 lock (lockObj)
                 {
                     byte[] sendbyte = new byte[] { 0, 8, 254, 255, 255, 255, 255, 1 };
-                    //  string bb = tRemoteIP.Text;
-                    //  System.Diagnostics.Debug.WriteLine(bb);
+                    string bb = tRemoteIP.Text;
+                    System.Diagnostics.Debug.WriteLine(bb);
                     socket.Send(sendbyte, sendbyte.Length, Convert.ToString(tRemoteIP.Text), Convert.ToInt32(tRemotePort.Text));
 
                     if (Stat.ConnReqCnt > 1)

@@ -17,5 +17,8 @@
     <Setting Name="MFP_Skid" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="tbTimerMFP" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">900</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

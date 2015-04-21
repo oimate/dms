@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
+using System.Diagnostics;
 
 namespace PLCSimUDP
 {
@@ -18,20 +19,22 @@ namespace PLCSimUDP
         IPEndPoint RemoteIP;
         Statistics Stat = new Statistics();
         System.Threading.Timer TimerSF;
-        System.Threading.Timer TimerMFP_Frame;
+        System.Threading.Timer TimerMFPFrame;
         object lockObj;
         bool petla;
-        public int[] MFP_Skid = new int[100];
+        public short[] MFP_Skid = new short[150];
+        Status ActState;
 
+        //   MFP_Skid[2] = 22;
 
         public PLCSimUDP()
         {
+            ActState = Status.Disconnected;
             lockObj = new object();
             InitializeComponent();
             ReadConfig();
 
             Stat.OnChange += UpdateStats;
-
         }
         public void bStartService_Click(object sender, EventArgs e)
         {
@@ -42,7 +45,7 @@ namespace PLCSimUDP
             socket.BeginReceive(ReceiveCallback, socket);
             petla = true;
             TimerSF = new System.Threading.Timer(TimerCallback, null, 0, 1000);
-           TimerMFP_Frame = new System.Threading.Timer(TimeUpdateMFPSkid, null, 0, 2000);
+            TimerMFPFrame = new System.Threading.Timer(TimeUpdateMFPSkid, null, 0, Convert.ToInt16(tbTimerMFP.Text));
             ServiceStatus(Status.Enabled);
             string HostName = Dns.GetHostName();
             var dnsAdresses = Dns.GetHostEntry(HostName).AddressList;
@@ -53,7 +56,7 @@ namespace PLCSimUDP
                     tLocalIP.Text = Convert.ToString(dnsAdresses[i]);
                     return;
                 }
-                else 
+                else
                 {
                     tLocalIP.Text = "Wrong Rem IP";
                 }
@@ -62,17 +65,43 @@ namespace PLCSimUDP
 
         public void TimeUpdateMFPSkid(object state)
         {
+            if (ActState == Status.Connected)
+            {
+                SendDataFrame(CreateDataFrame(MFP_Skid, 9));
+            }
+        }
+
+        static public byte[] CreateDataFrame(short[] tablica, int ID)
+        {
+
+            byte[] sendbyte = new byte[tablica.Length * 2];
+            for (int i = 0; i < tablica.Length; i++)
+            {
+                sendbyte[i * 2] = (byte)(tablica[i] >> 8);
+                sendbyte[(i * 2) + 1] = (byte)tablica[i];
+            }
+            byte[] sendFrame = new byte[sendbyte.Length + 4];
+            for (int i = 0; i < sendbyte.Length; i++)
+            {
+                sendFrame[i + 3] = sendbyte[i];
+            }
+            sendFrame[0] = (byte)(sendFrame.Length >> 8);
+            sendFrame[1] = (byte)(sendFrame.Length);
+            sendFrame[2] = (byte)ID;
+            sendFrame[sendFrame.Length - 1] = (byte)~sendFrame[2];
+
+            return sendFrame;
+        }
+
+
+        public void SendDataFrame(byte[] tablica)
+        {
             if (socket != null)
             {
                 lock (lockObj)
                 {
-                    byte[] sendbyte = new byte[304];
-                    //     MFP_Skid.Length
-
-                    //   socket.Send(sendbyte, sendbyte.Length, Convert.ToString(tRemoteIP.Text), Convert.ToInt32(tRemotePort.Text));
-
-
-                    //   Stat.AddValues(0, 300, 0, 0);
+                    socket.Send(tablica, tablica.Length, Convert.ToString(tRemoteIP.Text), Convert.ToInt32(tRemotePort.Text));
+                    Stat.AddValues(0, tablica.Length, 0, 0);
                 }
             }
         }
@@ -103,16 +132,32 @@ namespace PLCSimUDP
             {
                 dane = sock.EndReceive(ar, ref RemoteIP);
                 Stat.AddValues(dane.Length, 0, 0, 0);
+
+                JakoBufor(dane);
+
+            }
+            catch (SocketException)
+            {
+                ServiceStatus(Status.Disconnected);
+                //    System.Threading.Thread.Sleep(500);
             }
             catch (ObjectDisposedException)
             {
                 return;
             }
-
-            JakoBufor(dane);
-
-            if (petla)
-                sock.BeginReceive(ReceiveCallback, sock);
+            if (petla && sock != null)
+                try
+                {
+                    sock.BeginReceive(ReceiveCallback, sock);
+                }
+                catch (SocketException)
+                {
+                    ServiceStatus(Status.Disconnected);
+                    //    System.Threading.Thread.Sleep(500);
+                }
+                catch (ObjectDisposedException)
+                {
+                }
         }
 
         public string ThText
@@ -192,16 +237,21 @@ namespace PLCSimUDP
             {
                 lock (lockObj)
                 {
-                    byte[] sendbyte = new byte[] { 0, 8, 254, 255, 255, 255, 255, 1 };
-                    string bb = tRemoteIP.Text;
-                    System.Diagnostics.Debug.WriteLine(bb);
-                    socket.Send(sendbyte, sendbyte.Length, Convert.ToString(tRemoteIP.Text), Convert.ToInt32(tRemotePort.Text));
-
-                    if (Stat.ConnReqCnt > 1)
+                    try
                     {
-                        ServiceStatus(Status.Disconnected);
+                        //     byte[] sendbyte = new byte[] { 0, 8, 254, 255, 255, 255, 255, 1 };
+                        short[] sendData = new short[] { -1, -1 };
+                        SendDataFrame(CreateDataFrame(sendData, 254));
+                        if (Stat.ConnReqCnt > 1)
+                        {
+                            ServiceStatus(Status.Disconnected);
+                        }
+                        Stat.AddValues(0, 0, 1, 1);
                     }
-                    Stat.AddValues(0, 0, 1, 1);
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(string.Format("Nieznany blad na timerze: {0}", ex));
+                    }
                 }
             }
         }
@@ -241,6 +291,7 @@ namespace PLCSimUDP
         }
         public void ServiceStatus(Status activestatus)
         {
+            ActState = activestatus;
             switch (activestatus)
             {
                 case Status.Enabled:
@@ -331,6 +382,7 @@ namespace PLCSimUDP
             Properties.Settings.Default.LocalIP = tLocalIP.Text;
             Properties.Settings.Default.RemPort = Convert.ToInt32(tRemotePort.Text);
             Properties.Settings.Default.RemIP = tRemoteIP.Text;
+            Properties.Settings.Default.tbTimerMFP  = Convert.ToInt32(tbTimerMFP.Text );
             Properties.Settings.Default.Save();
         }
 
@@ -340,16 +392,27 @@ namespace PLCSimUDP
             tLocalIP.Text = Properties.Settings.Default.LocalIP;
             tRemotePort.Text = Properties.Settings.Default.RemPort.ToString();
             tRemoteIP.Text = Properties.Settings.Default.RemIP;
+            tbTimerMFP.Text = Properties.Settings.Default.tbTimerMFP.ToString();
         }
 
         private void tSkidIndex_Leave(object sender, EventArgs e)
         {
-            tSkidValue.Text = Convert.ToString(MFP_Skid[Convert.ToInt32(tSkidIndex.Text)]);
+            tSkidValue.Text = Convert.ToString(MFP_Skid[Convert.ToInt16(tSkidIndex.Text)]);
         }
 
         private void bMFPUpdate_Click(object sender, EventArgs e)
         {
-            MFP_Skid[Convert.ToInt32(tSkidIndex.Text)] = Convert.ToInt32(tSkidValue.Text);
+            MFP_Skid[Convert.ToInt16(tSkidIndex.Text)] = Convert.ToInt16(tSkidValue.Text);
+        }
+
+        private void tTimeSendMFP(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar != '\b')
+            {
+                TextBox tb = (TextBox)sender;
+                if (tb.TextLength > 3 || !(Char.IsDigit(e.KeyChar)))
+                    e.Handled = true;
+            }
         }
     }
 

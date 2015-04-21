@@ -82,5 +82,17 @@ namespace PLCSimUDP.Properties {
                 this["MFP_Skid"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("900")]
+        public int tbTimerMFP {
+            get {
+                return ((int)(this["tbTimerMFP"]));
+            }
+            set {
+                this["tbTimerMFP"] = value;
+            }
+        }
     }
 }

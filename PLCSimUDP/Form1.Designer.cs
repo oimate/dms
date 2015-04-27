@@ -40,8 +40,16 @@
             this.cbLifeFrame = new System.Windows.Forms.CheckBox();
             this.BSConn = new System.Windows.Forms.Button();
             this.bSService = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.label21 = new System.Windows.Forms.Label();
+            this.bReqData1 = new System.Windows.Forms.Button();
+            this.tbRegLskid = new System.Windows.Forms.TextBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.tbRegFskid = new System.Windows.Forms.TextBox();
+            this.label24 = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
             this.label14 = new System.Windows.Forms.Label();
             this.bReqData = new System.Windows.Forms.Button();
@@ -84,7 +92,9 @@
             this.tMfp_Colour = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.panel2.SuspendLayout();
+            this.panel6.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -217,17 +227,11 @@
             this.bSService.Text = "Service";
             this.bSService.UseVisualStyleBackColor = false;
             // 
-            // panel1
-            // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel1.Location = new System.Drawing.Point(7, 8);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(162, 224);
-            this.panel1.TabIndex = 13;
-            // 
             // panel2
             // 
+            this.panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel2.Controls.Add(this.panel6);
             this.panel2.Controls.Add(this.panel5);
             this.panel2.Controls.Add(this.label19);
             this.panel2.Controls.Add(this.tMfp_Track);
@@ -246,8 +250,99 @@
             this.panel2.Controls.Add(this.panel4);
             this.panel2.Location = new System.Drawing.Point(175, 8);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(637, 224);
+            this.panel2.Size = new System.Drawing.Size(637, 228);
             this.panel2.TabIndex = 14;
+            // 
+            // panel6
+            // 
+            this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel6.Controls.Add(this.label21);
+            this.panel6.Controls.Add(this.bReqData1);
+            this.panel6.Controls.Add(this.tbRegLskid);
+            this.panel6.Controls.Add(this.textBox3);
+            this.panel6.Controls.Add(this.label22);
+            this.panel6.Controls.Add(this.label23);
+            this.panel6.Controls.Add(this.tbRegFskid);
+            this.panel6.Controls.Add(this.label24);
+            this.panel6.Location = new System.Drawing.Point(10, 162);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(608, 41);
+            this.panel6.TabIndex = 29;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label21.Location = new System.Drawing.Point(7, 12);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(69, 13);
+            this.label21.TabIndex = 16;
+            this.label21.Text = "SKID_REQ";
+            // 
+            // bReqData1
+            // 
+            this.bReqData1.Enabled = false;
+            this.bReqData1.Location = new System.Drawing.Point(494, 7);
+            this.bReqData1.Name = "bReqData1";
+            this.bReqData1.Size = new System.Drawing.Size(96, 23);
+            this.bReqData1.TabIndex = 15;
+            this.bReqData1.Text = "Request";
+            this.bReqData1.UseVisualStyleBackColor = true;
+            this.bReqData1.Click += new System.EventHandler(this.bReqData1_Click);
+            // 
+            // tbRegLskid
+            // 
+            this.tbRegLskid.Location = new System.Drawing.Point(342, 9);
+            this.tbRegLskid.Name = "tbRegLskid";
+            this.tbRegLskid.Size = new System.Drawing.Size(50, 20);
+            this.tbRegLskid.TabIndex = 3;
+            this.tbRegLskid.Tag = "4";
+            this.tbRegLskid.TextChanged += new System.EventHandler(this.CheckInput_Color);
+            this.tbRegLskid.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CheckInput_Dig);
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(266, 100);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(100, 20);
+            this.textBox3.TabIndex = 3;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(259, 12);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(69, 13);
+            this.label22.TabIndex = 2;
+            this.label22.Text = "Local Skid Id";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(51, 133);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(57, 13);
+            this.label23.TabIndex = 1;
+            this.label23.Text = "Skid Index";
+            // 
+            // tbRegFskid
+            // 
+            this.tbRegFskid.Location = new System.Drawing.Point(175, 9);
+            this.tbRegFskid.Name = "tbRegFskid";
+            this.tbRegFskid.Size = new System.Drawing.Size(53, 20);
+            this.tbRegFskid.TabIndex = 0;
+            this.tbRegFskid.Tag = "4";
+            this.tbRegFskid.TextChanged += new System.EventHandler(this.CheckInput_Color);
+            this.tbRegFskid.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CheckInput_Dig);
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(87, 12);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(78, 13);
+            this.label24.TabIndex = 1;
+            this.label24.Text = "Foreign skid ID";
             // 
             // panel5
             // 
@@ -260,7 +355,7 @@
             this.panel5.Controls.Add(this.label17);
             this.panel5.Controls.Add(this.tbReqVin);
             this.panel5.Controls.Add(this.label18);
-            this.panel5.Location = new System.Drawing.Point(16, 152);
+            this.panel5.Location = new System.Drawing.Point(10, 117);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(608, 41);
             this.panel5.TabIndex = 17;
@@ -343,7 +438,7 @@
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(603, 202);
+            this.label19.Location = new System.Drawing.Point(597, 209);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(20, 13);
             this.label19.TabIndex = 19;
@@ -351,7 +446,7 @@
             // 
             // tMfp_Track
             // 
-            this.tMfp_Track.Location = new System.Drawing.Point(298, 93);
+            this.tMfp_Track.Location = new System.Drawing.Point(292, 88);
             this.tMfp_Track.Name = "tMfp_Track";
             this.tMfp_Track.Size = new System.Drawing.Size(13, 20);
             this.tMfp_Track.TabIndex = 28;
@@ -361,7 +456,7 @@
             // 
             // tbTimerMFP
             // 
-            this.tbTimerMFP.Location = new System.Drawing.Point(558, 199);
+            this.tbTimerMFP.Location = new System.Drawing.Point(552, 206);
             this.tbTimerMFP.Name = "tbTimerMFP";
             this.tbTimerMFP.Size = new System.Drawing.Size(41, 20);
             this.tbTimerMFP.TabIndex = 17;
@@ -369,7 +464,7 @@
             // 
             // tMfp_Body
             // 
-            this.tMfp_Body.Location = new System.Drawing.Point(193, 93);
+            this.tMfp_Body.Location = new System.Drawing.Point(187, 88);
             this.tMfp_Body.Name = "tMfp_Body";
             this.tMfp_Body.Size = new System.Drawing.Size(52, 20);
             this.tMfp_Body.TabIndex = 27;
@@ -380,7 +475,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(470, 202);
+            this.label20.Location = new System.Drawing.Point(464, 209);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(87, 13);
             this.label20.TabIndex = 18;
@@ -388,7 +483,7 @@
             // 
             // tMfp_Code
             // 
-            this.tMfp_Code.Location = new System.Drawing.Point(301, 64);
+            this.tMfp_Code.Location = new System.Drawing.Point(295, 59);
             this.tMfp_Code.Name = "tMfp_Code";
             this.tMfp_Code.Size = new System.Drawing.Size(28, 20);
             this.tMfp_Code.TabIndex = 25;
@@ -399,7 +494,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(257, 96);
+            this.label11.Location = new System.Drawing.Point(251, 91);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(38, 13);
             this.label11.TabIndex = 22;
@@ -408,7 +503,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(115, 96);
+            this.label9.Location = new System.Drawing.Point(109, 91);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(74, 13);
             this.label9.TabIndex = 20;
@@ -417,7 +512,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(337, 67);
+            this.label8.Location = new System.Drawing.Point(331, 62);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(40, 13);
             this.label8.TabIndex = 19;
@@ -426,7 +521,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(213, 67);
+            this.label7.Location = new System.Drawing.Point(207, 62);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(86, 13);
             this.label7.TabIndex = 18;
@@ -435,7 +530,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(115, 67);
+            this.label6.Location = new System.Drawing.Point(109, 62);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(45, 13);
             this.label6.TabIndex = 17;
@@ -445,7 +540,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label5.Location = new System.Drawing.Point(23, 80);
+            this.label5.Location = new System.Drawing.Point(17, 75);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(86, 13);
             this.label5.TabIndex = 17;
@@ -453,7 +548,7 @@
             // 
             // tMfp_skid
             // 
-            this.tMfp_skid.Location = new System.Drawing.Point(166, 64);
+            this.tMfp_skid.Location = new System.Drawing.Point(160, 59);
             this.tMfp_skid.Name = "tMfp_skid";
             this.tMfp_skid.Size = new System.Drawing.Size(38, 20);
             this.tMfp_skid.TabIndex = 17;
@@ -463,6 +558,7 @@
             // 
             // panel3
             // 
+            this.panel3.BackColor = System.Drawing.SystemColors.Control;
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3.Controls.Add(this.label3);
             this.panel3.Controls.Add(this.bMFPUpdate);
@@ -472,7 +568,7 @@
             this.panel3.Controls.Add(this.label4);
             this.panel3.Controls.Add(this.tSkidIndex);
             this.panel3.Controls.Add(this.label1);
-            this.panel3.Location = new System.Drawing.Point(15, 6);
+            this.panel3.Location = new System.Drawing.Point(9, 5);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(608, 41);
             this.panel3.TabIndex = 15;
@@ -563,7 +659,7 @@
             this.panel4.Controls.Add(this.tMfp_Colour);
             this.panel4.Controls.Add(this.label12);
             this.panel4.Controls.Add(this.label10);
-            this.panel4.Location = new System.Drawing.Point(16, 58);
+            this.panel4.Location = new System.Drawing.Point(9, 51);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(608, 62);
             this.panel4.TabIndex = 17;
@@ -662,11 +758,20 @@
             this.label10.TabIndex = 21;
             this.label10.Text = "Roof:";
             // 
+            // panel1
+            // 
+            this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Location = new System.Drawing.Point(7, 8);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(162, 228);
+            this.panel1.TabIndex = 13;
+            // 
             // PLCSimUDP
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(824, 242);
+            this.ClientSize = new System.Drawing.Size(823, 248);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.bSService);
             this.Controls.Add(this.BSConn);
@@ -685,6 +790,8 @@
             this.Text = "PLC Simulator";
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
             this.panel3.ResumeLayout(false);
@@ -710,7 +817,6 @@
         private System.Windows.Forms.CheckBox cbLifeFrame;
         private System.Windows.Forms.Button BSConn;
         private System.Windows.Forms.Button bSService;
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Button bMFPUpdate;
@@ -754,6 +860,16 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.TextBox tbTimerMFP;
         private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Button bReqData1;
+        private System.Windows.Forms.TextBox tbRegLskid;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.TextBox tbRegFskid;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 

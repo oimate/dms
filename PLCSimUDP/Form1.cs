@@ -311,6 +311,7 @@ namespace PLCSimUDP
                     bMFPUpdate.Enabled = true;
                     bReqData.Enabled = true;
                     bUpdateMfp.Enabled = true;
+                    bReqData1.Enabled = true;
                     Stat.Clear();
                     break;
                 case Status.Disabled:
@@ -327,6 +328,7 @@ namespace PLCSimUDP
                     tbTimerMFP.Enabled = true;
                     bMFPUpdate.Enabled = false;
                     bUpdateMfp.Enabled = false;
+                    bReqData1.Enabled = false;
                     break;
                 case Status.Connected:
                     BSConn.BackColor = System.Drawing.Color.LimeGreen;
@@ -537,6 +539,36 @@ namespace PLCSimUDP
 
 
             SendDataFrame(sendFrame);
+        }
+
+        private void bReqData1_Click(object sender, EventArgs e)
+        {
+            if ((tbRegFskid.Text.Length == 4) & (tbRegLskid.Text.Length == 4))
+            {
+                Vin_Req[0] = Convert.ToInt32(tbRegFskid.Text);
+                Vin_Req[1] = Convert.ToInt32(tbRegLskid.Text);
+
+                byte[] sendbyte = new byte[4];
+
+
+                sendbyte[0] = (byte)(Vin_Req[0] >> 8);
+                sendbyte[1] = (byte)Vin_Req[0];
+                sendbyte[2] = (byte)(Vin_Req[1] >> 8);
+                sendbyte[3] = (byte)Vin_Req[1];
+
+                byte[] sendFrame = new byte[sendbyte.Length + 4];
+                for (int i = 0; i < sendbyte.Length; i++)
+                {
+                    sendFrame[i + 3] = sendbyte[i];
+                }
+                sendFrame[0] = (byte)(sendFrame.Length >> 8);
+                sendFrame[1] = (byte)(sendFrame.Length);
+                sendFrame[2] = 5;
+                sendFrame[sendFrame.Length - 1] = (byte)~sendFrame[2];
+
+
+                SendDataFrame(sendFrame);
+            }
         }
 
 

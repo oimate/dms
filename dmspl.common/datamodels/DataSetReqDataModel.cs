@@ -8,25 +8,34 @@ namespace dmspl.common.datamodels
 {
     public class DataSetReqDataModel : DataModel
     {
-        public string RequestModelID { get; set; }
+        public int RequestForeignID { get; set; }
+        public int RequestLocalnID { get; set; }
         public string ResponseDataSet { get; set; }
+        public byte[] Dataset { get; set; }
 
-        public delegate void DataSetReceivedDelegate(byte[] dataSet);
-        public DataSetReceivedDelegate DataSetReceived { get; set; }
-
-        public DataSetReqDataModel(short size, byte type, System.IO.BinaryReader br)
+        public DataSetReqDataModel(short size, byte type, System.IO.BinaryReader br, DataSetReceivedDelegate dataSetReceived )
             : base(size, type)
         {
-            int count = (Size - 4) / 2;
-            RequestModelID = string.Empty;
-            RequestModelID = new string(br.ReadChars(count));
+            RequestForeignID =System.Net.IPAddress.NetworkToHostOrder( br.ReadInt32());
+            RequestLocalnID = System.Net.IPAddress.NetworkToHostOrder(br.ReadInt16());
+
+            DataSetReceived = dataSetReceived;
         }
 
         public void OnDataSetReceived(string dataset)
         {
             if (DataSetReceived != null)
             {
-                DataSetReceived(Encoding.UTF8.GetBytes(dataset));
+                Dataset = new byte[dataset.Length];
+
+                for (int i = 0; i < Dataset.Length; i++)
+                {
+                    Dataset[i] = (byte)(Convert.ToByte(dataset[i])  - (byte)0x30 );   
+                }
+              
+
+                Size = dataset.Length + 4;
+                DataSetReceived(this);
             }
         }
     }

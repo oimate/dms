@@ -9,9 +9,11 @@ namespace dmspl.common
 {
     public abstract class DataModel
     {
-        public short Size { get; private set; }
+        public int Size { get; set; }
         public byte Type { get; private set; }
         public byte CRC { get; private set; }
+        public delegate void DataSetReceivedDelegate(DataModel dm);
+        public DataSetReceivedDelegate DataSetReceived { get; set; }
 
         public DataModel(short size, byte type)
         {
@@ -24,7 +26,7 @@ namespace dmspl.common
             return null;
         }
 
-        public static DataModel GetModel(byte[] buffer)
+        public static DataModel GetModel(byte[] buffer, DataSetReceivedDelegate dataSetReceived)
         {
             DataModel retModel;
 
@@ -40,8 +42,8 @@ namespace dmspl.common
                         case 9: //mfp type
                             retModel = new MFPDataModel(size, type, reader);
                             break;
-                        case 99: //request type
-                            retModel = new DataSetReqDataModel(size, type, reader);
+                        case 4: //request type
+                            retModel = new DataSetReqDataModel(size, type, reader, dataSetReceived);
                             break;
                         case 254: //diagnostic type
                             return null;

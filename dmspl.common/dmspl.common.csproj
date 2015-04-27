@@ -45,6 +45,7 @@
     <Compile Include="DelegateCollection.cs" />
     <Compile Include="DataStorageType.cs" />
     <Compile Include="DataModel.cs" />
+    <Compile Include="ErpDataset.cs" />
     <Compile Include="IUDPComm.cs" />
     <Compile Include="datamodels\MFPDataModel.cs" />
     <Compile Include="Obfuscation.cs" />

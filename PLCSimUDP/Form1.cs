@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using System.Diagnostics;
-
+using dmspl.common;
 namespace PLCSimUDP
 {
     public partial class PLCSimUDP : Form
@@ -310,6 +310,7 @@ namespace PLCSimUDP
                     tbTimerMFP.Enabled = false;
                     bMFPUpdate.Enabled = true;
                     bReqData.Enabled = true;
+                    bUpdateMfp.Enabled = true;
                     Stat.Clear();
                     break;
                 case Status.Disabled:
@@ -325,6 +326,7 @@ namespace PLCSimUDP
                     tLocalIP.Text = "0.0.0.0";
                     tbTimerMFP.Enabled = true;
                     bMFPUpdate.Enabled = false;
+                    bUpdateMfp.Enabled = false;
                     break;
                 case Status.Connected:
                     BSConn.BackColor = System.Drawing.Color.LimeGreen;
@@ -482,16 +484,59 @@ namespace PLCSimUDP
         {
             if ((tMfp_Body.Text.Length == 6) && (tMfp_Code.Text.Length == 2) && (tMfp_Colour.Text.Length == 3) && (tMfp_Hod.Text.Length == 1) && (tMfp_Roof.Text.Length == 1) && (tMfp_skid.Text.Length == 4) && (tMfp_Spare.Text.Length == 2) && (tMfp_Track.Text.Length == 1))
             {
-                //MPP_Update[0] = Convert.ToInt32();
-                //MPP_Update[1] = Convert.ToInt32();
-                //MPP_Update[2] = Convert.ToInt32();
-                //MPP_Update[3] = Convert.ToInt32();
-                //MPP_Update[4] = Convert.ToInt32();
-                //MPP_Update[5] = Convert.ToInt32();
-                //MPP_Update[6] = Convert.ToInt32();
-                //MPP_Update[7] = Convert.ToInt32();
+                MPP_Update[0] = Convert.ToInt32(tMfp_skid.Text);
+                MPP_Update[1] = Convert.ToInt32(tMfp_Code.Text);
+                MPP_Update[2] = Convert.ToInt32(tMfp_Code.Text);
+                MPP_Update[3] = Convert.ToInt32(tMfp_Body.Text);
+                MPP_Update[4] = Convert.ToInt32(tMfp_Track.Text);
+                MPP_Update[5] = Convert.ToInt32(tMfp_Roof.Text);
+                MPP_Update[6] = Convert.ToInt32(tMfp_Hod.Text);
+                MPP_Update[7] = Convert.ToInt32(tMfp_Spare.Text);
+
+                ErpDataset ErpDs = new ErpDataset() {
+
+                    SkidID = Convert.ToInt32(tMfp_skid.Text),
+                    DerivativeCode = Convert.ToInt32(tMfp_Code.Text),
+                    Colour = Convert.ToInt32(tMfp_Code.Text),
+                    BSN = Convert.ToInt32(tMfp_Body.Text),
+                    Track =   Convert.ToInt32(tMfp_Track.Text),
+                    Roof=  Convert.ToInt32(tMfp_Roof.Text),
+                    HoD=  Convert.ToInt32(tMfp_Hod.Text),
+                    Spare=  Convert.ToInt32(tMfp_Spare.Text),
+                };
                 
             }
+            byte[] sendbyte = new byte[13];
+
+
+            sendbyte[0] = (byte)(MPP_Update[0] >> 8);  // skid id
+            sendbyte[1] = (byte)MPP_Update[0];
+            sendbyte[2] = (byte)MPP_Update[1];  // derivate code
+            sendbyte[3] = (byte)(MPP_Update[2] >> 8); //colour
+            sendbyte[4] = (byte)MPP_Update[2];
+            sendbyte[5] = (byte)(MPP_Update[3] >> 24); // BSN
+            sendbyte[6] = (byte)(MPP_Update[3] >> 16);
+            sendbyte[7] = (byte)(MPP_Update[3] >> 8);
+            sendbyte[8] = (byte)MPP_Update[3];
+            sendbyte[9] = (byte)MPP_Update[4];  // Tracek
+            sendbyte[10] = (byte)MPP_Update[5];  //Roof
+            sendbyte[11] = (byte)MPP_Update[6]; // HoD
+            sendbyte[12] = (byte)MPP_Update[7];  //Spare
+
+
+
+            byte[] sendFrame = new byte[sendbyte.Length + 4];
+            for (int i = 0; i < sendbyte.Length; i++)
+            {
+                sendFrame[i + 3] = sendbyte[i];
+            }
+            sendFrame[0] = (byte)(sendFrame.Length >> 8);
+            sendFrame[1] = (byte)(sendFrame.Length);
+            sendFrame[2] = 6;   // update MFP
+            sendFrame[sendFrame.Length - 1] = (byte)~sendFrame[2];
+
+
+            SendDataFrame(sendFrame);
         }
 
 

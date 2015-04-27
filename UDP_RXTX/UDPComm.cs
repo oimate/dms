@@ -60,10 +60,15 @@ namespace UDP_RXTX
         {
             foreach (byte[] buffer in cccc)
             {
-                DataModel RecievedDataModel = DataModel.GetModel(buffer);
+                DataModel RecievedDataModel = DataModel.GetModel(buffer , OnDataReceived);
                 if (RecievedDataModel == null) continue;
                 DataStorage.ProcessModel(RecievedDataModel);
             }
+        }
+
+        private void OnDataReceived(DataModel dm)
+        {
+            throw new NotImplementedException();
         }
 
         private void onNewDataRecieved(string s)

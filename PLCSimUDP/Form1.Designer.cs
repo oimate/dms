@@ -107,6 +107,7 @@
             this.tLocalPort.Size = new System.Drawing.Size(38, 20);
             this.tLocalPort.TabIndex = 1;
             this.tLocalPort.Text = "2001";
+            this.tLocalPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tTimeSendMFP);
             this.tLocalPort.Leave += new System.EventHandler(this.tRemoteIP_Enter);
             // 
             // tRemoteIP
@@ -125,6 +126,7 @@
             this.tRemotePort.Size = new System.Drawing.Size(38, 20);
             this.tRemotePort.TabIndex = 3;
             this.tRemotePort.Text = "9000";
+            this.tRemotePort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tTimeSendMFP);
             this.tRemotePort.Leave += new System.EventHandler(this.tRemoteIP_Enter);
             // 
             // iLocalIP

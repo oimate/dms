@@ -117,6 +117,8 @@ namespace PLCSimUDP
                 return;
             TimerSF.Dispose();
             TimerSF = null;
+            TimerMFPFrame.Dispose();
+            TimerMFPFrame = null;
             petla = false;
             socket.Close();
             socket = null;
@@ -302,6 +304,7 @@ namespace PLCSimUDP
                     tLocalPort.Enabled = false;
                     tRemoteIP.Enabled = false;
                     tRemotePort.Enabled = false;
+                    tbTimerMFP.Enabled = false;
                     Stat.Clear();
                     break;
                 case Status.Disabled:
@@ -312,6 +315,7 @@ namespace PLCSimUDP
                     tLocalPort.Enabled = true;
                     tRemoteIP.Enabled = true;
                     tRemotePort.Enabled = true;
+                    tbTimerMFP.Enabled = true;
                     BSConn.BackColor = System.Drawing.Color.Gray;
                     tLocalIP.Text = "0.0.0.0";
                     break;

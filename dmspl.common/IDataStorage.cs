@@ -38,6 +38,6 @@ namespace dmspl.common
 
         void ProcessModel(DataModel ReceivedDataModel);
 
-        Task<bool> Login(string u, string p);
+        //Task<bool> Login(string u, string p);
     }
 }

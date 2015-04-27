@@ -21,7 +21,7 @@ namespace dmspl.common
             Type = type;
         }
 
-        public byte[] GetRawData()
+        public virtual byte[] GetRawData()
         {
             return null;
         }

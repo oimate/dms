@@ -22,7 +22,7 @@ namespace dmspl.datastorage
 
         volatile bool mfpupdating;
 
-        usermanager.UserManager userManager;
+        //usermanager.UserManager userManager;
 
         DataStorageMode mode, lastmode;
 
@@ -124,7 +124,7 @@ namespace dmspl.datastorage
                     string Track = datatoimport.Substring(16, 1);
                     string CSOB = datatoimport.Substring(17, 4);
                     DateTime CreateTimestamp = DateTime.Now;
-                    long CreateUser = userManager.Currentuser.Id;
+                    long CreateUser = 2;
 
                     bool exists = dmsDataset.DMS_ERP.Rows.Contains(Id);
 
@@ -187,9 +187,9 @@ namespace dmspl.datastorage
                     if (dmsDataset.DMS_MFP.Rows.Contains(mfpindex))
                     {
                         DmsDataset.DMS_MFPRow row = dmsDataset.DMS_MFP.FindById(mfpindex);
-                        if (row.localskidnr != skid)
+                        if (row.LocalSkidNr != skid)
                         {
-                            row.localskidnr = skid;
+                            row.LocalSkidNr = skid;
                         }
                     }
                     else
@@ -325,20 +325,81 @@ namespace dmspl.datastorage
             if (ReceivedDataModel is MFPDataModel)
                 UpdateMFP(((MFPDataModel)ReceivedDataModel).Mfps);
             if (ReceivedDataModel is DataSetReqDataModel)
-                GetDataSetById(ReceivedDataModel as DataSetReqDataModel);
+                GetDataSetByBSN(ReceivedDataModel as DataSetReqDataModel);
         }
 
-        private void GetDataSetById(DataSetReqDataModel dataSetReqDataModel)
+        private void GetDataSetBySkid(DataSetReqDataModel dataSetReqDataModel)
         {
-            string simulated = "123456789012345678901";
-            dataSetReqDataModel.OnDataSetReceived(simulated);
+            try
+            {
+                using (var erp = erp_DataAdapter.GetData())
+                {
+                    var row = erp.FindBySkidID(dataSetReqDataModel.RequestForeignID);
+                    if (row == null)
+                        dataSetReqDataModel.OnDataSetReceived(null);
+                    else
+                    {
+                        dataSetReqDataModel.OnDataSetReceived(new ErpDataset()
+                            {
+                                BSN = row.BSN,
+                                Colour = row.Colour,
+                                DerivativeCode = row.DerivativeCode,
+                                HoD = row.Door,
+                                Roof = row.Roof,
+                                SkidID = row.SkidID,
+                                Track = row.Track,
+                                Spare = row.Spare
+                            }
+                        );
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("{1}\r\n{0}", ex.Message, ex.Source);
+            }
         }
 
-        public async Task<bool> Login(string u, string p)
+        private void GetDataSetByBSN(DataSetReqDataModel dataSetReqDataModel)
         {
-            bool success = await Task<bool>.Run(() => { return userManager.Login(u, p); });
-            return success;
+            try
+            {
+                using (var erp = erp_DataAdapter.GetData())
+                {
+                    var q = (from r in erp
+                             where r.BSN == dataSetReqDataModel.RequestForeignID
+                             select r);
+                    if (q.Count() != 1)
+                        dataSetReqDataModel.OnDataSetReceived(null);
+                    else
+                    {
+                        var row = q.First();
+                        dataSetReqDataModel.OnDataSetReceived(new ErpDataset()
+                        {
+                            BSN = row.BSN,
+                            Colour = row.Colour,
+                            DerivativeCode = row.DerivativeCode,
+                            HoD = row.Door,
+                            Roof = row.Roof,
+                            SkidID = row.SkidID,
+                            Track = row.Track,
+                            Spare = row.Spare
+                        }
+                        );
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("{1}\r\n{0}", ex.Message, ex.Source);
+            }
         }
+
+        //public async Task<bool> Login(string u, string p)
+        //{
+        //    bool success = await Task<bool>.Run(() => { return userManager.Login(u, p); });
+        //    return success;
+        //}
 
         #region Delegates/Events
 

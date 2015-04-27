@@ -8,71 +8,69 @@ using System.Threading.Tasks;
 
 namespace dmspl.datastorage.usermanager
 {
-    class UserManager
-    {
-        DmsDataset dmsDataset;
-        DmsDatasetTableAdapters.DMS_USRTableAdapter usr_DataAdapter;
-        DmsDatasetTableAdapters.DMS_SECTableAdapter sec_DataAdapter;
+    //class UserManager
+    //{
+    //    DmsDataset dmsDataset;
 
-        User currentuser;
-        internal User Currentuser
-        {
-            get { return currentuser; }
-            set { currentuser = value; }
-        }
+    //    User currentuser;
+    //    internal User Currentuser
+    //    {
+    //        get { return currentuser; }
+    //        set { currentuser = value; }
+    //    }
 
-        public UserManager(DmsDataset dmsDataset)
-        {
-            this.dmsDataset = dmsDataset;
-            this.sec_DataAdapter = new DmsDatasetTableAdapters.DMS_SECTableAdapter();
-            sec_DataAdapter.Fill(dmsDataset.DMS_SEC);
-            this.usr_DataAdapter = new DmsDatasetTableAdapters.DMS_USRTableAdapter();
-            usr_DataAdapter.Fill(dmsDataset.DMS_USR);
-        }
+    //    public UserManager(DmsDataset dmsDataset)
+    //    {
+    //        this.dmsDataset = dmsDataset;
+    //        this.sec_DataAdapter = new DmsDatasetTableAdapters.DMS_SECTableAdapter();
+    //        sec_DataAdapter.Fill(dmsDataset.DMS_SEC);
+    //        this.usr_DataAdapter = new DmsDatasetTableAdapters.DMS_USRTableAdapter();
+    //        usr_DataAdapter.Fill(dmsDataset.DMS_USR);
+    //    }
 
-        public bool Login(string login, string password)
-        {
-            string hpwd = Obfuscation.Code(login, password);
-            long? id = usr_DataAdapter.GetId(login, hpwd);
+    //    public bool Login(string login, string password)
+    //    {
+    //        string hpwd = Obfuscation.Code(login, password);
+    //        long? id = usr_DataAdapter.GetId(login, hpwd);
 
-            if (id != null)
-            {
-                DmsDataset.DMS_USRRow userrow = dmsDataset.DMS_USR.FindById(id.Value);
-                int secuid = userrow.security;
+    //        if (id != null)
+    //        {
+    //            DmsDataset.DMS_USRRow userrow = dmsDataset.DMS_USR.FindById(id.Value);
+    //            int secuid = userrow.security;
 
-                DmsDataset.DMS_SECRow securow = dmsDataset.DMS_SEC.FindById(secuid);
-                bool canAdd = securow.canAdd;
-                bool canModify = securow.canModify;
-                bool canRead = securow.canRead;
+    //            DmsDataset.DMS_SECRow securow = dmsDataset.DMS_SEC.FindById(secuid);
+    //            bool canAdd = securow.canAdd;
+    //            bool canModify = securow.canModify;
+    //            bool canRead = securow.canRead;
 
-                Secu secu = new Secu
-                {
-                    Id = secuid,
-                    CanAdd = canAdd,
-                    CanModify = canModify,
-                    CanRead = canRead
-                };
+    //            Secu secu = new Secu
+    //            {
+    //                Id = secuid,
+    //                CanAdd = canAdd,
+    //                CanModify = canModify,
+    //                CanRead = canRead
+    //            };
 
-                userrow.lastlogin = DateTime.Now;
-                usr_DataAdapter.Update(userrow);
+    //            userrow.lastlogin = DateTime.Now;
+    //            usr_DataAdapter.Update(userrow);
 
-                currentuser = new User
-                {
-                    Id = id.Value,
-                    Login = userrow.login,
-                    Name = userrow.name,
-                    Surname = userrow.surname,
-                    Pwd = userrow.pwd,
-                    Lastlogin = userrow.lastlogin,
-                    Security = secu
-                };
+    //            currentuser = new User
+    //            {
+    //                Id = id.Value,
+    //                Login = userrow.login,
+    //                Name = userrow.name,
+    //                Surname = userrow.surname,
+    //                Pwd = userrow.pwd,
+    //                Lastlogin = userrow.lastlogin,
+    //                Security = secu
+    //            };
 
-                return true;
-            }
+    //            return true;
+    //        }
 
-            return false;
-        }
-    }
+    //        return false;
+    //    }
+    //}
 
     class User
     {

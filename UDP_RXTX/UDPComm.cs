@@ -68,7 +68,14 @@ namespace UDP_RXTX
 
         private void OnDataReceived(DataModel dm)
         {
-            throw new NotImplementedException();
+            try
+            {
+                socket.Send(dm.GetRawData(), dm.Size, RemoteIP);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
         }
 
         private void onNewDataRecieved(string s)

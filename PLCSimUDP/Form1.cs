@@ -22,7 +22,10 @@ namespace PLCSimUDP
         System.Threading.Timer TimerMFPFrame;
         object lockObj;
         bool petla;
-        public short[] MFP_Skid = new short[150];
+        public int[] MFP_Skid = new int[150];
+        public int[] Vin_Req = new int[2];
+        public int[] MPP_Update = new int[8];
+
         Status ActState;
 
         //   MFP_Skid[2] = 22;
@@ -71,7 +74,7 @@ namespace PLCSimUDP
             }
         }
 
-        static public byte[] CreateDataFrame(short[] tablica, int ID)
+        static public byte[] CreateDataFrame(int[] tablica, int ID)
         {
 
             byte[] sendbyte = new byte[tablica.Length * 2];
@@ -242,7 +245,7 @@ namespace PLCSimUDP
                     try
                     {
                         //     byte[] sendbyte = new byte[] { 0, 8, 254, 255, 255, 255, 255, 1 };
-                        short[] sendData = new short[] { -1, -1 };
+                        int[] sendData = new int[] { -1, -1 };
                         SendDataFrame(CreateDataFrame(sendData, 254));
                         if (Stat.ConnReqCnt > 1)
                         {
@@ -305,6 +308,8 @@ namespace PLCSimUDP
                     tRemoteIP.Enabled = false;
                     tRemotePort.Enabled = false;
                     tbTimerMFP.Enabled = false;
+                    bMFPUpdate.Enabled = true;
+                    bReqData.Enabled = true;
                     Stat.Clear();
                     break;
                 case Status.Disabled:
@@ -315,9 +320,11 @@ namespace PLCSimUDP
                     tLocalPort.Enabled = true;
                     tRemoteIP.Enabled = true;
                     tRemotePort.Enabled = true;
-                    tbTimerMFP.Enabled = true;
+                    bReqData.Enabled = false;
                     BSConn.BackColor = System.Drawing.Color.Gray;
                     tLocalIP.Text = "0.0.0.0";
+                    tbTimerMFP.Enabled = true;
+                    bMFPUpdate.Enabled = false;
                     break;
                 case Status.Connected:
                     BSConn.BackColor = System.Drawing.Color.LimeGreen;
@@ -386,7 +393,7 @@ namespace PLCSimUDP
             Properties.Settings.Default.LocalIP = tLocalIP.Text;
             Properties.Settings.Default.RemPort = Convert.ToInt32(tRemotePort.Text);
             Properties.Settings.Default.RemIP = tRemoteIP.Text;
-            Properties.Settings.Default.tbTimerMFP  = Convert.ToInt32(tbTimerMFP.Text );
+            Properties.Settings.Default.tbTimerMFP = Convert.ToInt32(tbTimerMFP.Text);
             Properties.Settings.Default.Save();
         }
 
@@ -409,15 +416,85 @@ namespace PLCSimUDP
             MFP_Skid[Convert.ToInt16(tSkidIndex.Text)] = Convert.ToInt16(tSkidValue.Text);
         }
 
-        private void tTimeSendMFP(object sender, KeyPressEventArgs e)
+        private void CheckInput_Dig(object sender, KeyPressEventArgs e)
         {
+            TextBox tb = (TextBox)sender;
+            int a = Convert.ToInt16(tb.Tag);
             if (e.KeyChar != '\b')
             {
-                TextBox tb = (TextBox)sender;
-                if (tb.TextLength > 3 || !(Char.IsDigit(e.KeyChar)))
+                if (tb.TextLength >= a || !(Char.IsDigit(e.KeyChar)))
+                {
                     e.Handled = true;
+                }
             }
         }
+        private void CheckInput_Color(object sender, EventArgs e)
+        {
+            TextBox tb = (TextBox)sender;
+            int a = Convert.ToInt16(tb.Tag);
+            if (tb.TextLength >= a)
+            {
+                tb.BackColor = Color.LawnGreen;
+            }
+            else
+            {
+                tb.BackColor = Color.White;
+            }
+        }
+        private void tbReqVin_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void bReqData_Click(object sender, EventArgs e)
+        {
+            if ((tbReqVin.Text.Length == 6) & (tReqSkid.Text.Length == 4))
+            {
+                Vin_Req[0] = Convert.ToInt32(tbReqVin.Text);
+                Vin_Req[1] = Convert.ToInt32(tReqSkid.Text);
+
+                byte[] sendbyte = new byte[6];
+
+
+                sendbyte[0] = (byte)(Vin_Req[0] >> 24);
+                sendbyte[1] = (byte)(Vin_Req[0] >> 16);
+                sendbyte[2] = (byte)(Vin_Req[0] >> 8);
+                sendbyte[3] = (byte)Vin_Req[0];
+                sendbyte[4] = (byte)(Vin_Req[1] >> 8);
+                sendbyte[5] = (byte)Vin_Req[1];
+
+                byte[] sendFrame = new byte[sendbyte.Length + 4];
+                for (int i = 0; i < sendbyte.Length; i++)
+                {
+                    sendFrame[i + 3] = sendbyte[i];
+                }
+                sendFrame[0] = (byte)(sendFrame.Length >> 8);
+                sendFrame[1] = (byte)(sendFrame.Length);
+                sendFrame[2] = 4;
+                sendFrame[sendFrame.Length - 1] = (byte)~sendFrame[2];
+
+
+                SendDataFrame(sendFrame);
+            }
+        }
+
+        private void bUpdateMfp_Click(object sender, EventArgs e)
+        {
+            if ((tMfp_Body.Text.Length == 6) && (tMfp_Code.Text.Length == 2) && (tMfp_Colour.Text.Length == 3) && (tMfp_Hod.Text.Length == 1) && (tMfp_Roof.Text.Length == 1) && (tMfp_skid.Text.Length == 4) && (tMfp_Spare.Text.Length == 2) && (tMfp_Track.Text.Length == 1))
+            {
+                //MPP_Update[0] = Convert.ToInt32();
+                //MPP_Update[1] = Convert.ToInt32();
+                //MPP_Update[2] = Convert.ToInt32();
+                //MPP_Update[3] = Convert.ToInt32();
+                //MPP_Update[4] = Convert.ToInt32();
+                //MPP_Update[5] = Convert.ToInt32();
+                //MPP_Update[6] = Convert.ToInt32();
+                //MPP_Update[7] = Convert.ToInt32();
+                
+            }
+        }
+
+
     }
 
 }

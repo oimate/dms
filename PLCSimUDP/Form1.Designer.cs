@@ -44,23 +44,26 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.label14 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
-            this.textBox10 = new System.Windows.Forms.TextBox();
+            this.bReqData = new System.Windows.Forms.Button();
+            this.tReqSkid = new System.Windows.Forms.TextBox();
             this.textBox12 = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
-            this.textBox13 = new System.Windows.Forms.TextBox();
+            this.tbReqVin = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.tMfp_Track = new System.Windows.Forms.TextBox();
+            this.tbTimerMFP = new System.Windows.Forms.TextBox();
+            this.tMfp_Body = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.tMfp_Code = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.tMfp_skid = new System.Windows.Forms.TextBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.bMFPUpdate = new System.Windows.Forms.Button();
@@ -71,19 +74,16 @@
             this.tSkidIndex = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox9 = new System.Windows.Forms.TextBox();
+            this.bUpdateMfp = new System.Windows.Forms.Button();
+            this.tMfp_Spare = new System.Windows.Forms.TextBox();
             this.textBox11 = new System.Windows.Forms.TextBox();
-            this.textBox7 = new System.Windows.Forms.TextBox();
-            this.textBox8 = new System.Windows.Forms.TextBox();
+            this.tMfp_Roof = new System.Windows.Forms.TextBox();
+            this.tMfp_Hod = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.tMfp_Colour = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.tbTimerMFP = new System.Windows.Forms.TextBox();
-            this.label20 = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -106,8 +106,10 @@
             this.tLocalPort.Name = "tLocalPort";
             this.tLocalPort.Size = new System.Drawing.Size(38, 20);
             this.tLocalPort.TabIndex = 1;
+            this.tLocalPort.Tag = "4";
             this.tLocalPort.Text = "2001";
-            this.tLocalPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tTimeSendMFP);
+            this.tLocalPort.TextChanged += new System.EventHandler(this.CheckInput_Color);
+            this.tLocalPort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CheckInput_Dig);
             this.tLocalPort.Leave += new System.EventHandler(this.tRemoteIP_Enter);
             // 
             // tRemoteIP
@@ -125,8 +127,10 @@
             this.tRemotePort.Name = "tRemotePort";
             this.tRemotePort.Size = new System.Drawing.Size(38, 20);
             this.tRemotePort.TabIndex = 3;
+            this.tRemotePort.Tag = "4";
             this.tRemotePort.Text = "9000";
-            this.tRemotePort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tTimeSendMFP);
+            this.tRemotePort.TextChanged += new System.EventHandler(this.CheckInput_Color);
+            this.tRemotePort.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CheckInput_Dig);
             this.tRemotePort.Leave += new System.EventHandler(this.tRemoteIP_Enter);
             // 
             // iLocalIP
@@ -226,18 +230,18 @@
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel2.Controls.Add(this.panel5);
             this.panel2.Controls.Add(this.label19);
-            this.panel2.Controls.Add(this.textBox6);
+            this.panel2.Controls.Add(this.tMfp_Track);
             this.panel2.Controls.Add(this.tbTimerMFP);
-            this.panel2.Controls.Add(this.textBox5);
+            this.panel2.Controls.Add(this.tMfp_Body);
             this.panel2.Controls.Add(this.label20);
-            this.panel2.Controls.Add(this.textBox3);
+            this.panel2.Controls.Add(this.tMfp_Code);
             this.panel2.Controls.Add(this.label11);
             this.panel2.Controls.Add(this.label9);
             this.panel2.Controls.Add(this.label8);
             this.panel2.Controls.Add(this.label7);
             this.panel2.Controls.Add(this.label6);
             this.panel2.Controls.Add(this.label5);
-            this.panel2.Controls.Add(this.textBox2);
+            this.panel2.Controls.Add(this.tMfp_skid);
             this.panel2.Controls.Add(this.panel3);
             this.panel2.Controls.Add(this.panel4);
             this.panel2.Location = new System.Drawing.Point(175, 8);
@@ -249,12 +253,12 @@
             // 
             this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel5.Controls.Add(this.label14);
-            this.panel5.Controls.Add(this.button2);
-            this.panel5.Controls.Add(this.textBox10);
+            this.panel5.Controls.Add(this.bReqData);
+            this.panel5.Controls.Add(this.tReqSkid);
             this.panel5.Controls.Add(this.textBox12);
             this.panel5.Controls.Add(this.label15);
             this.panel5.Controls.Add(this.label17);
-            this.panel5.Controls.Add(this.textBox13);
+            this.panel5.Controls.Add(this.tbReqVin);
             this.panel5.Controls.Add(this.label18);
             this.panel5.Location = new System.Drawing.Point(16, 152);
             this.panel5.Name = "panel5";
@@ -271,21 +275,26 @@
             this.label14.TabIndex = 16;
             this.label14.Text = "VIN_REQ";
             // 
-            // button2
+            // bReqData
             // 
-            this.button2.Location = new System.Drawing.Point(494, 7);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(96, 23);
-            this.button2.TabIndex = 15;
-            this.button2.Text = "Request";
-            this.button2.UseVisualStyleBackColor = true;
+            this.bReqData.Enabled = false;
+            this.bReqData.Location = new System.Drawing.Point(494, 7);
+            this.bReqData.Name = "bReqData";
+            this.bReqData.Size = new System.Drawing.Size(96, 23);
+            this.bReqData.TabIndex = 15;
+            this.bReqData.Text = "Request";
+            this.bReqData.UseVisualStyleBackColor = true;
+            this.bReqData.Click += new System.EventHandler(this.bReqData_Click);
             // 
-            // textBox10
+            // tReqSkid
             // 
-            this.textBox10.Location = new System.Drawing.Point(333, 9);
-            this.textBox10.Name = "textBox10";
-            this.textBox10.Size = new System.Drawing.Size(100, 20);
-            this.textBox10.TabIndex = 3;
+            this.tReqSkid.Location = new System.Drawing.Point(333, 9);
+            this.tReqSkid.Name = "tReqSkid";
+            this.tReqSkid.Size = new System.Drawing.Size(100, 20);
+            this.tReqSkid.TabIndex = 3;
+            this.tReqSkid.Tag = "4";
+            this.tReqSkid.TextChanged += new System.EventHandler(this.CheckInput_Color);
+            this.tReqSkid.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CheckInput_Dig);
             // 
             // textBox12
             // 
@@ -312,12 +321,15 @@
             this.label17.TabIndex = 1;
             this.label17.Text = "Skid Index";
             // 
-            // textBox13
+            // tbReqVin
             // 
-            this.textBox13.Location = new System.Drawing.Point(152, 9);
-            this.textBox13.Name = "textBox13";
-            this.textBox13.Size = new System.Drawing.Size(100, 20);
-            this.textBox13.TabIndex = 0;
+            this.tbReqVin.Location = new System.Drawing.Point(152, 9);
+            this.tbReqVin.Name = "tbReqVin";
+            this.tbReqVin.Size = new System.Drawing.Size(100, 20);
+            this.tbReqVin.TabIndex = 0;
+            this.tbReqVin.Tag = "6";
+            this.tbReqVin.TextChanged += new System.EventHandler(this.CheckInput_Color);
+            this.tbReqVin.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CheckInput_Dig);
             // 
             // label18
             // 
@@ -328,26 +340,61 @@
             this.label18.TabIndex = 1;
             this.label18.Text = "Body Number";
             // 
-            // textBox6
+            // label19
             // 
-            this.textBox6.Location = new System.Drawing.Point(298, 93);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(13, 20);
-            this.textBox6.TabIndex = 28;
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(603, 202);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(20, 13);
+            this.label19.TabIndex = 19;
+            this.label19.Text = "ms";
             // 
-            // textBox5
+            // tMfp_Track
             // 
-            this.textBox5.Location = new System.Drawing.Point(193, 93);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(52, 20);
-            this.textBox5.TabIndex = 27;
+            this.tMfp_Track.Location = new System.Drawing.Point(298, 93);
+            this.tMfp_Track.Name = "tMfp_Track";
+            this.tMfp_Track.Size = new System.Drawing.Size(13, 20);
+            this.tMfp_Track.TabIndex = 28;
+            this.tMfp_Track.Tag = "1";
+            this.tMfp_Track.TextChanged += new System.EventHandler(this.CheckInput_Color);
+            this.tMfp_Track.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CheckInput_Dig);
             // 
-            // textBox3
+            // tbTimerMFP
             // 
-            this.textBox3.Location = new System.Drawing.Point(301, 64);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(28, 20);
-            this.textBox3.TabIndex = 25;
+            this.tbTimerMFP.Location = new System.Drawing.Point(558, 199);
+            this.tbTimerMFP.Name = "tbTimerMFP";
+            this.tbTimerMFP.Size = new System.Drawing.Size(41, 20);
+            this.tbTimerMFP.TabIndex = 17;
+            this.tbTimerMFP.Text = "900";
+            // 
+            // tMfp_Body
+            // 
+            this.tMfp_Body.Location = new System.Drawing.Point(193, 93);
+            this.tMfp_Body.Name = "tMfp_Body";
+            this.tMfp_Body.Size = new System.Drawing.Size(52, 20);
+            this.tMfp_Body.TabIndex = 27;
+            this.tMfp_Body.Tag = "6";
+            this.tMfp_Body.TextChanged += new System.EventHandler(this.CheckInput_Color);
+            this.tMfp_Body.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CheckInput_Dig);
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(470, 202);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(87, 13);
+            this.label20.TabIndex = 18;
+            this.label20.Text = "MFP Cycle Time:";
+            // 
+            // tMfp_Code
+            // 
+            this.tMfp_Code.Location = new System.Drawing.Point(301, 64);
+            this.tMfp_Code.Name = "tMfp_Code";
+            this.tMfp_Code.Size = new System.Drawing.Size(28, 20);
+            this.tMfp_Code.TabIndex = 25;
+            this.tMfp_Code.Tag = "2";
+            this.tMfp_Code.TextChanged += new System.EventHandler(this.CheckInput_Color);
+            this.tMfp_Code.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CheckInput_Dig);
             // 
             // label11
             // 
@@ -404,12 +451,15 @@
             this.label5.TabIndex = 17;
             this.label5.Text = "MFP UPDATE";
             // 
-            // textBox2
+            // tMfp_skid
             // 
-            this.textBox2.Location = new System.Drawing.Point(166, 64);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(38, 20);
-            this.textBox2.TabIndex = 17;
+            this.tMfp_skid.Location = new System.Drawing.Point(166, 64);
+            this.tMfp_skid.Name = "tMfp_skid";
+            this.tMfp_skid.Size = new System.Drawing.Size(38, 20);
+            this.tMfp_skid.TabIndex = 17;
+            this.tMfp_skid.Tag = "4";
+            this.tMfp_skid.TextChanged += new System.EventHandler(this.CheckInput_Color);
+            this.tMfp_skid.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CheckInput_Dig);
             // 
             // panel3
             // 
@@ -439,6 +489,7 @@
             // 
             // bMFPUpdate
             // 
+            this.bMFPUpdate.Enabled = false;
             this.bMFPUpdate.Location = new System.Drawing.Point(494, 7);
             this.bMFPUpdate.Name = "bMFPUpdate";
             this.bMFPUpdate.Size = new System.Drawing.Size(96, 23);
@@ -453,6 +504,9 @@
             this.tSkidValue.Name = "tSkidValue";
             this.tSkidValue.Size = new System.Drawing.Size(100, 20);
             this.tSkidValue.TabIndex = 3;
+            this.tSkidValue.Tag = "4";
+            this.tSkidValue.TextChanged += new System.EventHandler(this.CheckInput_Color);
+            this.tSkidValue.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CheckInput_Dig);
             // 
             // textBox1
             // 
@@ -499,14 +553,14 @@
             // panel4
             // 
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel4.Controls.Add(this.button1);
-            this.panel4.Controls.Add(this.textBox9);
+            this.panel4.Controls.Add(this.bUpdateMfp);
+            this.panel4.Controls.Add(this.tMfp_Spare);
             this.panel4.Controls.Add(this.textBox11);
-            this.panel4.Controls.Add(this.textBox7);
-            this.panel4.Controls.Add(this.textBox8);
+            this.panel4.Controls.Add(this.tMfp_Roof);
+            this.panel4.Controls.Add(this.tMfp_Hod);
             this.panel4.Controls.Add(this.label16);
             this.panel4.Controls.Add(this.label13);
-            this.panel4.Controls.Add(this.textBox4);
+            this.panel4.Controls.Add(this.tMfp_Colour);
             this.panel4.Controls.Add(this.label12);
             this.panel4.Controls.Add(this.label10);
             this.panel4.Location = new System.Drawing.Point(16, 58);
@@ -514,21 +568,26 @@
             this.panel4.Size = new System.Drawing.Size(608, 62);
             this.panel4.TabIndex = 17;
             // 
-            // button1
+            // bUpdateMfp
             // 
-            this.button1.Location = new System.Drawing.Point(493, 16);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(96, 23);
-            this.button1.TabIndex = 17;
-            this.button1.Text = "Update";
-            this.button1.UseVisualStyleBackColor = true;
+            this.bUpdateMfp.Enabled = false;
+            this.bUpdateMfp.Location = new System.Drawing.Point(493, 16);
+            this.bUpdateMfp.Name = "bUpdateMfp";
+            this.bUpdateMfp.Size = new System.Drawing.Size(96, 23);
+            this.bUpdateMfp.TabIndex = 17;
+            this.bUpdateMfp.Text = "Update";
+            this.bUpdateMfp.UseVisualStyleBackColor = true;
+            this.bUpdateMfp.Click += new System.EventHandler(this.bUpdateMfp_Click);
             // 
-            // textBox9
+            // tMfp_Spare
             // 
-            this.textBox9.Location = new System.Drawing.Point(419, 34);
-            this.textBox9.Name = "textBox9";
-            this.textBox9.Size = new System.Drawing.Size(40, 20);
-            this.textBox9.TabIndex = 31;
+            this.tMfp_Spare.Location = new System.Drawing.Point(419, 34);
+            this.tMfp_Spare.Name = "tMfp_Spare";
+            this.tMfp_Spare.Size = new System.Drawing.Size(40, 20);
+            this.tMfp_Spare.TabIndex = 31;
+            this.tMfp_Spare.Tag = "2";
+            this.tMfp_Spare.TextChanged += new System.EventHandler(this.CheckInput_Color);
+            this.tMfp_Spare.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CheckInput_Dig);
             // 
             // textBox11
             // 
@@ -537,19 +596,25 @@
             this.textBox11.Size = new System.Drawing.Size(100, 20);
             this.textBox11.TabIndex = 3;
             // 
-            // textBox7
+            // tMfp_Roof
             // 
-            this.textBox7.Location = new System.Drawing.Point(343, 34);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(22, 20);
-            this.textBox7.TabIndex = 29;
+            this.tMfp_Roof.Location = new System.Drawing.Point(343, 34);
+            this.tMfp_Roof.Name = "tMfp_Roof";
+            this.tMfp_Roof.Size = new System.Drawing.Size(22, 20);
+            this.tMfp_Roof.TabIndex = 29;
+            this.tMfp_Roof.Tag = "1";
+            this.tMfp_Roof.TextChanged += new System.EventHandler(this.CheckInput_Color);
+            this.tMfp_Roof.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CheckInput_Dig);
             // 
-            // textBox8
+            // tMfp_Hod
             // 
-            this.textBox8.Location = new System.Drawing.Point(446, 5);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(13, 20);
-            this.textBox8.TabIndex = 30;
+            this.tMfp_Hod.Location = new System.Drawing.Point(446, 5);
+            this.tMfp_Hod.Name = "tMfp_Hod";
+            this.tMfp_Hod.Size = new System.Drawing.Size(13, 20);
+            this.tMfp_Hod.TabIndex = 30;
+            this.tMfp_Hod.Tag = "1";
+            this.tMfp_Hod.TextChanged += new System.EventHandler(this.CheckInput_Color);
+            this.tMfp_Hod.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CheckInput_Dig);
             // 
             // label16
             // 
@@ -569,12 +634,15 @@
             this.label13.TabIndex = 24;
             this.label13.Text = "Spare:";
             // 
-            // textBox4
+            // tMfp_Colour
             // 
-            this.textBox4.Location = new System.Drawing.Point(366, 5);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(27, 20);
-            this.textBox4.TabIndex = 26;
+            this.tMfp_Colour.Location = new System.Drawing.Point(366, 5);
+            this.tMfp_Colour.Name = "tMfp_Colour";
+            this.tMfp_Colour.Size = new System.Drawing.Size(27, 20);
+            this.tMfp_Colour.TabIndex = 26;
+            this.tMfp_Colour.Tag = "3";
+            this.tMfp_Colour.TextChanged += new System.EventHandler(this.CheckInput_Color);
+            this.tMfp_Colour.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CheckInput_Dig);
             // 
             // label12
             // 
@@ -593,33 +661,6 @@
             this.label10.Size = new System.Drawing.Size(33, 13);
             this.label10.TabIndex = 21;
             this.label10.Text = "Roof:";
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(603, 202);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(20, 13);
-            this.label19.TabIndex = 19;
-            this.label19.Text = "ms";
-            // 
-            // tbTimerMFP
-            // 
-            this.tbTimerMFP.Location = new System.Drawing.Point(558, 199);
-            this.tbTimerMFP.Name = "tbTimerMFP";
-            this.tbTimerMFP.Size = new System.Drawing.Size(41, 20);
-            this.tbTimerMFP.TabIndex = 17;
-            this.tbTimerMFP.Text = "900";
-            this.tbTimerMFP.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tTimeSendMFP);
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(470, 202);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(87, 13);
-            this.label20.TabIndex = 18;
-            this.label20.Text = "MFP Cycle Time:";
             // 
             // PLCSimUDP
             // 
@@ -689,26 +730,26 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox9;
-        private System.Windows.Forms.TextBox textBox8;
-        private System.Windows.Forms.TextBox textBox7;
-        private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.TextBox textBox4;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox tMfp_skid;
+        private System.Windows.Forms.TextBox tMfp_Spare;
+        private System.Windows.Forms.TextBox tMfp_Hod;
+        private System.Windows.Forms.TextBox tMfp_Roof;
+        private System.Windows.Forms.TextBox tMfp_Track;
+        private System.Windows.Forms.TextBox tMfp_Body;
+        private System.Windows.Forms.TextBox tMfp_Colour;
+        private System.Windows.Forms.TextBox tMfp_Code;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.TextBox textBox11;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button bUpdateMfp;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.TextBox textBox10;
+        private System.Windows.Forms.Button bReqData;
+        private System.Windows.Forms.TextBox tReqSkid;
         private System.Windows.Forms.TextBox textBox12;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.TextBox textBox13;
+        private System.Windows.Forms.TextBox tbReqVin;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.TextBox tbTimerMFP;

@@ -44,8 +44,9 @@ namespace dmspl.common.datamodels
             {
                 using (System.IO.BinaryWriter bw = new System.IO.BinaryWriter(ms))
                 {
+                    bw.Write((byte)(Size >> 8));
+                    bw.Write((byte)Size);
                     bw.Write(Type);
-                    bw.Write((Int16)Size);
                     bw.Write((byte)(Erpdataset.SkidID >> 8));
                     bw.Write((byte)Erpdataset.SkidID);
                     bw.Write((byte)(Erpdataset.BSN >> 24));

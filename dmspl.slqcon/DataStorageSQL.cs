@@ -53,15 +53,11 @@ namespace dmspl.datastorage
 
             dmsDataset = new DmsDataset();
 
-            mfp_DataAdapter = new DmsDatasetTableAdapters.DMS_MFPTableAdapter();
-            mfp_DataAdapter.Fill(dmsDataset.DMS_MFP);
+            InitDB();
 
-            erp_DataAdapter = new DmsDatasetTableAdapters.DMS_ERPTableAdapter();
-            erp_DataAdapter.Fill(dmsDataset.DMS_ERP);
-
-     //       userManager = new usermanager.UserManager(dmsDataset);
-      //      if (!userManager.Login("sli", "sli"))
-       //         throw new InvalidOperationException("login failed");
+            //userManager = new usermanager.UserManager(dmsDataset);
+            //if (!userManager.Login("sli", "sli"))
+            //    throw new InvalidOperationException("login failed");
 
             lastmode = DataStorageMode.Ready;
             mode = DataStorageMode.Init;
@@ -80,6 +76,26 @@ namespace dmspl.datastorage
             queueworker.IsBackground = true;
             queueworker.Priority = ThreadPriority.Lowest;
             //queueworker.Start();
+        }
+
+        private void InitDB()
+        {
+            try
+            {
+                mfp_DataAdapter = new DmsDatasetTableAdapters.DMS_MFPTableAdapter();
+                erp_DataAdapter = new DmsDatasetTableAdapters.DMS_ERPTableAdapter();
+                mfp_DataAdapter.Fill(dmsDataset.DMS_MFP);
+                erp_DataAdapter.Fill(dmsDataset.DMS_ERP);
+            }
+            catch (Exception ex)
+            {
+                mfp_DataAdapter.Dispose();
+                erp_DataAdapter.Dispose();
+
+                System.Diagnostics.Debug.WriteLine("{0}", ex.Message, null);
+                Thread.Sleep(5000);
+                InitDB();
+            }
         }
         #endregion
 
@@ -156,52 +172,49 @@ namespace dmspl.datastorage
         public void UpdateMFP(List<int> data)
         {
             int counter = 0;
-            while (mfpupdating)
+            //while (mfpupdating)
+            //{
+            //    System.Diagnostics.Debug.WriteLine("while mfpr: {0}", counter++);
+            //    Thread.Sleep(5);
+            //}
+            //mfpupdating = true;
+            lock (dmsDataset)
             {
-                System.Diagnostics.Debug.WriteLine("while mfpr: {0}", counter++);
-                Thread.Sleep(5);
-            }
-            mfpupdating = true;
-            int mfpindex = 1;
-            foreach (int skid in data)
-            {
-                string newskid = string.Format("{0:D4}", skid);
-                if (dmsDataset.DMS_MFP.Rows.Contains(mfpindex))
+                int mfpindex = 1;
+                foreach (int skid in data)
                 {
-                    DmsDataset.DMS_MFPRow row = dmsDataset.DMS_MFP.FindById(mfpindex);
-                    if (row.localskidnr != skid)
+                    string newskid = string.Format("{0:D4}", skid);
+                    if (dmsDataset.DMS_MFP.Rows.Contains(mfpindex))
                     {
-                        row.localskidnr = skid;
+                        DmsDataset.DMS_MFPRow row = dmsDataset.DMS_MFP.FindById(mfpindex);
+                        if (row.localskidnr != skid)
+                        {
+                            row.localskidnr = skid;
+                        }
                     }
+                    else
+                    {
+                        dmsDataset.DMS_MFP.Rows.Add(
+                            mfpindex,
+                            null,
+                            skid,
+                            null);
+                    }
+                    mfpindex++;
                 }
-                else
+
+                try
                 {
-                    dmsDataset.DMS_MFP.Rows.Add(
-                        mfpindex,
-                        null,
-                        skid,
-                        null);
+                    mfp_DataAdapter.Update(dmsDataset.DMS_MFP);
                 }
-                mfpindex++;
+                catch (Exception e)
+                {
+                    System.Diagnostics.Debug.WriteLine("catched: {0}", e.Message, null);
+                    InitDB();
+                }
             }
-
-            try
-            {
-                mfp_DataAdapter.Update(dmsDataset.DMS_MFP);
-            }
-            catch (Exception e)
-            {
-                dmsDataset.DMS_MFP.RejectChanges();
-                dmsDataset.RejectChanges();
-                System.Diagnostics.Debug.WriteLine(string.Format("catched: {0}", e.Message));
-                Thread.Sleep(5000);
-                dmsDataset.Reset();
-                mfp_DataAdapter.Fill(dmsDataset.DMS_MFP);
-                erp_DataAdapter.Fill(dmsDataset.DMS_ERP);
-            }
-
             OnDataStorageMfpUpdateEvent();
-            mfpupdating = false;
+            //mfpupdating = false;
         }
 
         public void StartThread()
@@ -311,6 +324,14 @@ namespace dmspl.datastorage
         {
             if (ReceivedDataModel is MFPDataModel)
                 UpdateMFP(((MFPDataModel)ReceivedDataModel).Mfps);
+            if (ReceivedDataModel is DataSetReqDataModel)
+                GetDataSetById(ReceivedDataModel as DataSetReqDataModel);
+        }
+
+        private void GetDataSetById(DataSetReqDataModel dataSetReqDataModel)
+        {
+            string simulated = "123456789012345678901";
+            dataSetReqDataModel.OnDataSetReceived(simulated);
         }
 
         public async Task<bool> Login(string u, string p)

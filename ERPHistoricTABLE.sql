@@ -1,15 +1,16 @@
 USE [EMOS_WEB]
 GO
 
-/****** Object:  Table [dbo].[DMS_ERP]    Script Date: 28.04.2015 14:48:22 ******/
+/****** Object:  Table [dbo].[DMS_ERPHistoric]    Script Date: 28.04.2015 14:48:37 ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE TABLE [dbo].[DMS_ERP](
-	[ForeignSkid] [int] NOT NULL,
+CREATE TABLE [dbo].[DMS_ERPHistoric](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[SkidID] [int] NOT NULL,
 	[DerivativeCode] [int] NOT NULL,
 	[Colour] [int] NOT NULL,
 	[BSN] [int] NOT NULL,
@@ -19,18 +20,11 @@ CREATE TABLE [dbo].[DMS_ERP](
 	[Spare] [int] NOT NULL,
 	[Timestamp] [datetime2](7) NOT NULL,
 	[fk_User] [bigint] NOT NULL,
- CONSTRAINT [PK_DMS_ERP] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_DMS_ERP_Historic] PRIMARY KEY CLUSTERED 
 (
-	[ForeignSkid] ASC
+	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
-GO
-
-ALTER TABLE [dbo].[DMS_ERP]  WITH CHECK ADD  CONSTRAINT [FK_DMS_ERP_DMS_ERP] FOREIGN KEY([ForeignSkid])
-REFERENCES [dbo].[DMS_ERP] ([ForeignSkid])
-GO
-
-ALTER TABLE [dbo].[DMS_ERP] CHECK CONSTRAINT [FK_DMS_ERP_DMS_ERP]
 GO
 

@@ -1,14 +1,7 @@
 USE [EMOS_WEB]
 GO
 
-ALTER TABLE [dbo].[DMS_MFP] DROP CONSTRAINT [FK_DMS_MFP_DMS_ERP]
-GO
-
-/****** Object:  Table [dbo].[DMS_MFP]    Script Date: 17.04.2015 15:45:21 ******/
-DROP TABLE [dbo].[DMS_MFP]
-GO
-
-/****** Object:  Table [dbo].[DMS_MFP]    Script Date: 17.04.2015 15:45:21 ******/
+/****** Object:  Table [dbo].[DMS_MFP]    Script Date: 28.04.2015 14:49:02 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -16,23 +9,14 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE TABLE [dbo].[DMS_MFP](
-	[Id] [int] NOT NULL,
-	[mfpdesc] [nvarchar](255) NULL,
-	[localskidnr] [int] NOT NULL,
-	[foreignskidnr] [int] NULL,
+	[MfpPos] [int] NOT NULL,
+	[Description] [nvarchar](255) NULL,
+	[fk_LocalSkidNr] [int] NULL,
  CONSTRAINT [PK_DMS_MFP] PRIMARY KEY CLUSTERED 
 (
-	[Id] ASC
+	[MfpPos] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
 GO
-
-ALTER TABLE [dbo].[DMS_MFP]  WITH CHECK ADD  CONSTRAINT [FK_DMS_MFP_DMS_ERP] FOREIGN KEY([foreignskidnr])
-REFERENCES [dbo].[DMS_ERP] ([Id])
-GO
-
-ALTER TABLE [dbo].[DMS_MFP] CHECK CONSTRAINT [FK_DMS_MFP_DMS_ERP]
-GO
-
 

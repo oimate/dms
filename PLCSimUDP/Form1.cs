@@ -11,6 +11,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Diagnostics;
 using dmspl.common;
+using dmspl.common.log;
+using System.IO;
 namespace PLCSimUDP
 {
     public partial class PLCSimUDP : Form
@@ -25,19 +27,31 @@ namespace PLCSimUDP
         public int[] MFP_Skid = new int[150];
         public int[] Vin_Req = new int[2];
         public int[] MPP_Update = new int[8];
+        public bool connectionstate = true;
 
         Status ActState;
 
         //   MFP_Skid[2] = 22;
 
+        private void Log(EvType type, Level lv, object data)
+        {
+            if (Program.Log != null)
+               Program.Log.AddEvent(DateTime.Now, Module.RXTXComm, type, lv,data);
+        }
+
         public PLCSimUDP()
         {
+            
             ActState = Status.Disconnected;
             lockObj = new object();
             InitializeComponent();
             ReadConfig();
+     //       Log(EvType.Error, Level.Main, "dupa");
+     //       Log(EvType.Warning , Level.Main, "dupa");
+     //       Log(EvType.Info , Level.Main, "dupa");
 
             Stat.OnChange += UpdateStats;
+            Program.Log.AddEvent(DateTime.Now, Module.Appl, EvType.Info, Level.Main, "Aplication PLCSim Started");
         }
         public void bStartService_Click(object sender, EventArgs e)
         {
@@ -217,14 +231,19 @@ namespace PLCSimUDP
                             Stat.ConnReqCnt = 0;
                         ServiceStatus(Status.Connected);
                         break;
-                    case 8:
-
+                    case 5:
+                        UpdateMFPExternal(buffer);
                         break;
                     case 9:
 
                         break;
 
                     default:
+                       if( Program.Log.IsEnablesEvent(Module.RXTXComm, EvType.Warning, Level.Debug));
+                       {
+                           Log(EvType.Warning, Level.Debug, ConverByteArrayToStrong(buffer));  
+ 
+                      }
                         break;
                 }
 
@@ -278,10 +297,43 @@ namespace PLCSimUDP
                 foreach (int firstindex in pocz)
                 {
                     int size = (wholerecdata[firstindex] << 8) + (wholerecdata[firstindex + 1]);
-                    list.Add(subst(wholerecdata, firstindex, size));
+                    byte Type = (wholerecdata[firstindex + 2]);
+                    if (size <= wholerecdata.Length)
+                    {
+                        byte CRC = (wholerecdata[firstindex + (size - 1)]);
+                        if (CRC == (byte)(~(Type)))
+                        {
+                            list.Add(subst(wholerecdata, firstindex, size));
+                        }
+                        else
+                        {
+
+                  //          writeLogfile(ConverByteArrayToStrong(wholerecdata), "Incorrect CRC");
+                         Log(EvType.Error,Level.Debug, ConverByteArrayToStrong(wholerecdata));
+
+                       //     Log(EvType.Warning, Level.Debug, ConverByteArrayToStrong(buffer));  
+                            return list;
+                        }
+
+                    }
+                    else
+                    {
+                   //     writeLogfile(ConverByteArrayToStrong(wholerecdata), "Incorrect size");
+                        Log(EvType.Error, Level.Debug, ConverByteArrayToStrong(wholerecdata));
+
+                        return list;
+                    }
                 }
+
                 return list;
             }
+
+            static private void Log(EvType type, Level lv, object data)
+            {
+                if (Program.Log != null)
+                    Program.Log.AddEvent(DateTime.Now, Module.RXTXComm, type, lv, data);
+            }
+
 
             private static byte[] subst(byte[] wholerecdata, int p1, int p2)
             {
@@ -313,6 +365,7 @@ namespace PLCSimUDP
                     bUpdateMfp.Enabled = true;
                     bReqData1.Enabled = true;
                     Stat.Clear();
+                    Program.Log.AddEvent(DateTime.Now, Module.Appl, EvType.Info, Level.Main, "Service from PLCSim Enabled ");
                     break;
                 case Status.Disabled:
                     bSService.BackColor = System.Drawing.Color.Gray;
@@ -329,12 +382,23 @@ namespace PLCSimUDP
                     bMFPUpdate.Enabled = false;
                     bUpdateMfp.Enabled = false;
                     bReqData1.Enabled = false;
+                    Program.Log.AddEvent(DateTime.Now, Module.Appl, EvType.Info, Level.Main, "Service from PLCSim Disabled ");
                     break;
                 case Status.Connected:
                     BSConn.BackColor = System.Drawing.Color.LimeGreen;
+                    if (!connectionstate)
+	{
+		    Program.Log.AddEvent(DateTime.Now, Module.RXTXComm, EvType.Warning, Level.Main, "Partner for PLCSim Connected ");
+	}                 
+                    connectionstate = true;
                     break;
                 case Status.Disconnected:
                     BSConn.BackColor = System.Drawing.Color.Red;
+                    if (connectionstate)
+                    {
+                        Program.Log.AddEvent(DateTime.Now, Module.RXTXComm, EvType.Warning, Level.Main, "Partner for PLCSim Disconnected ");                        
+                    }
+                    connectionstate = false;
                     break;
                 case Status.WithoutCommFrame:
                     BSConn.BackColor = System.Drawing.Color.Gray;
@@ -343,6 +407,18 @@ namespace PLCSimUDP
 
             }
 
+        }
+
+        static string ConverByteArrayToStrong(byte[] data)
+        {
+            string s = string.Empty;
+
+            foreach (var item in data)
+            {
+                s += item.ToString();
+
+            }
+            return s;
         }
 
         #region Enumy
@@ -482,6 +558,23 @@ namespace PLCSimUDP
             }
         }
 
+        public void UpdateMFPExternal(byte[] data)
+        {
+            MPP_Update[0] = data[0];  // skid id
+            data[1] = (byte)MPP_Update[0];
+            data[2] = (byte)MPP_Update[1];  // derivate code
+            data[3] = (byte)(MPP_Update[2] >> 8); //colour
+            data[4] = (byte)MPP_Update[2];
+            data[5] = (byte)(MPP_Update[3] >> 24); // BSN
+            data[6] = (byte)(MPP_Update[3] >> 16);
+            data[7] = (byte)(MPP_Update[3] >> 8);
+            data[8] = (byte)MPP_Update[3];
+            data[9] = (byte)MPP_Update[4];  // Tracek
+            data[10] = (byte)MPP_Update[5];  //Roof
+            data[11] = (byte)MPP_Update[6]; // HoD
+            data[12] = (byte)MPP_Update[7];  //Spare
+        }
+
         private void bUpdateMfp_Click(object sender, EventArgs e)
         {
             if ((tMfp_Body.Text.Length == 6) && (tMfp_Code.Text.Length == 2) && (tMfp_Colour.Text.Length == 3) && (tMfp_Hod.Text.Length == 1) && (tMfp_Roof.Text.Length == 1) && (tMfp_skid.Text.Length == 4) && (tMfp_Spare.Text.Length == 2) && (tMfp_Track.Text.Length == 1))
@@ -495,18 +588,19 @@ namespace PLCSimUDP
                 MPP_Update[6] = Convert.ToInt32(tMfp_Hod.Text);
                 MPP_Update[7] = Convert.ToInt32(tMfp_Spare.Text);
 
-                ErpDataset ErpDs = new ErpDataset() {
+                ErpDataset ErpDs = new ErpDataset()
+                {
 
                     SkidID = Convert.ToInt32(tMfp_skid.Text),
                     DerivativeCode = Convert.ToInt32(tMfp_Code.Text),
                     Colour = Convert.ToInt32(tMfp_Code.Text),
                     BSN = Convert.ToInt32(tMfp_Body.Text),
-                    Track =   Convert.ToInt32(tMfp_Track.Text),
-                    Roof=  Convert.ToInt32(tMfp_Roof.Text),
-                    HoD=  Convert.ToInt32(tMfp_Hod.Text),
-                    Spare=  Convert.ToInt32(tMfp_Spare.Text),
+                    Track = Convert.ToInt32(tMfp_Track.Text),
+                    Roof = Convert.ToInt32(tMfp_Roof.Text),
+                    HoD = Convert.ToInt32(tMfp_Hod.Text),
+                    Spare = Convert.ToInt32(tMfp_Spare.Text),
                 };
-                
+
             }
             byte[] sendbyte = new byte[13];
 
@@ -568,6 +662,17 @@ namespace PLCSimUDP
 
 
                 SendDataFrame(sendFrame);
+            }
+        }
+
+        private void PLCSimUDP_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (Program.Log != null)
+            {
+              //  Log(EvType.Info, Level.Main, "Aplication closed");
+                Program.Log.AddEvent(DateTime.Now, Module.Appl, EvType.Info, Level.Main, "Aplication PLC Sim closed");
+        //        Program.Log.AddEvent(DateTime.Now, Module.DataBase, EvType.Info, Level.Main, "DataBase connection closed");
+                Program.Log.Close();
             }
         }
 

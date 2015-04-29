@@ -8,7 +8,7 @@ using dmspl.common;
 using dmspl.common.log;
 namespace UDP_RXTX
 {
-    public class UDPComm : IUDPComm
+    public class UDPComm : IUDPComm, IDisposable
     {
         public IDataStorage DataStorage { get; set; }
         UdpClient socket;  // socfket for commmunications
@@ -39,15 +39,16 @@ namespace UDP_RXTX
             MainLoopStatus = true;
             TimerSF = new System.Threading.Timer(TimerCallback, null, 0, Properties.Settings.Default.TimeSF);
             SetServiceStatus(Status.Enabled);
-         //   Program.Log.AddEvent(DateTime.Now, Module.Appl, EvType.Info, Level.Main, "Aplication PLCSim Started");
+            //   Program.Log.AddEvent(DateTime.Now, Module.Appl, EvType.Info, Level.Main, "Aplication PLCSim Started");
         }
-        public UDPComm(int port) : this(port, null)
-        {            
+        public UDPComm(int port)
+            : this(port, null)
+        {
         }
 
         private void Log(EvType type, Level lv, object data)
         {
-            if (LogObj  != null)
+            if (LogObj != null)
                 LogObj.AddEvent(DateTime.Now, Module.RXTXComm, type, lv, data);
         }
 
@@ -59,7 +60,7 @@ namespace UDP_RXTX
             {
                 dane = sock.EndReceive(ar, ref RemoteIP);
                 if (DataRecv != null)
-                    DataRecv(this, string.Format("{0}",RemoteIP));
+                    DataRecv(this, string.Format("{0}", RemoteIP));
             }
             catch (ObjectDisposedException)
             {
@@ -82,7 +83,7 @@ namespace UDP_RXTX
         {
             foreach (byte[] buffer in cccc)
             {
-                DataModel RecievedDataModel = DataModel.GetModel(buffer , OnDataReceived);
+                DataModel RecievedDataModel = DataModel.GetModel(buffer, OnDataReceived);
                 if (RecievedDataModel == null) continue;
                 DataStorage.ProcessModel(RecievedDataModel);
             }
@@ -112,16 +113,16 @@ namespace UDP_RXTX
         {
             if (socket != null && RemoteIP.Address != IPAddress.Any)
             {
-                byte[] sendbyte = new byte[] {  255, 255, 255, 255 };
+                byte[] sendbyte = new byte[] { 255, 255, 255, 255 };
                 SendDataFrame(CreateHeader(sendbyte, 254));
             }
         }
         private void SendDataFrame(byte[] tablica)
         {
-            if (socket != null&& RemoteIP.Address != IPAddress.Any)         
-                {
-                    socket.Send(tablica, tablica.Length,RemoteIP);
-                }
+            if (socket != null && RemoteIP.Address != IPAddress.Any)
+            {
+                socket.Send(tablica, tablica.Length, RemoteIP);
+            }
         }
         private class FrameSpitter
         {
@@ -156,29 +157,29 @@ namespace UDP_RXTX
             }
         }
 
-      private void SetServiceStatus(Status newStatus)
+        private void SetServiceStatus(Status newStatus)
         {
             Status oldStatus = pActState;
             pActState = newStatus;
             switch (newStatus)
             {
                 case Status.Enabled:
-               //     Program.Log.AddEvent(DateTime.Now, Module.Appl, EvType.Info, Level.Main, "Service from PLCSim Enabled ");
+                    //     Program.Log.AddEvent(DateTime.Now, Module.Appl, EvType.Info, Level.Main, "Service from PLCSim Enabled ");
                     break;
                 case Status.Disabled:
-               //     Program.Log.AddEvent(DateTime.Now, Module.Appl, EvType.Info, Level.Main, "Service from PLCSim Disabled ");
+                    //     Program.Log.AddEvent(DateTime.Now, Module.Appl, EvType.Info, Level.Main, "Service from PLCSim Disabled ");
                     break;
                 case Status.Connected:
                     if (!connectionstate)
                     {
-               //         Program.Log.AddEvent(DateTime.Now, Module.RXTXComm, EvType.Warning, Level.Main, "Partner for PLCSim Connected ");
+                        //         Program.Log.AddEvent(DateTime.Now, Module.RXTXComm, EvType.Warning, Level.Main, "Partner for PLCSim Connected ");
                     }
                     connectionstate = true;
                     break;
                 case Status.Disconnected:
                     if (connectionstate)
                     {
-                //        Program.Log.AddEvent(DateTime.Now, Module.RXTXComm, EvType.Warning, Level.Main, "Partner for PLCSim Disconnected ");
+                        //        Program.Log.AddEvent(DateTime.Now, Module.RXTXComm, EvType.Warning, Level.Main, "Partner for PLCSim Disconnected ");
                     }
                     connectionstate = false;
                     break;
@@ -187,9 +188,23 @@ namespace UDP_RXTX
 
 
             }
-            if ((newStatus != newStatus) && (StatusChanged != null))
+            if ((newStatus != oldStatus) && (StatusChanged != null))
                 StatusChanged(this, null);
         }
+
+        public void Dispose()
+        {           
+            DataRecv = null;
+            if (socket != null)
+                socket.Close();
+            socket = null;
+            TimerSF.Dispose();
+            TimerSF = null;
+            MainLoopStatus = false;
+            ActState = Status.Disabled;
+            StatusChanged = null;
+        }
+
 
         static public byte[] CreateHeader(byte[] tablica, int ID)
         {

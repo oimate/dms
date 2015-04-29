@@ -4,31 +4,51 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-
+using dmspl.common;
+using dmspl.common.log;
 namespace UDP_RXTX
 {
     public class UDPComm : IUDPComm
     {
         public IDataStorage DataStorage { get; set; }
+        UdpClient socket;  // socfket for commmunications
+        IPEndPoint RemoteIP;   // remmote ip object
+        System.Threading.Timer TimerSF; // Timer for call to func for checking connections status 
+        bool MainLoopStatus;
+        public bool connectionstate = true;
+        Status pActState;
 
-        UdpClient socket;
-        IPEndPoint RemoteIP;
-        System.Threading.Timer d;
+        public event EventHandler StatusChanged;
+        public event EventHandler<string> DataRecv;
 
-        bool petla;
-
-        public DelegateCollection.SetTextDel ReferencjaDoFunkcjiWyswietlajacejText { get; set; }
-
-        public UDPComm(int port)
+        public Status ActState
         {
+            get { return pActState; }
+            private set { SetServiceStatus(value); }
+        }
+        IDataLog LogObj;
+        public DelegateCollection.SetTextDel ReferencjaDoFunkcjiWyswietlajacejText { get; set; }
+        public UDPComm(int port, IDataLog log)
+        {
+            LogObj = log;
             if (socket != null)
                 return;
             socket = new UdpClient(port);
             RemoteIP = new IPEndPoint(IPAddress.Any, 0);
-
             socket.BeginReceive(ReceiveCallback, socket);
-            petla = true;
-            d = new System.Threading.Timer(TimerCallback, null, 0, 1000);
+            MainLoopStatus = true;
+            TimerSF = new System.Threading.Timer(TimerCallback, null, 0, Properties.Settings.Default.TimeSF);
+            SetServiceStatus(Status.Enabled);
+         //   Program.Log.AddEvent(DateTime.Now, Module.Appl, EvType.Info, Level.Main, "Aplication PLCSim Started");
+        }
+        public UDPComm(int port) : this(port, null)
+        {            
+        }
+
+        private void Log(EvType type, Level lv, object data)
+        {
+            if (LogObj  != null)
+                LogObj.AddEvent(DateTime.Now, Module.RXTXComm, type, lv, data);
         }
 
         private void ReceiveCallback(IAsyncResult ar)
@@ -38,6 +58,8 @@ namespace UDP_RXTX
             try
             {
                 dane = sock.EndReceive(ar, ref RemoteIP);
+                if (DataRecv != null)
+                    DataRecv(this, string.Format("{0}",RemoteIP));
             }
             catch (ObjectDisposedException)
             {
@@ -46,7 +68,7 @@ namespace UDP_RXTX
 
             JakoBufor(dane);
 
-            if (petla)
+            if (MainLoopStatus)
                 sock.BeginReceive(ReceiveCallback, sock);
         }
 
@@ -90,11 +112,17 @@ namespace UDP_RXTX
         {
             if (socket != null && RemoteIP.Address != IPAddress.Any)
             {
-                byte[] sendbyte = new byte[] { 0, 8, 254, 255, 255, 255, 255, 1 };
-                socket.Send(sendbyte, sendbyte.Length, RemoteIP);
+                byte[] sendbyte = new byte[] {  255, 255, 255, 255 };
+                SendDataFrame(CreateHeader(sendbyte, 254));
             }
         }
-
+        private void SendDataFrame(byte[] tablica)
+        {
+            if (socket != null&& RemoteIP.Address != IPAddress.Any)         
+                {
+                    socket.Send(tablica, tablica.Length,RemoteIP);
+                }
+        }
         private class FrameSpitter
         {
             internal static List<byte[]> SplitRD(byte[] wholerecdata)
@@ -127,6 +155,78 @@ namespace UDP_RXTX
                 return ret;
             }
         }
+
+      private void SetServiceStatus(Status newStatus)
+        {
+            Status oldStatus = pActState;
+            pActState = newStatus;
+            switch (newStatus)
+            {
+                case Status.Enabled:
+               //     Program.Log.AddEvent(DateTime.Now, Module.Appl, EvType.Info, Level.Main, "Service from PLCSim Enabled ");
+                    break;
+                case Status.Disabled:
+               //     Program.Log.AddEvent(DateTime.Now, Module.Appl, EvType.Info, Level.Main, "Service from PLCSim Disabled ");
+                    break;
+                case Status.Connected:
+                    if (!connectionstate)
+                    {
+               //         Program.Log.AddEvent(DateTime.Now, Module.RXTXComm, EvType.Warning, Level.Main, "Partner for PLCSim Connected ");
+                    }
+                    connectionstate = true;
+                    break;
+                case Status.Disconnected:
+                    if (connectionstate)
+                    {
+                //        Program.Log.AddEvent(DateTime.Now, Module.RXTXComm, EvType.Warning, Level.Main, "Partner for PLCSim Disconnected ");
+                    }
+                    connectionstate = false;
+                    break;
+                case Status.WithoutCommFrame:
+                    break;
+
+
+            }
+            if ((newStatus != newStatus) && (StatusChanged != null))
+                StatusChanged(this, null);
+        }
+
+        static public byte[] CreateHeader(byte[] tablica, int ID)
+        {
+            byte[] sendFrame = new byte[tablica.Length + 4];
+            for (int i = 0; i < tablica.Length; i++)
+            {
+                sendFrame[i + 3] = tablica[i];
+            }
+            sendFrame[0] = (byte)(sendFrame.Length >> 8);
+            sendFrame[1] = (byte)(sendFrame.Length);
+            sendFrame[2] = (byte)ID;
+            sendFrame[sendFrame.Length - 1] = (byte)~sendFrame[2];
+            return sendFrame;
+        }
+
+        static string ConverByteArrayToStrong(byte[] data)
+        {
+            string s = string.Empty;
+
+            foreach (var item in data)
+            {
+                s += item.ToString();
+
+            }
+            return s;
+        }
+
+        #region Enumy
+        public enum Status
+        {
+            Enabled,
+            Disabled,
+            Connected,
+            Disconnected,
+            WithoutCommFrame,
+        }
+        #endregion
     }
 
 }

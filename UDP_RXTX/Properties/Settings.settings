@@ -3,10 +3,13 @@
   <Profiles />
   <Settings>
     <Setting Name="Ajpi" Type="System.String" Scope="User">
-      <Value Profile="(Default)">192.168.2.5</Value>
+      <Value Profile="(Default)">192.168.2.25</Value>
     </Setting>
-    <Setting Name="port" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">9000</Value>
+    <Setting Name="LocalPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2002</Value>
+    </Setting>
+    <Setting Name="TimeSF" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -17,17 +17,19 @@ namespace PLCSimUDP
 {
     public partial class PLCSimUDP : Form
     {
+        #region Initial
         UdpClient socket;
         IPEndPoint RemoteIP;
         Statistics Stat = new Statistics();
         System.Threading.Timer TimerSF;
         System.Threading.Timer TimerMFPFrame;
         object lockObj;
-        bool petla;
+        bool MainLoopStatus;
         public int[] MFP_Skid = new int[150];
         public int[] Vin_Req = new int[2];
         public int[] MPP_Update = new int[8];
         public bool connectionstate = true;
+        #endregion
 
         Status ActState;
 
@@ -60,7 +62,7 @@ namespace PLCSimUDP
             socket = new UdpClient(Convert.ToInt32(tLocalPort.Text));
             RemoteIP = new IPEndPoint(IPAddress.Any, 0);
             socket.BeginReceive(ReceiveCallback, socket);
-            petla = true;
+            MainLoopStatus = true;
             TimerSF = new System.Threading.Timer(TimerCallback, null, 0, 1000);
             TimerMFPFrame = new System.Threading.Timer(TimeUpdateMFPSkid, null, 0, Convert.ToInt16(tbTimerMFP.Text));
             ServiceStatus(Status.Enabled);
@@ -136,7 +138,7 @@ namespace PLCSimUDP
             TimerSF = null;
             TimerMFPFrame.Dispose();
             TimerMFPFrame = null;
-            petla = false;
+            MainLoopStatus = false;
             socket.Close();
             socket = null;
             ServiceStatus(Status.Disabled);
@@ -164,7 +166,7 @@ namespace PLCSimUDP
             {
                 return;
             }
-            if (petla && sock != null)
+            if (MainLoopStatus && sock != null)
                 try
                 {
                     sock.BeginReceive(ReceiveCallback, sock);

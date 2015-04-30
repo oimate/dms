@@ -87,15 +87,20 @@ namespace dmspl.datastorage
                 mfp_DataAdapter.Fill(dmsDataset.DMS_MFP);
                 erp_DataAdapter.Fill(dmsDataset.DMS_ERP);
             }
-            catch (Exception ex)
+                finally
             {
                 mfp_DataAdapter.Dispose();
                 erp_DataAdapter.Dispose();
+            }
+ /*           catch (Exception ex)
+            {
+
+                
 
                 System.Diagnostics.Debug.WriteLine("{0}", ex.Message, null);
                 Thread.Sleep(5000);
                 InitDB();
-            }
+            }*/
         }
         #endregion
 

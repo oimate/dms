@@ -30,30 +30,73 @@ namespace dmspl
         public fMain()
         {
             InitializeComponent();
-
             datatosend = new List<int>(new int[400]);
-            datastorage = DataStorageFactory.CreateStorage(DataStorageType.SQL);
-            datastorage.StartThread();
-
-            comm = new UDPComm(9001);
-            comm.ReferencjaDoFunkcjiWyswietlajacejText = refdofwystekst;
-            comm.DataStorage = datastorage;
-
-            datastorage.UdpComm = comm;
+            comm = InitCommunication();
+            if (comm != null)
+                datastorage = InitDatabaseStorage(comm);
 
             this.FormClosed += FormGui_FormClosed;
 
             //datastorage.DataStorageImportUpdate = DataStorageImportUpdate;
-            datastorage.DataStorageImportResult = DataStorageImportResult;
-            datastorage.DataStorageStateReport = DataStorageStateReport;
-            datastorage.DataStorageModeReport = DataStorageModeReport;
-            datastorage.DataStorageMfpUpdateEvent = DataStorageMfpUpdateEvent;
-            datastorage.DataStorageErpUpdateEvent = DataStorageErpUpdateEvent;
-
             //ds = new DataSimulator(datastorage); //moved to DataStorageModeReport;
         }
 
+        private IDataStorage InitDatabaseStorage(UDPComm comObj)
+        {
+            //if (comObj == null)
+            //    throw new ArgumentNullException("comObj");
+            IDataStorage ret;
+            try
+            {
+                ret = DataStorageFactory.CreateStorage(DataStorageType.SQL);
+                ret.StartThread();
+                ret.UdpComm = comObj;
+                ret.DataStorageImportResult = DataStorageImportResult;
+                ret.DataStorageStateReport = DataStorageStateReport;
+                ret.DataStorageModeReport = DataStorageModeReport;
+                ret.DataStorageMfpUpdateEvent = DataStorageMfpUpdateEvent;
+                ret.DataStorageErpUpdateEvent = DataStorageErpUpdateEvent;
+            }
+            catch
+            {
+                ret = null;
+            }
+            return ret;
+        }
+
+        private UDPComm InitCommunication()
+        {
+            UDPComm ret =null;
+            try
+            {
+                ret = new UDPComm(9001);
+                ret.ReferencjaDoFunkcjiWyswietlajacejText = refdofwystekst;
+                ret.DataStorage = datastorage;
+                ret.StatusChanged += StatChanged;
+                ret.DataRecv += DataRecv;
+            }
+            catch (Exception ex)
+            {
+                if (ret != null)
+                    ret.Dispose();
+                ret = null;
+            }
+            return ret;
+        }
+
         #endregion
+
+        void StatChanged(object sender, EventArgs aa)
+        {
+            UDPComm com = (UDPComm)sender;
+            if (com.ActState == UDPComm.Status.Connected)
+            {
+            }
+        }
+
+        void DataRecv(object sender, string str)
+        {
+        }
 
         private void refdofwystekst(string d)
         {

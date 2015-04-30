@@ -208,7 +208,7 @@ namespace PLCSimUDP
             intramk(cccc);
         }
 
-        bool ArraysEqual(byte[] a, byte[] b)
+     private   bool ArraysEqual(byte[] a, byte[] b)
         {
             if (a.Length != b.Length)
                 return false;
@@ -346,7 +346,6 @@ namespace PLCSimUDP
                 }
                 return ret;
             }
-
         }
         public void ServiceStatus(Status activestatus)
         {

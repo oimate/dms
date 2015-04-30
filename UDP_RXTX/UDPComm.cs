@@ -17,7 +17,7 @@ namespace UDP_RXTX
         bool MainLoopStatus;
         public bool connectionstate = true;
         Status pActState;
-
+        int ConnReqCnt = 0;
         public event EventHandler StatusChanged;
         public event EventHandler<string> DataRecv;
 
@@ -39,6 +39,7 @@ namespace UDP_RXTX
             MainLoopStatus = true;
             TimerSF = new System.Threading.Timer(TimerCallback, null, 0, Properties.Settings.Default.TimeSF);
             SetServiceStatus(Status.Enabled);
+            //           throw new UdpRxTxException("test");
             //   Program.Log.AddEvent(DateTime.Now, Module.Appl, EvType.Info, Level.Main, "Aplication PLCSim Started");
         }
         public UDPComm(int port)
@@ -52,40 +53,79 @@ namespace UDP_RXTX
                 LogObj.AddEvent(DateTime.Now, Module.RXTXComm, type, lv, data);
         }
 
+        #region Receive func
         private void ReceiveCallback(IAsyncResult ar)
         {
             UdpClient sock = (UdpClient)ar.AsyncState;
             byte[] dane = null;
             try
             {
-                dane = sock.EndReceive(ar, ref RemoteIP);
+                dane = sock.EndReceive(ar, ref RemoteIP);  // przekazanie rem ip do innej fcji
+                JakoBufor(dane);
                 if (DataRecv != null)
                     DataRecv(this, string.Format("{0}", RemoteIP));
+            }
+            catch (SocketException)
+            {
+                SetServiceStatus(Status.Disconnected);
+                //    System.Threading.Thread.Sleep(500);
             }
             catch (ObjectDisposedException)
             {
                 return;
             }
-
-            JakoBufor(dane);
-
-            if (MainLoopStatus)
-                sock.BeginReceive(ReceiveCallback, sock);
+            if (MainLoopStatus && sock != null)
+                try
+                {
+                    sock.BeginReceive(ReceiveCallback, sock);
+                }
+                catch (SocketException)
+                {
+                    SetServiceStatus(Status.Disconnected);
+                    //    System.Threading.Thread.Sleep(500);
+                }
+                catch (ObjectDisposedException)
+                {
+                }
         }
-
+        #endregion
         private void JakoBufor(byte[] dane)
         {
             List<byte[]> cccc = FrameSpitter.SplitRD(dane);
             intramk(cccc);
         }
 
+        private bool ArraysEqual(byte[] a, byte[] b)
+        {
+            if (a.Length != b.Length)
+                return false;
+            for (int i = 0; i < a.Length; i++)
+            {
+                if (a[i] != b[i])
+                    return false;
+            }
+            return true;
+        }
+
         private void intramk(List<byte[]> cccc)
         {
             foreach (byte[] buffer in cccc)
             {
-                DataModel RecievedDataModel = DataModel.GetModel(buffer, OnDataReceived);
-                if (RecievedDataModel == null) continue;
-                DataStorage.ProcessModel(RecievedDataModel);
+                switch (buffer[2])
+                {
+                    case 254:
+                        byte[] comparebyte = new byte[] { 0, 8, 254, 255, 255, 255, 255, 1 };
+                        if (ArraysEqual(buffer, comparebyte))
+                        ConnReqCnt = 0;
+                        SetServiceStatus(Status.Connected);
+                        break;
+
+                    default:
+                        DataModel RecievedDataModel = DataModel.GetModel(buffer, OnDataReceived);
+                        if (RecievedDataModel == null) continue;
+                        DataStorage.ProcessModel(RecievedDataModel);
+                        break;
+                }
             }
         }
 
@@ -111,10 +151,23 @@ namespace UDP_RXTX
 
         private void TimerCallback(Object state)
         {
-            if (socket != null && RemoteIP.Address != IPAddress.Any)
+            try
             {
-                byte[] sendbyte = new byte[] { 255, 255, 255, 255 };
-                SendDataFrame(CreateHeader(sendbyte, 254));
+
+                    byte[] sendbyte = new byte[] { 255, 255, 255, 255 };
+                    SendDataFrame(CreateHeader(sendbyte, 254));
+                    if (ConnReqCnt > 1)
+                    {
+                        SetServiceStatus(Status.Disconnected);
+                    }
+                    ConnReqCnt++;
+            }
+
+            catch (SocketException ex)
+            {
+            }
+            catch (Exception ex)
+            {
             }
         }
         private void SendDataFrame(byte[] tablica)
@@ -124,6 +177,7 @@ namespace UDP_RXTX
                 socket.Send(tablica, tablica.Length, RemoteIP);
             }
         }
+
         private class FrameSpitter
         {
             internal static List<byte[]> SplitRD(byte[] wholerecdata)
@@ -141,10 +195,36 @@ namespace UDP_RXTX
                 foreach (int firstindex in pocz)
                 {
                     int size = (wholerecdata[firstindex] << 8) + (wholerecdata[firstindex + 1]);
-                    list.Add(subst(wholerecdata, firstindex, size));
+                    byte Type = (wholerecdata[firstindex + 2]);
+                    if (size <= wholerecdata.Length)
+                    {
+                        byte CRC = (wholerecdata[firstindex + (size - 1)]);
+                        if (CRC == (byte)(~(Type)))
+                        {
+                            list.Add(subst(wholerecdata, firstindex, size));
+                        }
+                        else
+                        {
+                            Log(EvType.Error, Level.Debug, ConverByteArrayToString(wholerecdata));// Incorrect CRC
+                            return list;
+                        }
+                    }
+                    else
+                    {
+                        Log(EvType.Error, Level.Debug, ConverByteArrayToString(wholerecdata)); //Incorrect size
+                        return list;
+                    }
                 }
                 return list;
             }
+
+            static private void Log(EvType type, Level lv, object data)
+            {
+                //      if (Program.Log != null)
+             // Program.log.AddEvent(DateTime.Now, Module.RXTXComm, type, lv, data);
+            
+            }
+
 
             private static byte[] subst(byte[] wholerecdata, int p1, int p2)
             {
@@ -156,6 +236,7 @@ namespace UDP_RXTX
                 return ret;
             }
         }
+
 
         private void SetServiceStatus(Status newStatus)
         {
@@ -192,8 +273,8 @@ namespace UDP_RXTX
                 StatusChanged(this, null);
         }
 
-        public void Dispose()
-        {           
+        public void Dispose()   //
+        {
             DataRecv = null;
             if (socket != null)
                 socket.Close();
@@ -206,7 +287,7 @@ namespace UDP_RXTX
         }
 
 
-        static public byte[] CreateHeader(byte[] tablica, int ID)
+        static public byte[] CreateHeader(byte[] tablica, int ID)   // create header for preparing send frame 
         {
             byte[] sendFrame = new byte[tablica.Length + 4];
             for (int i = 0; i < tablica.Length; i++)
@@ -220,14 +301,13 @@ namespace UDP_RXTX
             return sendFrame;
         }
 
-        static string ConverByteArrayToStrong(byte[] data)
+        static string ConverByteArrayToString(byte[] data)    // convert array in byte to string array
         {
             string s = string.Empty;
 
             foreach (var item in data)
             {
                 s += item.ToString();
-
             }
             return s;
         }
@@ -244,4 +324,27 @@ namespace UDP_RXTX
         #endregion
     }
 
+    public class UdpRxTxException : Exception
+    {
+        public UdpRxTxException(string message)
+            : base(message)
+        {
+        }
+    }
+
+    public class UdpRxTxConnectionException : Exception
+    {
+        public UdpRxTxConnectionException(string message)
+            : base(message)
+        {
+        }
+    }
+
+    public class UdpRxTxDataException : Exception
+    {
+        public UdpRxTxDataException(string message)
+            : base(message)
+        {
+        }
+    }
 }

@@ -45,9 +45,8 @@ namespace dmspl.common
                         case 4: //request type
                             retModel = new DataSetReqDataModel(size, type, reader, dataSetReceived);
                             break;
-                        case 254: //diagnostic type
-                            return null;
                         default:
+                            Log(EvType.Warning, Level.Debug, ConverByteArrayToStrong(buffer));  
                             System.Diagnostics.Debug.WriteLine(string.Format("Unsupported type: {0}", type));
                             return null;
                     }
@@ -55,6 +54,16 @@ namespace dmspl.common
                 }
             }
             return retModel;
+        }
+        static string ConverByteArrayToString(byte[] data)    // convert array in byte to string array
+        {
+            string s = string.Empty;
+
+            foreach (var item in data)
+            {
+                s += item.ToString();
+            }
+            return s;
         }
     }
 }

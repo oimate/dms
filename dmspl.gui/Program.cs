@@ -16,7 +16,15 @@ namespace dmspl.gui
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new fMain());
+            try
+            {
+                Form f = new fMain();
+                Application.Run(f);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex);
+            }
         }
     }
 }

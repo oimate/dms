@@ -17,6 +17,25 @@ namespace dmspl.common.log
         bool IsEnablesEvent(Module mod, EvType typ, Level lv);
     }
 
+    static public class DataLog 
+    {
+        public static IDataLog Default { get; private set;}
+        public static void SetDefautLog(IDataLog log)
+        {
+            Default = log;
+        }
+
+        static public void Log(Module mod, EvType type, Level lv, object data)
+        {
+            Log(DateTime.Now, mod, type, lv, data);
+        }
+        static public void Log(DateTime dtime, Module mod, EvType type, Level lv, object data)
+        {
+            if (Default != null)
+                Default.AddEvent(dtime,  mod, type, lv, data);
+        }
+    }
+
     [Flags]
     public enum Module : int
 	{

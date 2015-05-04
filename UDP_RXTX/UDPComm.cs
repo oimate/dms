@@ -20,16 +20,18 @@ namespace UDP_RXTX
         int ConnReqCnt = 0;
         public event EventHandler StatusChanged;
         public event EventHandler<string> DataRecv;
+        object Dupa;
 
         public Status ActState
         {
             get { return pActState; }
             private set { SetServiceStatus(value); }
         }
-        IDataLog LogObj;
+        dmspl.common.log.IDataLog LogObj;
         public DelegateCollection.SetTextDel ReferencjaDoFunkcjiWyswietlajacejText { get; set; }
-        public UDPComm(int port, IDataLog log)
+        public UDPComm(int port, dmspl.common.log.IDataLog log)
         {
+            Dupa = new object();
             LogObj = log;
             if (socket != null)
                 return;
@@ -47,10 +49,10 @@ namespace UDP_RXTX
         {
         }
 
-        private void Log(EvType type, Level lv, object data)
+        private void Log(dmspl.common.log.EvType type, dmspl.common.log.Level lv, object data)
         {
             if (LogObj != null)
-                LogObj.AddEvent(DateTime.Now, Module.RXTXComm, type, lv, data);
+                LogObj.AddEvent(DateTime.Now, dmspl.common.log.Module.RXTXComm, type, lv, data);
         }
 
         #region Receive func
@@ -91,7 +93,7 @@ namespace UDP_RXTX
         #endregion
         private void JakoBufor(byte[] dane)
         {
-            List<byte[]> cccc = FrameSpitter.SplitRD(dane);
+            List<byte[]> cccc = FrameSpitter.SplitRD(dane, LogObj);
             intramk(cccc);
         }
 
@@ -111,24 +113,31 @@ namespace UDP_RXTX
         {
             foreach (byte[] buffer in cccc)
             {
-                switch (buffer[2])
+                using (System.IO.MemoryStream ms = new System.IO.MemoryStream(buffer))
                 {
-                    case 254:
-                        byte[] comparebyte = new byte[] { 0, 8, 254, 255, 255, 255, 255, 1 };
-                        if (ArraysEqual(buffer, comparebyte))
-                        ConnReqCnt = 0;
-                        SetServiceStatus(Status.Connected);
-                        break;
-
-                    default:
-                        DataModel RecievedDataModel = DataModel.GetModel(buffer, OnDataReceived);
-                        if (RecievedDataModel == null) continue;
-                        DataStorage.ProcessModel(RecievedDataModel);
-                        break;
+                    using (System.IO.BinaryReader br = new System.IO.BinaryReader(ms))
+                    {
+                        DataModel RecievedDataModel = DataHeader.GetModel(br);
+                        if (RecievedDataModel == null)
+                            continue;
+                        if (RecievedDataModel is DataLifePacket)
+                            ProcessLifePacket((DataLifePacket)RecievedDataModel, buffer);
+                        else
+                            DataStorage.ProcessModel(RecievedDataModel);
+                    }
                 }
             }
         }
 
+
+
+        private void ProcessLifePacket(DataLifePacket pack, byte[] buffer)
+        {
+            byte[] comparebyte = new byte[] { 0, 8, 254, 255, 255, 255, 255, 1 };
+            if (ArraysEqual(buffer, comparebyte))
+                ConnReqCnt = 0;
+            SetServiceStatus(Status.Connected);
+        }
         private void OnDataReceived(DataModel dm)
         {
             try
@@ -151,36 +160,57 @@ namespace UDP_RXTX
 
         private void TimerCallback(Object state)
         {
-            try
+            lock (Dupa)
             {
-
-                    byte[] sendbyte = new byte[] { 255, 255, 255, 255 };
-                    SendDataFrame(CreateHeader(sendbyte, 254));
+                try
+                {
+                    SendData(new DataLifePacket());
                     if (ConnReqCnt > 1)
                     {
                         SetServiceStatus(Status.Disconnected);
                     }
                     ConnReqCnt++;
-            }
+                }
 
-            catch (SocketException ex)
-            {
-            }
-            catch (Exception ex)
-            {
+                catch (SocketException)
+                {
+                }
+                catch (Exception)
+                {
+                }
             }
         }
+
+        public void SendData(DataModel data)
+        {
+            byte[] buffer = new byte[data.Size];
+            using (System.IO.MemoryStream ms = new System.IO.MemoryStream(buffer))
+            {
+                using (System.IO.BinaryWriter br = new System.IO.BinaryWriter(ms))
+                {
+                    DataHeader dh = new dmspl.common.DataHeader(data);
+                    dh.WriteHeader(br);
+                    SendDataFrame(buffer);
+                }
+            }
+            
+        }
+
         private void SendDataFrame(byte[] tablica)
         {
             if (socket != null && RemoteIP.Address != IPAddress.Any)
             {
                 socket.Send(tablica, tablica.Length, RemoteIP);
             }
+            else
+            {
+                DataLog.Log(Module.RXTXComm, EvType.Error, Level.Main, "Socket for sending data not ready ");// socket not ready 
+            }
         }
 
         private class FrameSpitter
         {
-            internal static List<byte[]> SplitRD(byte[] wholerecdata)
+            internal static List<byte[]> SplitRD(byte[] wholerecdata, dmspl.common.log.IDataLog log = null)
             {
                 List<byte[]> list = new List<byte[]>();
 
@@ -205,26 +235,20 @@ namespace UDP_RXTX
                         }
                         else
                         {
-                            Log(EvType.Error, Level.Debug, ConverByteArrayToString(wholerecdata));// Incorrect CRC
+
+                            DataLog.Log(Module.RXTXComm, EvType.Error, Level.Debug, "Incorrect Frame CRC" + ConverByteArrayToString(wholerecdata));// Incorrect CRC
+
                             return list;
                         }
                     }
                     else
                     {
-                        Log(EvType.Error, Level.Debug, ConverByteArrayToString(wholerecdata)); //Incorrect size
+                        DataLog.Log(Module.RXTXComm, EvType.Error, Level.Debug, "Incorrect frame size:" + ConverByteArrayToString(wholerecdata));//Incorrect size
                         return list;
                     }
                 }
                 return list;
             }
-
-            static private void Log(EvType type, Level lv, object data)
-            {
-                //      if (Program.Log != null)
-             // Program.log.AddEvent(DateTime.Now, Module.RXTXComm, type, lv, data);
-            
-            }
-
 
             private static byte[] subst(byte[] wholerecdata, int p1, int p2)
             {
@@ -245,22 +269,22 @@ namespace UDP_RXTX
             switch (newStatus)
             {
                 case Status.Enabled:
-                    //     Program.Log.AddEvent(DateTime.Now, Module.Appl, EvType.Info, Level.Main, "Service from PLCSim Enabled ");
+                    DataLog.Log(Module.RXTXComm, EvType.Info, Level.Main, "UDP Module  Enabled ");
                     break;
                 case Status.Disabled:
-                    //     Program.Log.AddEvent(DateTime.Now, Module.Appl, EvType.Info, Level.Main, "Service from PLCSim Disabled ");
+                    DataLog.Log(Module.RXTXComm, EvType.Info, Level.Main, "UDP Module  Disabled ");
                     break;
                 case Status.Connected:
                     if (!connectionstate)
                     {
-                        //         Program.Log.AddEvent(DateTime.Now, Module.RXTXComm, EvType.Warning, Level.Main, "Partner for PLCSim Connected ");
+                        DataLog.Log(Module.RXTXComm, EvType.Info, Level.Main, "PLC  with IP:" + RemoteIP.ToString() + " Connected ");
                     }
                     connectionstate = true;
                     break;
                 case Status.Disconnected:
                     if (connectionstate)
                     {
-                        //        Program.Log.AddEvent(DateTime.Now, Module.RXTXComm, EvType.Warning, Level.Main, "Partner for PLCSim Disconnected ");
+                        DataLog.Log(Module.RXTXComm, EvType.Warning, Level.Main, "PLC with IP:" + RemoteIP.ToString() + "   Disconnected ");
                     }
                     connectionstate = false;
                     break;

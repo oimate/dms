@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UDP_RXTX;
+using dmspl.common.log;
 
 namespace dmspl
 {
@@ -23,13 +24,13 @@ namespace dmspl
         DataSimulator ds;
         List<int> datatosend;
         int currentdata;
-
         UDPComm comm;
 
         #region Constructor
         public fMain()
         {
             InitializeComponent();
+            StartLog();
             datatosend = new List<int>(new int[400]);
             comm = InitCommunication();
             if (comm != null)
@@ -85,6 +86,18 @@ namespace dmspl
         }
 
         #endregion
+
+        void StartLog()
+        {
+            IDataLog _log = new HTMLLog("dupa");
+            _log.Start();
+            _log.SetLevel(Module.Appl, Level.Debug);
+            _log.SetLevel(Module.DataBase, Level.Debug);
+            _log.SetLevel(Module.RXTXComm,Level.Debug);
+            _log.EnabledModules = Module.All;
+            _log.EnabledEventType = EvType.All;
+            DataLog.SetDefautLog(_log);
+        }
 
         void StatChanged(object sender, EventArgs aa)
         {

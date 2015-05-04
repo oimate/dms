@@ -48,7 +48,6 @@
     <Compile Include="ErpDataset.cs" />
     <Compile Include="IUDPComm.cs" />
     <Compile Include="datamodels\MFPDataModel.cs" />
-    <Compile Include="Logger.cs" />
     <Compile Include="Logger\FileLog.cs" />
     <Compile Include="Logger\HTMLLog.cs" />
     <Compile Include="Logger\IDataLog.cs" />

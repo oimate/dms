@@ -25,7 +25,7 @@ namespace UDP_RXTX.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("192.168.2.5")]
+        [global::System.Configuration.DefaultSettingValueAttribute("192.168.2.25")]
         public string Ajpi {
             get {
                 return ((string)(this["Ajpi"]));
@@ -37,13 +37,25 @@ namespace UDP_RXTX.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("9000")]
-        public int port {
+        [global::System.Configuration.DefaultSettingValueAttribute("2002")]
+        public int LocalPort {
             get {
-                return ((int)(this["port"]));
+                return ((int)(this["LocalPort"]));
             }
             set {
-                this["port"] = value;
+                this["LocalPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int TimeSF {
+            get {
+                return ((int)(this["TimeSF"]));
+            }
+            set {
+                this["TimeSF"] = value;
             }
         }
     }

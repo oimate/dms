@@ -788,6 +788,7 @@
             this.Controls.Add(this.panel1);
             this.Name = "PLCSimUDP";
             this.Text = "PLC Simulator";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.PLCSimUDP_FormClosed);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel6.ResumeLayout(false);

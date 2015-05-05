@@ -18,5 +18,9 @@ namespace dmspl.common.datamodels
                 Mfps.Add(System.Net.IPAddress.NetworkToHostOrder(br.ReadInt16()));
             }
         }
+        public override void GetRawData(System.IO.BinaryWriter bw)
+        {
+
+        }
     }
 }

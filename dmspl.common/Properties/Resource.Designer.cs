@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace UDP_RXTX.Properties {
+namespace dmspl.common.Properties {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace UDP_RXTX.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    internal class Resource {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources() {
+        internal Resource() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace UDP_RXTX.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("UDP_RXTX.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("dmspl.common.Properties.Resource", typeof(Resource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,67 @@ namespace UDP_RXTX.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;script type=&quot;text/javascript&quot;&gt;
+        ///// &lt;![CDATA[
+        ///        function SHH(stl, clel) {
+        ///            var elem = document.getElementsByClassName(stl);
+        ///            var styl = &apos;&apos;;
+        ///            if (elem[0].style.display == &apos;&apos;) {
+        ///                styl = &apos;none&apos;;
+        ///                clel.style.background = &quot;#FFA0A0&quot;;                
+        ///            }
+        ///            else {
+        ///                clel.style.background = &quot;#A0FFA0&quot;;
+        ///            }
+        ///            for (i = 0; i &lt; elem.length; i++) {
+        ///                elem[i].style.display = s [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string HTMLScript {
+            get {
+                return ResourceManager.GetString("HTMLScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;style  type=&quot;text/css&quot;&gt;
+        ///body {
+        ///    background-color: #505050;
+        ///    text-align: center; 
+        ///    font-family: &apos;Courier New&apos;;
+        ///    font-size: small;
+        ///}
+        ///table {
+        ///    width: 100%;
+        ///    background-color: white;
+        ///}
+        ///th {
+        ///    background-color: black;
+        ///    color: white;
+        ///    margin: 1px;
+        ///    padding: 1px;
+        ///}
+        ///#wrap {
+        ///    width: 100%;
+        ///    position: absolute;
+        ///    top: 0;
+        ///    left: 0;
+        ///}
+        ///#dmenu {
+        ///    margin: 0px;
+        ///    width: 200px;
+        ///    float:left;
+        ///    position: absolute;
+        ///    top: 8px;
+        ///    left: -195px;
+        ///  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string HTMLStyle {
+            get {
+                return ResourceManager.GetString("HTMLStyle", resourceCulture);
             }
         }
     }

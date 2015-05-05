@@ -14,7 +14,7 @@ namespace dmspl.common.datamodels
         public byte[] Dataset { get; set; }
         public ErpDataset Erpdataset { get; set; }
 
-        public DataSetReqDataModel(short size, byte type, System.IO.BinaryReader br, DataSetReceivedDelegate dataSetReceived)
+        public DataSetReqDataModel(short size, byte type, System.IO.BinaryReader br, DataSetReceivedDelegate dataSetReceived = null)
             : base(size, type)
         {
             RequestForeignID = System.Net.IPAddress.NetworkToHostOrder(br.ReadInt16());
@@ -38,25 +38,14 @@ namespace dmspl.common.datamodels
             }
         }
 
-        public override byte[] GetRawData()
+        public override void GetRawData(System.IO.BinaryWriter bw)
         {
-            using (System.IO.MemoryStream ms = new System.IO.MemoryStream(new byte[Size]))
-            {
-                using (System.IO.BinaryWriter bw = new System.IO.BinaryWriter(ms))
-                {
-                    bw.Write((byte)(Size >> 8));
-                    bw.Write((byte)Size);
-                    bw.Write(Type);
                     bw.Write((byte)(Erpdataset.SkidID >> 8));
                     bw.Write((byte)Erpdataset.SkidID);
                     bw.Write((byte)(Erpdataset.BSN >> 24));
                     bw.Write((byte)(Erpdataset.BSN >> 16));
                     bw.Write((byte)(Erpdataset.BSN >> 8));
-                    bw.Write((byte)Erpdataset.BSN);
-                    bw.Write(CRC);
-                    return ms.ToArray();
-                }
-            }
+                    bw.Write((byte)Erpdataset.BSN);                    
         }
     }
 }

@@ -117,4 +117,92 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="HTMLScript" xml:space="preserve">
+    <value>&lt;script type="text/javascript"&gt;
+// &lt;![CDATA[
+        function SHH(stl, clel) {
+            var elem = document.getElementsByClassName(stl);
+            var styl = '';
+            if (elem[0].style.display == '') {
+                styl = 'none';
+                clel.style.background = "#FFA0A0";                
+            }
+            else {
+                clel.style.background = "#A0FFA0";
+            }
+            for (i = 0; i &lt; elem.length; i++) {
+                elem[i].style.display = styl;
+            }
+        }
+        function Mnu(show) {
+            var elem = document.getElementById('dmenu');
+            var le = '0px';
+            if (show != true)
+                le = '-195px';
+            elem.style.left = le;
+        }
+// ]]&gt;
+&lt;/script&gt;</value>
+  </data>
+  <data name="HTMLStyle" xml:space="preserve">
+    <value>&lt;style  type="text/css"&gt;
+body {
+    background-color: #505050;
+    text-align: center; 
+    font-family: 'Courier New';
+    font-size: small;
+}
+table {
+    width: 100%;
+    background-color: white;
+}
+th {
+    background-color: black;
+    color: white;
+    margin: 1px;
+    padding: 1px;
+}
+#wrap {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+#dmenu {
+    margin: 0px;
+    width: 200px;
+    float:left;
+    position: absolute;
+    top: 8px;
+    left: -195px;
+    border:2px solid white;
+}
+.Appl {
+    background-color: #EAFF80
+}
+.RXTXComm {
+    background-color: #74F0F5
+}
+.DataBase {
+    background-color: #FFE760
+}
+.event {
+    background-color: lightblue;
+}
+.visul {
+    list-style:none; 
+    margin: 0px; 
+    padding: 0px; 
+    text-align: left;
+}
+.viscpt {
+    background-color: black; 
+    color: white;
+}
+.vissel {
+    padding-left: 10px; 
+    background-color: #A0FFA0;
+}
+&lt;/style&gt;</value>
+  </data>
 </root>

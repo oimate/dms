@@ -31,10 +31,9 @@ namespace dmspl // to z dzis :)
         {
             InitializeComponent();
 
-            this.FormClosed += fMain_FormClosed;
-
             datatosend = new List<int>(new int[400]);
             datastorage = DataStorageFactory.CreateStorage(DataStorageType.SQL);
+            datastorage.StartThread();
 
             comm = new UDPComm(9001);
             comm.ReferencjaDoFunkcjiWyswietlajacejText = refdofwystekst;
@@ -42,14 +41,14 @@ namespace dmspl // to z dzis :)
 
             datastorage.UdpComm = comm;
 
+            this.FormClosed += FormGui_FormClosed;
+
             //datastorage.DataStorageImportUpdate = DataStorageImportUpdate;
             datastorage.DataStorageImportResult = DataStorageImportResult;
             datastorage.DataStorageStateReport = DataStorageStateReport;
             datastorage.DataStorageModeReport = DataStorageModeReport;
             datastorage.DataStorageMfpUpdateEvent = DataStorageMfpUpdateEvent;
             datastorage.DataStorageErpUpdateEvent = DataStorageErpUpdateEvent;
-
-            datastorage.Init();
 
             //ds = new DataSimulator(datastorage); //moved to DataStorageModeReport;
         }
@@ -64,7 +63,7 @@ namespace dmspl // to z dzis :)
             { }
         }
 
-        void fMain_FormClosed(object sender, FormClosedEventArgs e)
+        void FormGui_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (ds != null) ds.Dispose();
             if (datastorage != null) ((IDisposable)datastorage).Dispose();
@@ -88,31 +87,28 @@ namespace dmspl // to z dzis :)
             ImportPopUp.Show(this);
         }
 
-        private void DataStorageImportUpdate(DelegateCollection.Classes.ImportUpdateData data)
+        private void DataStorageImportUpdate(IDataStorage datastorage, DelegateCollection.Classes.ImportUpdateData data)
         {
             if (InvokeRequired)
-                BeginInvoke(new DelegateCollection.DataStorageImportUpdate(DataStorageImportUpdate), data);
+                BeginInvoke(new DelegateCollection.DataStorageImportUpdate(DataStorageImportUpdate), datastorage, data);
             else
             { }
         }
 
-        private void DataStorageImportResult(string msg, int items, int duplicates)
+        private void DataStorageImportResult(IDataStorage datastorage, string msg, int items, int duplicates)
         {
             if (InvokeRequired)
-                BeginInvoke(new DelegateCollection.DataStorageImportResult(DataStorageImportResult), msg, items, duplicates);
+                BeginInvoke(new DelegateCollection.DataStorageImportResult(DataStorageImportResult), datastorage, msg, items, duplicates);
             else
             { }
         }
 
-        private void DataStorageStateReport(DataStorageState state)
+        private void DataStorageStateReport(IDataStorage datastorage, ConnectionState oldstate, ConnectionState newstate)
         {
             if (InvokeRequired)
-                BeginInvoke(new DelegateCollection.DataStorageStateReport(DataStorageStateReport), state);
+                BeginInvoke(new DelegateCollection.DataStorageStateReport(DataStorageStateReport), datastorage, oldstate, newstate);
             else
-            {
-                lStatusDB.Text = state.ToString();
-                System.Diagnostics.Debug.WriteLine(state);
-            }
+            { }
         }
 
         private void DataStorageMfpUpdateEvent(DataTable mfpdt)
@@ -131,13 +127,12 @@ namespace dmspl // to z dzis :)
             { }
         }
 
-        private void DataStorageModeReport(DataStorageState oldstate, DataStorageState newstate)
+        private void DataStorageModeReport(IDataStorage whosend, DataStorageMode oldstate, DataStorageMode newstate)
         {
             if (InvokeRequired)
-                BeginInvoke(new DelegateCollection.DataStorageModeReport(DataStorageModeReport), oldstate, newstate);
+                BeginInvoke(new DelegateCollection.DataStorageModeReport(DataStorageModeReport), datastorage, oldstate, newstate);
             else
             { }
         }
-
     }
 }

@@ -16,7 +16,9 @@ namespace dmspl.common
         public int Roof { get; set; }
         public int HoD { get; set; }
         public int Spare { get; set; }
-        public DateTime Timestamp { get; set; }
-        public int User { get; set; }
+        public DateTime CreateTimestamp { get; set; }
+        public int CreateUser { get; set; }
+        public DateTime UpdateTimestamp { get; set; }
+        public int UpdateUser { get; set; }
     }
 }

@@ -210,7 +210,7 @@ namespace dmspl.datastorage
         {
             lock (DMS_MFP)
             {
-                int mfpindex = 1;
+                int mfpindex = 0;
 
                 DMS_MFP = mfp_DataAdapter.GetData();
 

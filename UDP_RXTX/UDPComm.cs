@@ -123,7 +123,10 @@ namespace UDP_RXTX
                         if (RecievedDataModel is DataLifePacket)
                             ProcessLifePacket((DataLifePacket)RecievedDataModel, buffer);
                         else
-                            DataStorage.ProcessModel(RecievedDataModel);
+                        {
+                            if (DataStorage != null)
+                                DataStorage.ProcessModel(RecievedDataModel);
+                        }
                     }
                 }
             }
@@ -193,12 +196,12 @@ namespace UDP_RXTX
                     SendDataFrame(buffer);
                 }
             }
-            
+
         }
 
         private void SendDataFrame(byte[] tablica)
         {
-            if (socket != null && RemoteIP.Address != IPAddress.Any )
+            if (socket != null && RemoteIP.Address != IPAddress.Any)
             {
                 socket.Send(tablica, tablica.Length, RemoteIP);
             }

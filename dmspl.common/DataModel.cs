@@ -21,7 +21,7 @@ namespace dmspl.common
         }
         public DataLifePacket(short size, byte type,System.IO.BinaryReader reader) : base(size,type)
         {
-            data = new byte[4];
+            data = reader.ReadBytes(4);
         }
         public override void GetRawData(System.IO.BinaryWriter br)
         {
@@ -39,6 +39,9 @@ namespace dmspl.common
         {
             datasize = System.Net.IPAddress.NetworkToHostOrder(br.ReadInt16());
             datatype = br.ReadByte();
+            ModelFactory(br);
+            ReadCrc(br);
+
         }
 
         public DataHeader(DataModel dm)
@@ -100,13 +103,13 @@ namespace dmspl.common
 
         public void ReadCrc(System.IO.BinaryReader br)
         {
+            Crc = br.ReadByte();
         }
 
         public static DataModel GetModel(System.IO.BinaryReader br)
         {            
             DataHeader header = new DataHeader(br);
             DataModel retModel = header.Data;
-            header.ReadCrc(br);
             return retModel;
         }
 

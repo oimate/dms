@@ -32,9 +32,14 @@ namespace dmspl
             InitializeComponent();
             StartLog();
             datatosend = new List<int>(new int[400]);
+            
             comm = InitCommunication();
+            
             if (comm != null)
+            {
                 datastorage = InitDatabaseStorage(comm);
+                comm.DataStorage = datastorage;
+            }
 
             this.FormClosed += FormGui_FormClosed;
 

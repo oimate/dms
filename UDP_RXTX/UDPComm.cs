@@ -198,7 +198,7 @@ namespace UDP_RXTX
 
         private void SendDataFrame(byte[] tablica)
         {
-            if (socket != null && RemoteIP.Address != IPAddress.Any)
+            if (socket != null && RemoteIP.Address != IPAddress.Any )
             {
                 socket.Send(tablica, tablica.Length, RemoteIP);
             }

@@ -55,8 +55,9 @@ namespace dmspl.common
 
         public void WriteHeader(System.IO.BinaryWriter br)
         {
-            br.Write(datasize);
-            br.Write(datatype);
+            br.Write((byte)(datasize>>8));
+            br.Write((byte)(datasize ));
+            br.Write((byte)(datatype));
             Data.GetRawData(br);
             Crc = ((byte)~(datatype));
             br.Write(Crc);

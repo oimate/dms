@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace dmspl.common
 {
-    public enum DataStorageMode : int
+    public enum DataStorageState
     {
-        Init = 1,
-        Ready,
+        Init,
         Connecting,
+        Offline,
+        Ready,
     }
 }

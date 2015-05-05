@@ -9,7 +9,7 @@ namespace dmspl.common.datamodels
     public class DataSetReqDataModel : DataModel
     {
         public int RequestForeignID { get; set; }
-        public int RequestLocalnID { get; set; }
+        public int RequestLocalID { get; set; }
         public string ResponseDataSet { get; set; }
         public byte[] Dataset { get; set; }
         public ErpDataset Erpdataset { get; set; }
@@ -17,8 +17,8 @@ namespace dmspl.common.datamodels
         public DataSetReqDataModel(short size, byte type, System.IO.BinaryReader br, DataSetReceivedDelegate dataSetReceived)
             : base(size, type)
         {
-            RequestForeignID = System.Net.IPAddress.NetworkToHostOrder(br.ReadInt32());
-            RequestLocalnID = System.Net.IPAddress.NetworkToHostOrder(br.ReadInt16());
+            RequestForeignID = System.Net.IPAddress.NetworkToHostOrder(br.ReadInt16());
+            RequestLocalID = System.Net.IPAddress.NetworkToHostOrder(br.ReadInt16());
 
             DataSetReceived = dataSetReceived;
         }

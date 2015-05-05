@@ -42,7 +42,7 @@ namespace dmspl.common
                         case 9: //mfp type
                             retModel = new MFPDataModel(size, type, reader);
                             break;
-                        case 4: //request type
+                        case 5: //request type
                             retModel = new DataSetReqDataModel(size, type, reader, dataSetReceived);
                             break;
                         case 254: //diagnostic type

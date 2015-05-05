@@ -31,9 +31,10 @@ namespace dmspl
         {
             InitializeComponent();
 
+            this.FormClosed += fMain_FormClosed;
+
             datatosend = new List<int>(new int[400]);
             datastorage = DataStorageFactory.CreateStorage(DataStorageType.SQL);
-            datastorage.StartThread();
 
             comm = new UDPComm(9001);
             comm.ReferencjaDoFunkcjiWyswietlajacejText = refdofwystekst;
@@ -41,14 +42,14 @@ namespace dmspl
 
             datastorage.UdpComm = comm;
 
-            this.FormClosed += FormGui_FormClosed;
-
             //datastorage.DataStorageImportUpdate = DataStorageImportUpdate;
             datastorage.DataStorageImportResult = DataStorageImportResult;
             datastorage.DataStorageStateReport = DataStorageStateReport;
             datastorage.DataStorageModeReport = DataStorageModeReport;
             datastorage.DataStorageMfpUpdateEvent = DataStorageMfpUpdateEvent;
             datastorage.DataStorageErpUpdateEvent = DataStorageErpUpdateEvent;
+
+            datastorage.Init();
 
             //ds = new DataSimulator(datastorage); //moved to DataStorageModeReport;
         }
@@ -63,7 +64,7 @@ namespace dmspl
             { }
         }
 
-        void FormGui_FormClosed(object sender, FormClosedEventArgs e)
+        void fMain_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (ds != null) ds.Dispose();
             if (datastorage != null) ((IDisposable)datastorage).Dispose();
@@ -87,28 +88,31 @@ namespace dmspl
             ImportPopUp.Show(this);
         }
 
-        private void DataStorageImportUpdate(IDataStorage datastorage, DelegateCollection.Classes.ImportUpdateData data)
+        private void DataStorageImportUpdate(DelegateCollection.Classes.ImportUpdateData data)
         {
             if (InvokeRequired)
-                BeginInvoke(new DelegateCollection.DataStorageImportUpdate(DataStorageImportUpdate), datastorage, data);
+                BeginInvoke(new DelegateCollection.DataStorageImportUpdate(DataStorageImportUpdate), data);
             else
             { }
         }
 
-        private void DataStorageImportResult(IDataStorage datastorage, string msg, int items, int duplicates)
+        private void DataStorageImportResult(string msg, int items, int duplicates)
         {
             if (InvokeRequired)
-                BeginInvoke(new DelegateCollection.DataStorageImportResult(DataStorageImportResult), datastorage, msg, items, duplicates);
+                BeginInvoke(new DelegateCollection.DataStorageImportResult(DataStorageImportResult), msg, items, duplicates);
             else
             { }
         }
 
-        private void DataStorageStateReport(IDataStorage datastorage, ConnectionState oldstate, ConnectionState newstate)
+        private void DataStorageStateReport(DataStorageState state)
         {
             if (InvokeRequired)
-                BeginInvoke(new DelegateCollection.DataStorageStateReport(DataStorageStateReport), datastorage, oldstate, newstate);
+                BeginInvoke(new DelegateCollection.DataStorageStateReport(DataStorageStateReport), state);
             else
-            { }
+            {
+                lStatusDB.Text = state.ToString();
+                System.Diagnostics.Debug.WriteLine(state);
+            }
         }
 
         private void DataStorageMfpUpdateEvent(DataTable mfpdt)
@@ -127,12 +131,13 @@ namespace dmspl
             { }
         }
 
-        private void DataStorageModeReport(IDataStorage whosend, DataStorageMode oldstate, DataStorageMode newstate)
+        private void DataStorageModeReport(DataStorageState oldstate, DataStorageState newstate)
         {
             if (InvokeRequired)
-                BeginInvoke(new DelegateCollection.DataStorageModeReport(DataStorageModeReport), datastorage, oldstate, newstate);
+                BeginInvoke(new DelegateCollection.DataStorageModeReport(DataStorageModeReport), oldstate, newstate);
             else
             { }
         }
+
     }
 }

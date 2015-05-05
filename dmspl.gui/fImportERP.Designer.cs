@@ -37,6 +37,8 @@
             this.lNOK = new System.Windows.Forms.Label();
             this.lIST = new System.Windows.Forms.Label();
             this.lALL = new System.Windows.Forms.Label();
+            this.lMsg = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // pgb
@@ -66,7 +68,7 @@
             this.label2.Name = "label2";
             this.label2.Padding = new System.Windows.Forms.Padding(3);
             this.label2.Size = new System.Drawing.Size(42, 19);
-            this.label2.TabIndex = 2;
+            this.label2.TabIndex = 3;
             this.label2.Text = "NOK: ";
             // 
             // label3
@@ -77,7 +79,7 @@
             this.label3.Name = "label3";
             this.label3.Padding = new System.Windows.Forms.Padding(3);
             this.label3.Size = new System.Drawing.Size(50, 19);
-            this.label3.TabIndex = 3;
+            this.label3.TabIndex = 5;
             this.label3.Text = "Current:";
             // 
             // label4
@@ -88,7 +90,7 @@
             this.label4.Name = "label4";
             this.label4.Padding = new System.Windows.Forms.Padding(3);
             this.label4.Size = new System.Drawing.Size(40, 19);
-            this.label4.TabIndex = 4;
+            this.label4.TabIndex = 7;
             this.label4.Text = "Total:";
             // 
             // lOK
@@ -99,7 +101,7 @@
             this.lOK.Name = "lOK";
             this.lOK.Padding = new System.Windows.Forms.Padding(3);
             this.lOK.Size = new System.Drawing.Size(100, 19);
-            this.lOK.TabIndex = 5;
+            this.lOK.TabIndex = 2;
             this.lOK.Text = ".............................";
             // 
             // lNOK
@@ -110,7 +112,7 @@
             this.lNOK.Name = "lNOK";
             this.lNOK.Padding = new System.Windows.Forms.Padding(3);
             this.lNOK.Size = new System.Drawing.Size(100, 19);
-            this.lNOK.TabIndex = 2;
+            this.lNOK.TabIndex = 4;
             this.lNOK.Text = ".............................";
             // 
             // lIST
@@ -121,7 +123,7 @@
             this.lIST.Name = "lIST";
             this.lIST.Padding = new System.Windows.Forms.Padding(3);
             this.lIST.Size = new System.Drawing.Size(100, 19);
-            this.lIST.TabIndex = 3;
+            this.lIST.TabIndex = 6;
             this.lIST.Text = ".............................";
             // 
             // lALL
@@ -132,14 +134,38 @@
             this.lALL.Name = "lALL";
             this.lALL.Padding = new System.Windows.Forms.Padding(3);
             this.lALL.Size = new System.Drawing.Size(100, 19);
-            this.lALL.TabIndex = 4;
+            this.lALL.TabIndex = 8;
             this.lALL.Text = ".............................";
+            // 
+            // lMsg
+            // 
+            this.lMsg.AutoSize = true;
+            this.lMsg.Location = new System.Drawing.Point(143, 129);
+            this.lMsg.Margin = new System.Windows.Forms.Padding(3);
+            this.lMsg.Name = "lMsg";
+            this.lMsg.Padding = new System.Windows.Forms.Padding(3);
+            this.lMsg.Size = new System.Drawing.Size(100, 19);
+            this.lMsg.TabIndex = 10;
+            this.lMsg.Text = ".............................";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(12, 129);
+            this.label5.Margin = new System.Windows.Forms.Padding(3);
+            this.label5.Name = "label5";
+            this.label5.Padding = new System.Windows.Forms.Padding(3);
+            this.label5.Size = new System.Drawing.Size(36, 19);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "Item:";
             // 
             // fImportERP
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 270);
+            this.Controls.Add(this.lMsg);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.lOK);
             this.Controls.Add(this.lALL);
             this.Controls.Add(this.label4);
@@ -170,5 +196,7 @@
         private System.Windows.Forms.Label lNOK;
         private System.Windows.Forms.Label lIST;
         private System.Windows.Forms.Label lALL;
+        private System.Windows.Forms.Label lMsg;
+        private System.Windows.Forms.Label label5;
     }
 }

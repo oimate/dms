@@ -24,6 +24,7 @@ namespace dmspl.datastorage
             set
             {
                 state = value;
+                System.Diagnostics.Debug.WriteLine("{1} :: {0}", state, DateTime.Now.ToString("yyyy:MM:dd HH:mm:ss:fffffff"));
                 OnDataStorageModeReport(state);
             }
         }
@@ -52,7 +53,7 @@ namespace dmspl.datastorage
 
             mfp_DataAdapter = new DmsDatasetTableAdapters.DMS_MFPTableAdapter();
             erp_DataAdapter = new DmsDatasetTableAdapters.DMS_ERPTableAdapter();
-            
+
             //InitAdapters();
 
             //userManager = new usermanager.UserManager(dmsDataset);
@@ -86,9 +87,13 @@ namespace dmspl.datastorage
             }
             catch (SqlException sqlex)
             {
-                System.Diagnostics.Debug.WriteLine("{0}", sqlex.Message, null);
+                System.Diagnostics.Debug.WriteLine("SqlException, Class:{0:D2}", sqlex.Class, null);
                 if (sqlex.Class >= 20)
                     State = DataStorageState.Offline;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("Exception", ex.Message, null);
             }
         }
         #endregion
@@ -210,39 +215,43 @@ namespace dmspl.datastorage
         {
             lock (DMS_MFP)
             {
-                int mfpindex = 0;
-
-                DMS_MFP = mfp_DataAdapter.GetData();
-
-                foreach (int skid in data)
-                {
-                    string newskid = string.Format("{0:D4}", skid);
-                    if (DMS_MFP.Rows.Contains(mfpindex))
-                    {
-                        DmsDataset.DMS_MFPRow row = DMS_MFP.FindByMfpPos(mfpindex);
-                        if (row.fk_LocalSkidNr != skid)
-                        {
-                            row.fk_LocalSkidNr = skid;
-                        }
-                    }
-                    else
-                    {
-                        DMS_MFP.Rows.Add(
-                            mfpindex,
-                            null,
-                            skid);
-                    }
-                    mfpindex++;
-                }
-
                 try
                 {
+                    int mfpindex = 0;
+                    DMS_MFP = mfp_DataAdapter.GetData();
+
+                    foreach (int skid in data)
+                    {
+                        string newskid = string.Format("{0:D4}", skid);
+                        if (DMS_MFP.Rows.Contains(mfpindex))
+                        {
+                            DmsDataset.DMS_MFPRow row = DMS_MFP.FindByMfpPos(mfpindex);
+                            if (row.fk_LocalSkidNr != skid)
+                            {
+                                row.fk_LocalSkidNr = skid;
+                            }
+                        }
+                        else
+                        {
+                            DMS_MFP.Rows.Add(
+                                mfpindex,
+                                null,
+                                skid);
+                        }
+                        mfpindex++;
+                    }
+
                     mfp_DataAdapter.Update(DMS_MFP);
                 }
-                catch (Exception e)
+                catch (SqlException sqlex)
                 {
-                    System.Diagnostics.Debug.WriteLine("catched: {0}", e.Message, null);
-                    InitAdapters();
+                    System.Diagnostics.Debug.WriteLine("SqlException, Class:{0:D2}", sqlex.Class, null);
+                    if (sqlex.Class >= 20)
+                        State = DataStorageState.Offline;
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("Exception", ex.Message, null);
                 }
             }
             OnDataStorageMfpUpdateEvent();
@@ -274,7 +283,8 @@ namespace dmspl.datastorage
                             InitAdapters();
                             break;
                         case DataStorageState.Offline:
-                            Thread.Sleep(5000);
+                            Thread.Sleep(1000);
+                            State = DataStorageState.Connecting;
                             break;
                         case DataStorageState.Ready:
                             Thread.CurrentThread.IsBackground = true;
@@ -355,7 +365,7 @@ namespace dmspl.datastorage
 
         void GetDataSetByBSN(DataSetReqDataModelByBSN ReceivedDataModel)
         {
-            ReceivedDataModel.OnDataSetReceived(new ErpDataset() { BSN = ReceivedDataModel.RequestBSN, SkidID = 1234, Colour=20, DerivativeCode=10, HoD=5, Roof=30, Track=99 });
+            ReceivedDataModel.OnDataSetReceived(new ErpDataset() { BSN = ReceivedDataModel.RequestBSN, SkidID = 1234, Colour = 20, DerivativeCode = 10, HoD = 5, Roof = 30, Track = 99 });
         }
 
         //private void GetDataSetBySkid(DataSetReqDataModel dataSetReqDataModel)

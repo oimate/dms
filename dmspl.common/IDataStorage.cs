@@ -11,7 +11,7 @@ namespace dmspl.common
     {
         //responsible for inserting provided data to database------------
         void StoreProductionData(List<string> collection);
-        void StartThread();
+        void Init();
         //---------------------------------------------------------------
 
         //
@@ -20,11 +20,11 @@ namespace dmspl.common
 
         //
         void UpdateMFP(List<int> data);
-        Task UpdateMFPAsync(List<int> data);
+        //Task UpdateMFPAsync(List<int> data);
         //
 
         //
-        void PauseResumeThread();
+        //void PauseResumeThread();
         //
 
         //

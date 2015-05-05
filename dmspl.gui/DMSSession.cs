@@ -24,7 +24,7 @@ namespace dmspl
             pwd = "some";
             srv = @"192.168.232.128\durr_systems";
             dbn = "EMOS_WEB";
-            string cs = "data source=" + srv + ";Persist Security Info=false;database=" + dbn + ";user id=" + usr + ";password=" + pwd + ";Connection Timeout = 15";
+            string cs = "data source=" + srv + ";Persist Security Info=false;database=" + dbn + ";user id=" + usr + ";password=" + pwd + ";Connection Timeout = 5";
             connection = new SqlConnection(cs);
             sscea = new SessionStatusChangedEventArgs();
         }

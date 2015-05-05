@@ -40,7 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="datamodels\DataSetReqDataModel.cs" />
+    <Compile Include="datamodels\DataLifePacket.cs" />
+    <Compile Include="datamodels\DataSetReqDataModelByBSN.cs" />
     <Compile Include="DataStorageSourceMode.cs" />
     <Compile Include="DelegateCollection.cs" />
     <Compile Include="DataStorageType.cs" />

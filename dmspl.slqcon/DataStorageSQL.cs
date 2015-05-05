@@ -246,7 +246,6 @@ namespace dmspl.datastorage
                 }
             }
             OnDataStorageMfpUpdateEvent();
-            //mfpupdating = false;
         }
 
         public void StartThread()
@@ -350,8 +349,13 @@ namespace dmspl.datastorage
         {
             if (ReceivedDataModel is MFPDataModel)
                 UpdateMFP(((MFPDataModel)ReceivedDataModel).Mfps);
-            //if (ReceivedDataModel is DataSetReqDataModel)
-            //    GetDataSetByBSN(ReceivedDataModel as DataSetReqDataModel);
+            if (ReceivedDataModel is DataSetReqDataModelByBSN)
+                GetDataSetByBSN(ReceivedDataModel as DataSetReqDataModelByBSN);
+        }
+
+        void GetDataSetByBSN(DataSetReqDataModelByBSN ReceivedDataModel)
+        {
+            ReceivedDataModel.OnDataSetReceived(new ErpDataset() { BSN = ReceivedDataModel.RequestBSN, SkidID = 1234 });
         }
 
         //private void GetDataSetBySkid(DataSetReqDataModel dataSetReqDataModel)

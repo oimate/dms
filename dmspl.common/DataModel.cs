@@ -8,27 +8,6 @@ using dmspl.common.log;
 
 namespace dmspl.common
 {
-    public class DataLifePacket : DataModel
-    {
-        byte[] data;
-        public DataLifePacket() : base(8,254)
-        {
-            data = new byte[4];
-            data[0] = 255;
-            data[1] = 255;
-            data[2] = 255;
-            data[3] = 255;
-        }
-        public DataLifePacket(short size, byte type,System.IO.BinaryReader reader) : base(size,type)
-        {
-            data = reader.ReadBytes(4);
-        }
-        public override void GetRawData(System.IO.BinaryWriter br)
-        {
-            br.Write(data);
-        }
-    }
-
     public class DataHeader
     {
         public short datasize;
@@ -41,7 +20,6 @@ namespace dmspl.common
             datatype = br.ReadByte();
             ModelFactory(br);
             ReadCrc(br);
-
         }
 
         public DataHeader(DataModel dm)
@@ -51,15 +29,16 @@ namespace dmspl.common
                 datatype = 9;
             else if (dm is DataLifePacket)
                 datatype = 254;
-            else if (dm is DataSetReqDataModel)
+            else if (dm is DataSetReqDataModelByBSN)
                 datatype = 4;
             datasize = (short)dm.Size;
         }
 
         public void WriteHeader(System.IO.BinaryWriter br)
         {
-            br.Write((byte)(datasize>>8));
-            br.Write((byte)(datasize ));
+            datasize = (short)(Data.Size + 4);
+            br.Write((byte)(datasize >> 8));
+            br.Write((byte)(datasize));
             br.Write((byte)(datatype));
             Data.GetRawData(br);
             Crc = ((byte)~(datatype));
@@ -71,12 +50,15 @@ namespace dmspl.common
             switch (datatype)
             {
                 case 9: //mfp type
+                    datasize -= 4;
                     Data = new MFPDataModel(datasize, datatype, br);
                     break;
                 case 4: //request type
-                    Data = new DataSetReqDataModel(datasize, datatype, br);
+                    datasize -= 4;
+                    Data = new DataSetReqDataModelByBSN(datasize, datatype, br);
                     break;
                 case 254:
+                    datasize -= 4;
                     Data = new DataLifePacket(datasize, datatype, br);
                     break;
                 default:
@@ -107,7 +89,7 @@ namespace dmspl.common
         }
 
         public static DataModel GetModel(System.IO.BinaryReader br)
-        {            
+        {
             DataHeader header = new DataHeader(br);
             DataModel retModel = header.Data;
             return retModel;
@@ -144,7 +126,7 @@ namespace dmspl.common
                     return ms.ToArray();
                 }
             }
-            
+
         }
         /*
         public static DataModel GetModel(byte[] buffer, DataSetReceivedDelegate dataSetReceived)
@@ -180,6 +162,6 @@ namespace dmspl.common
             return retModel;
         }
         */
-        
+
     }
 }

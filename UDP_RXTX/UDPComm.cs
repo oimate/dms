@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using dmspl.common;
 using dmspl.common.log;
+using dmspl.common.datamodels;
 namespace UDP_RXTX
 {
     public class UDPComm : IUDPComm, IDisposable
@@ -118,6 +119,7 @@ namespace UDP_RXTX
                     using (System.IO.BinaryReader br = new System.IO.BinaryReader(ms))
                     {
                         DataModel RecievedDataModel = DataHeader.GetModel(br);
+                        RecievedDataModel.DataSetReceived = (dm) => { SendData(dm); };
                         if (RecievedDataModel == null)
                             continue;
                         if (RecievedDataModel is DataLifePacket)
@@ -132,8 +134,6 @@ namespace UDP_RXTX
             }
         }
 
-
-
         private void ProcessLifePacket(DataLifePacket pack, byte[] buffer)
         {
             byte[] comparebyte = new byte[] { 0, 8, 254, 255, 255, 255, 255, 1 };
@@ -141,17 +141,18 @@ namespace UDP_RXTX
                 ConnReqCnt = 0;
             SetServiceStatus(Status.Connected);
         }
-        private void OnDataReceived(DataModel dm)
-        {
-            try
-            {
-                socket.Send(dm.GetRawData(), dm.Size, RemoteIP);
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
-            }
-        }
+
+        //private void OnDataReceived(DataModel dm)
+        //{
+        //    try
+        //    {
+        //        socket.Send(dm.GetRawData(), dm.Size, RemoteIP);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        System.Diagnostics.Debug.WriteLine(ex.Message);
+        //    }
+        //}
 
         private void onNewDataRecieved(string s)
         {
@@ -186,7 +187,7 @@ namespace UDP_RXTX
 
         public void SendData(DataModel data)
         {
-            byte[] buffer = new byte[data.Size];
+            byte[] buffer = new byte[data.Size + 4];
             using (System.IO.MemoryStream ms = new System.IO.MemoryStream(buffer))
             {
                 using (System.IO.BinaryWriter br = new System.IO.BinaryWriter(ms))

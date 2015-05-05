@@ -27,7 +27,7 @@ namespace dmspl.datastorage.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
         [global::System.Configuration.DefaultSettingValueAttribute("Data Source=dbmachine\\durr_systems;Initial Catalog=EMOS_WEB;Persist Security Info" +
-            "=True;User ID=user;Password=user;Connection Timeout = 2")]
+            "=True;User ID=user;Password=user;Connection Timeout = 5")]
         public string EMOS_WEBConnectionString {
             get {
                 return ((string)(this["EMOS_WEBConnectionString"]));

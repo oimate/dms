@@ -15,36 +15,33 @@ namespace dmspl.datastorage
 {
     class DataStorageSQL : IDataStorage, IDisposable
     {
-        DmsDataset dmsDataset;
-
-        DmsDatasetTableAdapters.DMS_ERPTableAdapter erp_DataAdapter;
-        DmsDatasetTableAdapters.DMS_MFPTableAdapter mfp_DataAdapter;
-
-        volatile bool mfpupdating;
-
-        //usermanager.UserManager userManager;
-
-        DataStorageMode mode, lastmode;
-
         public IUDPComm UdpComm { get; set; }
 
-        private DataStorageMode Mode
+        DataStorageState state;
+        private DataStorageState State
         {
-            get { return mode; }
+            get { return state; }
             set
             {
-                lastmode = mode;
-                mode = value;
-                OnDataStorageModeReport(lastmode, mode);
+                state = value;
+                OnDataStorageModeReport(state);
             }
         }
+
+        DmsDataset dmsDataset;
+
+        DmsDataset.DMS_ERPDataTable DMS_ERP;
+        DmsDatasetTableAdapters.DMS_ERPTableAdapter erp_DataAdapter;
+
+        DmsDataset.DMS_MFPDataTable DMS_MFP;
+        DmsDatasetTableAdapters.DMS_MFPTableAdapter mfp_DataAdapter;
 
         bool cancelThread, pauseThread;
         Thread queueworker;
 
         AuthData ad;
-        //string connectionstring;
-        //SqlConnection connection;
+
+        dmspl.common.log.IDataLog LogObj;
 
         #region Constructor
         public DataStorageSQL()
@@ -53,54 +50,46 @@ namespace dmspl.datastorage
 
             dmsDataset = new DmsDataset();
 
-            InitDB();
+            mfp_DataAdapter = new DmsDatasetTableAdapters.DMS_MFPTableAdapter();
+            erp_DataAdapter = new DmsDatasetTableAdapters.DMS_ERPTableAdapter();
+            
+            //InitAdapters();
 
             //userManager = new usermanager.UserManager(dmsDataset);
             //if (!userManager.Login("sli", "sli"))
             //    throw new InvalidOperationException("login failed");
 
-            lastmode = DataStorageMode.Ready;
-            mode = DataStorageMode.Init;
+            state = DataStorageState.Initializing;
 
             //processedqueue = new List<FileInfo>();
 
             //CreateDataAdapters(connection);
 
-            mfpupdating = false;
-
             cancelThread = false;
-            pauseThread = false; ;
+            pauseThread = false;
 
             queueworker = new Thread(Cycle);
             queueworker.Name = "dmsqw";
             queueworker.IsBackground = true;
             queueworker.Priority = ThreadPriority.Lowest;
-            //queueworker.Start();
+            queueworker.Start();
         }
 
-        private void InitDB()
+        private void InitAdapters()
         {
             try
             {
-                mfp_DataAdapter = new DmsDatasetTableAdapters.DMS_MFPTableAdapter();
-                erp_DataAdapter = new DmsDatasetTableAdapters.DMS_ERPTableAdapter();
-                mfp_DataAdapter.Fill(dmsDataset.DMS_MFP);
-                erp_DataAdapter.Fill(dmsDataset.DMS_ERP);
+                if (DMS_MFP != null)
+                    DMS_MFP.Dispose();
+                DMS_MFP = mfp_DataAdapter.GetData();
+                State = DataStorageState.Ready;
             }
-                finally
+            catch (SqlException sqlex)
             {
-                mfp_DataAdapter.Dispose();
-                erp_DataAdapter.Dispose();
+                System.Diagnostics.Debug.WriteLine("{0}", sqlex.Message, null);
+                if (sqlex.Class >= 20)
+                    State = DataStorageState.Offline;
             }
- /*           catch (Exception ex)
-            {
-
-                
-
-                System.Diagnostics.Debug.WriteLine("{0}", ex.Message, null);
-                Thread.Sleep(5000);
-                InitDB();
-            }*/
         }
         #endregion
 
@@ -109,44 +98,71 @@ namespace dmspl.datastorage
             int all, ok, nok;
             all = collection.Count;
             ok = nok = 0;
+
             if (collection == null || collection.Count == 0)
             {
                 OnDataStorageImportResult(string.Format("No Data To Import"));
                 return;
             }
+
+            DelegateCollection.Classes.ImportUpdateData iud = new DelegateCollection.Classes.ImportUpdateData("", 0, 0, 0, collection.Count);
             string sql = string.Empty;
             try
             {
                 foreach (string datatoimport in collection)
                 {
-                    //dataset structure is fixed
-                    string SkidID = datatoimport.Substring(0, 4);
-                    int Id;
-                    if (!int.TryParse(SkidID, out Id)) continue;
-                    string DerivativeCode = datatoimport.Substring(4, 3);
-                    string Colour = datatoimport.Substring(7, 3);
-                    string BSN = datatoimport.Substring(10, 6);
-                    string Track = datatoimport.Substring(16, 1);
-                    string CSOB = datatoimport.Substring(17, 4);
-                    DateTime CreateTimestamp = DateTime.Now;
-                    long CreateUser = 2;
+                    bool fail = false;
+                    if (datatoimport.Length != 21) fail = true;
 
-                    bool exists = dmsDataset.DMS_ERP.Rows.Contains(Id);
+                    int ForeignSkid;
+                    if (!int.TryParse(datatoimport.Substring(0, 4), out ForeignSkid)) fail = true;
 
-                    if (!exists)
+                    int DerivativeCode;
+                    if (!int.TryParse(datatoimport.Substring(4, 3), out DerivativeCode)) fail = true;
+
+                    int Colour;
+                    if (!int.TryParse(datatoimport.Substring(7, 3), out Colour)) fail = true;
+
+                    int BSN;
+                    if (!int.TryParse(datatoimport.Substring(10, 6), out BSN)) fail = true;
+
+                    int Track;
+                    if (!int.TryParse(datatoimport.Substring(16, 1), out Track)) fail = true;
+
+                    int Roof;
+                    if (!int.TryParse(datatoimport.Substring(17, 1), out Roof)) fail = true;
+
+                    int HoD;
+                    if (!int.TryParse(datatoimport.Substring(18, 1), out HoD)) fail = true;
+
+                    int Spare;
+                    if (!int.TryParse(datatoimport.Substring(19, 2), out Spare)) fail = true;
+
+                    DateTime Timestamp = DateTime.Now;
+
+                    long User = 0;
+
+                    if (fail)
                     {
-                        dmsDataset.DMS_ERP.Rows.Add(
-                            Id,
-                            datatoimport,
-                            SkidID,
+                        nok++;
+                        continue;
+                    }
+
+                    int? checkedForeignSkid = erp_DataAdapter.CheckExistForeignSkid(ForeignSkid);
+
+                    if (!checkedForeignSkid.HasValue)
+                    {
+                        erp_DataAdapter.Insert(
+                            ForeignSkid,
                             DerivativeCode,
                             Colour,
                             BSN,
                             Track,
-                            CSOB,
-                            CreateTimestamp,
-                            CreateUser,
-                            null,
+                            Roof,
+                            HoD,
+                            Spare,
+                            Timestamp,
+                            User,
                             null);
                         ok++;
                     }
@@ -157,65 +173,76 @@ namespace dmspl.datastorage
                         //OnDataStorageImportUpdate(new DelegateCollection.Classes.ImportUpdateData(msg, ok, nok, ok + nok, all));
                         //Thread.Sleep(1);
                     }
+                    iud.Msg = datatoimport;
+                    iud.OK = ok;
+                    iud.NOK = nok;
+                    iud.IST = ok + nok;
+                    OnDataStorageImportUpdate(iud);
                 }
-                erp_DataAdapter.Update(dmsDataset.DMS_ERP);
-                OnDataStorageErpUpdateEvent();
-                OnDataStorageImportResult("datastorageimportresult");
+                //erp_DataAdapter.Update(dmsDataset.DMS_ERP);
+                //OnDataStorageErpUpdateEvent();
+                //OnDataStorageImportResult("datastorageimportresult");
             }
-            catch (Exception ex)
+            catch (SqlException sqlEx)
             {
                 OnDataStorageImportResult("data import unsuccessful!", collection.Count);
+                System.Diagnostics.Debug.WriteLine("catched: {0}", sqlEx.Message, null);
+                if (sqlEx.Class >= 20)
+                    State = DataStorageState.Offline;
+            }
+            catch (Exception allEx)
+            {
+                System.Diagnostics.Debug.WriteLine("catched: {0}", allEx.Message, null);
+            }
+            finally
+            {
+                OnDataStorageImportResult("");
             }
         }
+        //public async Task UpdateMFPAsync(List<int> data)
+        //{
+        //    //if (connection.State != ConnectionState.Open)
+        //    //    return;
+        //    await Task.Run(() => UpdateMFP(data));
+        //}
 
-        public async Task UpdateMFPAsync(List<int> data)
-        {
-            //if (connection.State != ConnectionState.Open)
-            //    return;
-            await Task.Run(() => UpdateMFP(data));
-        }
         public void UpdateMFP(List<int> data)
         {
-            int counter = 0;
-            //while (mfpupdating)
-            //{
-            //    System.Diagnostics.Debug.WriteLine("while mfpr: {0}", counter++);
-            //    Thread.Sleep(5);
-            //}
-            //mfpupdating = true;
-            lock (dmsDataset)
+            lock (DMS_MFP)
             {
                 int mfpindex = 1;
+
+                DMS_MFP = mfp_DataAdapter.GetData();
+
                 foreach (int skid in data)
                 {
                     string newskid = string.Format("{0:D4}", skid);
-                    if (dmsDataset.DMS_MFP.Rows.Contains(mfpindex))
+                    if (DMS_MFP.Rows.Contains(mfpindex))
                     {
-                        DmsDataset.DMS_MFPRow row = dmsDataset.DMS_MFP.FindById(mfpindex);
-                        if (row.LocalSkidNr != skid)
+                        DmsDataset.DMS_MFPRow row = DMS_MFP.FindByMfpPos(mfpindex);
+                        if (row.fk_LocalSkidNr != skid)
                         {
-                            row.LocalSkidNr = skid;
+                            row.fk_LocalSkidNr = skid;
                         }
                     }
                     else
                     {
-                        dmsDataset.DMS_MFP.Rows.Add(
+                        DMS_MFP.Rows.Add(
                             mfpindex,
                             null,
-                            skid,
-                            null);
+                            skid);
                     }
                     mfpindex++;
                 }
 
                 try
                 {
-                    mfp_DataAdapter.Update(dmsDataset.DMS_MFP);
+                    mfp_DataAdapter.Update(DMS_MFP);
                 }
                 catch (Exception e)
                 {
                     System.Diagnostics.Debug.WriteLine("catched: {0}", e.Message, null);
-                    InitDB();
+                    InitAdapters();
                 }
             }
             OnDataStorageMfpUpdateEvent();
@@ -238,27 +265,21 @@ namespace dmspl.datastorage
             {
                 if (!pauseThread)
                 {
-                    switch (Mode)
+                    Thread.CurrentThread.IsBackground = false;
+                    switch (state)
                     {
-                        case DataStorageMode.Connecting:
-                            //OnDataStorageStateReport(connection.State, connection.State);
-                            Thread.Sleep(5000);
-                            Mode = DataStorageMode.Init;
+                        case DataStorageState.Initializing:
+                            InitAdapters();
                             break;
-                        case DataStorageMode.Init:
-                            try
-                            {
-                                //if (connection.State != ConnectionState.Open) connection.Open();
-                                //OnDataStorageErpUpdateEvent();
-                                Mode = DataStorageMode.Ready;
-                                pauseThread = true;
-                            }
-                            catch (Exception ex)
-                            {
-                                System.Diagnostics.Debug.WriteLine("+++> {0}{1}{2}", ex.GetType(), ex.Message, ex.Source);
-                                Mode = DataStorageMode.Connecting;
-                                //Thread.Sleep(5000);
-                            }
+                        case DataStorageState.Connecting:
+                            InitAdapters();
+                            break;
+                        case DataStorageState.Offline:
+                            Thread.Sleep(5000);
+                            break;
+                        case DataStorageState.Ready:
+                            Thread.CurrentThread.IsBackground = true;
+                            Thread.Sleep(50);
                             break;
                     }
                 }
@@ -329,76 +350,76 @@ namespace dmspl.datastorage
         {
             if (ReceivedDataModel is MFPDataModel)
                 UpdateMFP(((MFPDataModel)ReceivedDataModel).Mfps);
-            if (ReceivedDataModel is DataSetReqDataModel)
-                GetDataSetByBSN(ReceivedDataModel as DataSetReqDataModel);
+            //if (ReceivedDataModel is DataSetReqDataModel)
+            //    GetDataSetByBSN(ReceivedDataModel as DataSetReqDataModel);
         }
 
-        private void GetDataSetBySkid(DataSetReqDataModel dataSetReqDataModel)
-        {
-            try
-            {
-                using (var erp = erp_DataAdapter.GetData())
-                {
-                    var row = erp.FindBySkidID(dataSetReqDataModel.RequestForeignID);
-                    if (row == null)
-                        dataSetReqDataModel.OnDataSetReceived(null);
-                    else
-                    {
-                        dataSetReqDataModel.OnDataSetReceived(new ErpDataset()
-                            {
-                                BSN = row.BSN,
-                                Colour = row.Colour,
-                                DerivativeCode = row.DerivativeCode,
-                                HoD = row.Door,
-                                Roof = row.Roof,
-                                SkidID = row.SkidID,
-                                Track = row.Track,
-                                Spare = row.Spare
-                            }
-                        );
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine("{1}\r\n{0}", ex.Message, ex.Source);
-            }
-        }
+        //private void GetDataSetBySkid(DataSetReqDataModel dataSetReqDataModel)
+        //{
+        //    try
+        //    {
+        //        using (var erp = erp_DataAdapter.GetData())
+        //        {
+        //            var row = erp.FindBySkidID(dataSetReqDataModel.RequestForeignID);
+        //            if (row == null)
+        //                dataSetReqDataModel.OnDataSetReceived(null);
+        //            else
+        //            {
+        //                dataSetReqDataModel.OnDataSetReceived(new ErpDataset()
+        //                    {
+        //                        BSN = row.BSN,
+        //                        Colour = row.Colour,
+        //                        DerivativeCode = row.DerivativeCode,
+        //                        HoD = row.Door,
+        //                        Roof = row.Roof,
+        //                        SkidID = row.SkidID,
+        //                        Track = row.Track,
+        //                        Spare = row.Spare
+        //                    }
+        //                );
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        System.Diagnostics.Debug.WriteLine("{1}\r\n{0}", ex.Message, ex.Source);
+        //    }
+        //}
 
-        private void GetDataSetByBSN(DataSetReqDataModel dataSetReqDataModel)
-        {
-            try
-            {
-                using (var erp = erp_DataAdapter.GetData())
-                {
-                    var q = (from r in erp
-                             where r.BSN == dataSetReqDataModel.RequestForeignID
-                             select r);
-                    if (q.Count() != 1)
-                        dataSetReqDataModel.OnDataSetReceived(null);
-                    else
-                    {
-                        var row = q.First();
-                        dataSetReqDataModel.OnDataSetReceived(new ErpDataset()
-                        {
-                            BSN = row.BSN,
-                            Colour = row.Colour,
-                            DerivativeCode = row.DerivativeCode,
-                            HoD = row.Door,
-                            Roof = row.Roof,
-                            SkidID = row.SkidID,
-                            Track = row.Track,
-                            Spare = row.Spare
-                        }
-                        );
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine("{1}\r\n{0}", ex.Message, ex.Source);
-            }
-        }
+        //private void GetDataSetByBSN(DataSetReqDataModel dataSetReqDataModel)
+        //{
+        //    try
+        //    {
+        //        using (var erp = erp_DataAdapter.GetData())
+        //        {
+        //            var q = (from r in erp
+        //                     where r.BSN == dataSetReqDataModel.RequestForeignID
+        //                     select r);
+        //            if (q.Count() != 1)
+        //                dataSetReqDataModel.OnDataSetReceived(null);
+        //            else
+        //            {
+        //                var row = q.First();
+        //                dataSetReqDataModel.OnDataSetReceived(new ErpDataset()
+        //                {
+        //                    BSN = row.BSN,
+        //                    Colour = row.Colour,
+        //                    DerivativeCode = row.DerivativeCode,
+        //                    HoD = row.Door,
+        //                    Roof = row.Roof,
+        //                    SkidID = row.SkidID,
+        //                    Track = row.Track,
+        //                    Spare = row.Spare
+        //                }
+        //                );
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        System.Diagnostics.Debug.WriteLine("{1}\r\n{0}", ex.Message, ex.Source);
+        //    }
+        //}
 
         //public async Task<bool> Login(string u, string p)
         //{
@@ -407,11 +428,6 @@ namespace dmspl.datastorage
         //}
 
         #region Delegates/Events
-
-        private void connection_StateChange(object sender, System.Data.StateChangeEventArgs e)
-        {
-            OnDataStorageStateReport(e.OriginalState, e.CurrentState);
-        }
 
         private void OnDataStorageImportUpdate(DelegateCollection.Classes.ImportUpdateData updatedata)
         {
@@ -431,23 +447,14 @@ namespace dmspl.datastorage
         }
         public DelegateCollection.DataStorageImportResult DataStorageImportResult { get; set; }
 
-        private void OnDataStorageStateReport(ConnectionState oldstate, ConnectionState newstate)
+        private void OnDataStorageModeReport(DataStorageState newstate)
         {
             if (DataStorageStateReport != null)
             {
-                DataStorageStateReport(this, oldstate, newstate);
+                DataStorageStateReport(newstate);
             }
         }
         public DelegateCollection.DataStorageStateReport DataStorageStateReport { get; set; }
-
-        private void OnDataStorageModeReport(DataStorageMode oldstate, DataStorageMode newstate)
-        {
-            if (DataStorageModeReport != null)
-            {
-                DataStorageModeReport(this, oldstate, newstate);
-            }
-        }
-        public DelegateCollection.DataStorageModeReport DataStorageModeReport { get; set; }
 
         private void OnDataStorageMfpUpdateEvent()
         {

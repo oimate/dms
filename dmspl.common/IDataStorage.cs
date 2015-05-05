@@ -20,7 +20,6 @@ namespace dmspl.common
 
         //
         void UpdateMFP(List<int> data);
-        Task UpdateMFPAsync(List<int> data);
         //
 
         //
@@ -33,7 +32,6 @@ namespace dmspl.common
         DelegateCollection.DataStorageMfpUpdateEvent DataStorageMfpUpdateEvent { get; set; }
         DelegateCollection.DataStorageErpUpdateEvent DataStorageErpUpdateEvent { get; set; }
         DelegateCollection.DataStorageStateReport DataStorageStateReport { get; set; }
-        DelegateCollection.DataStorageModeReport DataStorageModeReport { get; set; }
         //
 
         void ProcessModel(DataModel ReceivedDataModel);

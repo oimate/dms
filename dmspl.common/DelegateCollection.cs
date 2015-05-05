@@ -12,8 +12,7 @@ namespace dmspl.common
     {
         public delegate void DataStorageImportUpdate(IDataStorage whosend, Classes.ImportUpdateData updatedata);
         public delegate void DataStorageImportResult(IDataStorage whosend, string msg, int items, int duplicates);
-        public delegate void DataStorageStateReport(IDataStorage whosend, ConnectionState oldstate, ConnectionState newstate);
-        public delegate void DataStorageModeReport(IDataStorage whosend, DataStorageMode oldstate, DataStorageMode newstate);
+        public delegate void DataStorageStateReport(DataStorageState state);
         public delegate void DataStorageMfpUpdateEvent(DataTable mfpdt);
         public delegate void DataStorageErpUpdateEvent(DataTable erpdt);
         

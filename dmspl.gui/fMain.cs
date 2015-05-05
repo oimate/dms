@@ -50,16 +50,17 @@ namespace dmspl
             try
             {
                 ret = DataStorageFactory.CreateStorage(DataStorageType.SQL);
-                ret.StartThread();
+                //ret.StartThread();
                 ret.UdpComm = comObj;
                 ret.DataStorageImportResult = DataStorageImportResult;
-                ret.DataStorageStateReport = DataStorageStateReport;
-                ret.DataStorageModeReport = DataStorageModeReport;
+                //ret.DataStorageStateReport = DataStorageStateReport;
+                //ret.DataStorageStateReport = DataStorageModeReport;
                 ret.DataStorageMfpUpdateEvent = DataStorageMfpUpdateEvent;
                 ret.DataStorageErpUpdateEvent = DataStorageErpUpdateEvent;
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
                 ret = null;
             }
             return ret;
@@ -159,10 +160,10 @@ namespace dmspl
             { }
         }
 
-        private void DataStorageStateReport(IDataStorage datastorage, ConnectionState oldstate, ConnectionState newstate)
+        private void DataStorageStateReport(DataStorageState state)
         {
             if (InvokeRequired)
-                BeginInvoke(new DelegateCollection.DataStorageStateReport(DataStorageStateReport), datastorage, oldstate, newstate);
+                BeginInvoke(new DelegateCollection.DataStorageStateReport(DataStorageStateReport), state);
             else
             { }
         }
@@ -179,14 +180,6 @@ namespace dmspl
         {
             if (InvokeRequired)
                 BeginInvoke(new DelegateCollection.DataStorageErpUpdateEvent(DataStorageErpUpdateEvent), erpdt);
-            else
-            { }
-        }
-
-        private void DataStorageModeReport(IDataStorage whosend, DataStorageMode oldstate, DataStorageMode newstate)
-        {
-            if (InvokeRequired)
-                BeginInvoke(new DelegateCollection.DataStorageModeReport(DataStorageModeReport), datastorage, oldstate, newstate);
             else
             { }
         }

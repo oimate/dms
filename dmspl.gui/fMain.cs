@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using UDP_RXTX;
 
-namespace dmspl
+namespace dmspl // to z dzis :)
 {
     public partial class fMain : Form
     {

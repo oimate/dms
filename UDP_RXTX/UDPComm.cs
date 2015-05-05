@@ -257,7 +257,7 @@ namespace UDP_RXTX
             private static byte[] subst(byte[] wholerecdata, int p1, int p2)
             {
                 byte[] ret = new byte[p2];
-                for (int i = p1; i < p2; i++)
+                for (int i = p1; i < (p2 + p1); i++)
                 {
                     ret[i - p1] = wholerecdata[i];
                 }

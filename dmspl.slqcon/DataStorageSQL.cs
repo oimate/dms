@@ -355,7 +355,7 @@ namespace dmspl.datastorage
 
         void GetDataSetByBSN(DataSetReqDataModelByBSN ReceivedDataModel)
         {
-            ReceivedDataModel.OnDataSetReceived(new ErpDataset() { BSN = ReceivedDataModel.RequestBSN, SkidID = 1234 });
+            ReceivedDataModel.OnDataSetReceived(new ErpDataset() { BSN = ReceivedDataModel.RequestBSN, SkidID = 1234, Colour=20, DerivativeCode=10, HoD=5, Roof=30, Track=99 });
         }
 
         //private void GetDataSetBySkid(DataSetReqDataModel dataSetReqDataModel)

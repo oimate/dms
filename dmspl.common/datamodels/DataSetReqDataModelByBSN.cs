@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using dmspl.common.BigEndianExtension;
 
 namespace dmspl.common.datamodels
 {
@@ -40,7 +41,7 @@ namespace dmspl.common.datamodels
         public override void GetRawData(System.IO.BinaryWriter bw)
         {
             //
-            //in plc:
+            //order as in plc:
             //BSN - 4 Byte
             //Derivative Code - 2 Byte
             //Color - 2 Byte
@@ -52,30 +53,16 @@ namespace dmspl.common.datamodels
             //Spare - 1 Byte
             //Spare - 1 Byte
             //
-            bw.Write((byte)(Erpdataset.BSN >> 24));
-            bw.Write((byte)(Erpdataset.BSN >> 16));
-            bw.Write((byte)(Erpdataset.BSN >> 8));
-            bw.Write((byte)Erpdataset.BSN);
-            
-            bw.Write((byte)(Erpdataset.DerivativeCode >> 8));
-            bw.Write((byte)(Erpdataset.DerivativeCode));
-            
-            bw.Write((byte)(Erpdataset.Colour >> 8));
-            bw.Write((byte)(Erpdataset.Colour));
 
+            bw.Write(Erpdataset.BSN.ToBigEndian());
+            bw.Write(((short)Erpdataset.DerivativeCode).ToBigEndian());
+            bw.Write(((short)Erpdataset.Colour).ToBigEndian());
             bw.Write((byte)Erpdataset.Track);
-
             bw.Write((byte)Erpdataset.Roof);
-
             bw.Write((byte)Erpdataset.HoD);
+            bw.Write(((short)RequestLocalnID).ToBigEndian());
+            bw.Write(((short)Erpdataset.SkidID).ToBigEndian());
 
-            //as spare 2xBytes!
-            bw.Write((byte)(RequestLocalnID >> 8));
-            bw.Write((byte)(RequestLocalnID));
-
-            //additional foreign skid as spare 2xBytes
-            bw.Write((byte)(Erpdataset.SkidID >> 8));
-            bw.Write((byte)Erpdataset.SkidID);
         }
     }
 }

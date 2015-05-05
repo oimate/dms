@@ -10,8 +10,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UDP_RXTX;
+using dmspl.common.log;
 
-namespace dmspl // to z dzis :)
+namespace dmspl
 {
     public partial class fMain : Form
     {
@@ -23,38 +24,92 @@ namespace dmspl // to z dzis :)
         DataSimulator ds;
         List<int> datatosend;
         int currentdata;
-
         UDPComm comm;
 
         #region Constructor
         public fMain()
         {
             InitializeComponent();
-
-            this.FormClosed += fMain_FormClosed;
-
+            StartLog();
             datatosend = new List<int>(new int[400]);
-            datastorage = DataStorageFactory.CreateStorage(DataStorageType.SQL);
+            comm = InitCommunication();
+            if (comm != null)
+                datastorage = InitDatabaseStorage(comm);
 
-            comm = new UDPComm(9001);
-            comm.ReferencjaDoFunkcjiWyswietlajacejText = refdofwystekst;
-            comm.DataStorage = datastorage;
-
-            datastorage.UdpComm = comm;
+            this.FormClosed += FormGui_FormClosed;
 
             //datastorage.DataStorageImportUpdate = DataStorageImportUpdate;
-            datastorage.DataStorageImportResult = DataStorageImportResult;
-            datastorage.DataStorageStateReport = DataStorageStateReport;
-            datastorage.DataStorageModeReport = DataStorageModeReport;
-            datastorage.DataStorageMfpUpdateEvent = DataStorageMfpUpdateEvent;
-            datastorage.DataStorageErpUpdateEvent = DataStorageErpUpdateEvent;
-
-            datastorage.Init();
-
             //ds = new DataSimulator(datastorage); //moved to DataStorageModeReport;
         }
 
+        private IDataStorage InitDatabaseStorage(UDPComm comObj)
+        {
+            //if (comObj == null)
+            //    throw new ArgumentNullException("comObj");
+            IDataStorage ret;
+            try
+            {
+                ret = DataStorageFactory.CreateStorage(DataStorageType.SQL);
+                ret.StartThread();
+                ret.UdpComm = comObj;
+                ret.DataStorageImportResult = DataStorageImportResult;
+                ret.DataStorageStateReport = DataStorageStateReport;
+                ret.DataStorageModeReport = DataStorageModeReport;
+                ret.DataStorageMfpUpdateEvent = DataStorageMfpUpdateEvent;
+                ret.DataStorageErpUpdateEvent = DataStorageErpUpdateEvent;
+            }
+            catch
+            {
+                ret = null;
+            }
+            return ret;
+        }
+
+        private UDPComm InitCommunication()
+        {
+            UDPComm ret =null;
+            try
+            {
+                ret = new UDPComm(9001);
+                ret.ReferencjaDoFunkcjiWyswietlajacejText = refdofwystekst;
+                ret.DataStorage = datastorage;
+                ret.StatusChanged += StatChanged;
+                ret.DataRecv += DataRecv;
+            }
+            catch (Exception ex)
+            {
+                if (ret != null)
+                    ret.Dispose();
+                ret = null;
+            }
+            return ret;
+        }
+
         #endregion
+
+        void StartLog()
+        {
+            IDataLog _log = new HTMLLog("dupa");
+            _log.Start();
+            _log.SetLevel(Module.Appl, Level.Debug);
+            _log.SetLevel(Module.DataBase, Level.Debug);
+            _log.SetLevel(Module.RXTXComm,Level.Debug);
+            _log.EnabledModules = Module.All;
+            _log.EnabledEventType = EvType.All;
+            DataLog.SetDefautLog(_log);
+        }
+
+        void StatChanged(object sender, EventArgs aa)
+        {
+            UDPComm com = (UDPComm)sender;
+            if (com.ActState == UDPComm.Status.Connected)
+            {
+            }
+        }
+
+        void DataRecv(object sender, string str)
+        {
+        }
 
         private void refdofwystekst(string d)
         {
@@ -64,7 +119,7 @@ namespace dmspl // to z dzis :)
             { }
         }
 
-        void fMain_FormClosed(object sender, FormClosedEventArgs e)
+        void FormGui_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (ds != null) ds.Dispose();
             if (datastorage != null) ((IDisposable)datastorage).Dispose();
@@ -88,31 +143,28 @@ namespace dmspl // to z dzis :)
             ImportPopUp.Show(this);
         }
 
-        private void DataStorageImportUpdate(DelegateCollection.Classes.ImportUpdateData data)
+        private void DataStorageImportUpdate(IDataStorage datastorage, DelegateCollection.Classes.ImportUpdateData data)
         {
             if (InvokeRequired)
-                BeginInvoke(new DelegateCollection.DataStorageImportUpdate(DataStorageImportUpdate), data);
+                BeginInvoke(new DelegateCollection.DataStorageImportUpdate(DataStorageImportUpdate), datastorage, data);
             else
             { }
         }
 
-        private void DataStorageImportResult(string msg, int items, int duplicates)
+        private void DataStorageImportResult(IDataStorage datastorage, string msg, int items, int duplicates)
         {
             if (InvokeRequired)
-                BeginInvoke(new DelegateCollection.DataStorageImportResult(DataStorageImportResult), msg, items, duplicates);
+                BeginInvoke(new DelegateCollection.DataStorageImportResult(DataStorageImportResult), datastorage, msg, items, duplicates);
             else
             { }
         }
 
-        private void DataStorageStateReport(DataStorageState state)
+        private void DataStorageStateReport(IDataStorage datastorage, ConnectionState oldstate, ConnectionState newstate)
         {
             if (InvokeRequired)
-                BeginInvoke(new DelegateCollection.DataStorageStateReport(DataStorageStateReport), state);
+                BeginInvoke(new DelegateCollection.DataStorageStateReport(DataStorageStateReport), datastorage, oldstate, newstate);
             else
-            {
-                lStatusDB.Text = state.ToString();
-                System.Diagnostics.Debug.WriteLine(state);
-            }
+            { }
         }
 
         private void DataStorageMfpUpdateEvent(DataTable mfpdt)
@@ -131,13 +183,12 @@ namespace dmspl // to z dzis :)
             { }
         }
 
-        private void DataStorageModeReport(DataStorageState oldstate, DataStorageState newstate)
+        private void DataStorageModeReport(IDataStorage whosend, DataStorageMode oldstate, DataStorageMode newstate)
         {
             if (InvokeRequired)
-                BeginInvoke(new DelegateCollection.DataStorageModeReport(DataStorageModeReport), oldstate, newstate);
+                BeginInvoke(new DelegateCollection.DataStorageModeReport(DataStorageModeReport), datastorage, oldstate, newstate);
             else
             { }
         }
-
     }
 }

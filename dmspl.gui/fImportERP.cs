@@ -33,27 +33,26 @@ namespace dmspl
             this.it = it;
         }
 
-        private void DataStorageImportResult(string msg, int items, int duplicates)
+        private void DataStorageImportResult(IDataStorage whosend, string msg, int items, int duplicates)
         {
             if (InvokeRequired)
-                BeginInvoke(new DelegateCollection.DataStorageImportResult(DataStorageImportResult), msg, items, duplicates);
+                BeginInvoke(new DelegateCollection.DataStorageImportResult(DataStorageImportResult), whosend, msg, items, duplicates);
             else
             {
                 this.Close();
             }
         }
 
-        private void DataStorageImportUpdate(DelegateCollection.Classes.ImportUpdateData data)
+        private void DataStorageImportUpdate(IDataStorage datastorage, DelegateCollection.Classes.ImportUpdateData data)
         {
             if (InvokeRequired)
-                BeginInvoke(new DelegateCollection.DataStorageImportUpdate(DataStorageImportUpdate), data);
+                BeginInvoke(new DelegateCollection.DataStorageImportUpdate(DataStorageImportUpdate), datastorage, data);
             else
             {
                 lOK.Text = data.OK.ToString();
                 lNOK.Text = data.NOK.ToString();
                 lIST.Text = data.IST.ToString();
                 lALL.Text = data.ALL.ToString();
-                lMsg.Text = data.Msg;
                 pgb.Maximum = data.ALL;
                 pgb.Value = data.IST;
             }

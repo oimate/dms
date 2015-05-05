@@ -544,7 +544,7 @@
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(86, 13);
             this.label5.TabIndex = 17;
-            this.label5.Text = "MFP UPDATE";
+            this.label5.Text = "ERP UPDATE";
             // 
             // tMfp_skid
             // 

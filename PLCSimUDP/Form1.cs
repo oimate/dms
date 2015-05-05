@@ -233,8 +233,11 @@ namespace PLCSimUDP
                             Stat.ConnReqCnt = 0;
                         ServiceStatus(Status.Connected);
                         break;
+                    case 4:
+                        UpdateERPExternal(buffer);
+                        break;
                     case 5:
-                        UpdateMFPExternal(buffer);
+                     //   UpdateMFPExternal(buffer);
                         break;
                     case 9:
 
@@ -243,7 +246,7 @@ namespace PLCSimUDP
                     default:
                        if( Program.Log.IsEnablesEvent(Module.RXTXComm, EvType.Warning, Level.Debug));
                        {
-                           Log(EvType.Warning, Level.Debug, ConverByteArrayToStrong(buffer));  
+                           Log(EvType.Warning, Level.Debug, ConverByteArrayToString(buffer));  
  
                       }
                         break;
@@ -311,7 +314,7 @@ namespace PLCSimUDP
                         {
 
                   //          writeLogfile(ConverByteArrayToStrong(wholerecdata), "Incorrect CRC");
-                         Log(EvType.Error,Level.Debug, ConverByteArrayToStrong(wholerecdata));
+                         Log(EvType.Error,Level.Debug, ConverByteArrayToString(wholerecdata));
 
                        //     Log(EvType.Warning, Level.Debug, ConverByteArrayToStrong(buffer));  
                             return list;
@@ -321,7 +324,7 @@ namespace PLCSimUDP
                     else
                     {
                    //     writeLogfile(ConverByteArrayToStrong(wholerecdata), "Incorrect size");
-                        Log(EvType.Error, Level.Debug, ConverByteArrayToStrong(wholerecdata));
+                        Log(EvType.Error, Level.Debug, ConverByteArrayToString(wholerecdata));
 
                         return list;
                     }
@@ -410,7 +413,7 @@ namespace PLCSimUDP
 
         }
 
-        static string ConverByteArrayToStrong(byte[] data)
+        static string ConverByteArrayToString(byte[] data)
         {
             string s = string.Empty;
 
@@ -559,21 +562,91 @@ namespace PLCSimUDP
             }
         }
 
-        public void UpdateMFPExternal(byte[] data)
+
+
+        //public string dupnytekst
+        //{
+        //    get { return Text; }
+        //    set
+        //    {
+        //        SetDupaText(value);
+        //    }
+        //}
+        //delegate void UptdTxtdupa(string str);
+        //void SetDupaText(string text)
+        //{
+        //    if (InvokeRequired)
+        //        this.BeginInvoke(new UptdTxtdupa(SetDupaText), text);
+        //    else
+        //        Text = text;
+
+        //}
+
+        delegate void SetControlText(Control ctlr, string text);
+
+
+        void SetCtrlText(Control ctlr, string text)
         {
-            MPP_Update[0] = data[0];  // skid id
-            data[1] = (byte)MPP_Update[0];
-            data[2] = (byte)MPP_Update[1];  // derivate code
-            data[3] = (byte)(MPP_Update[2] >> 8); //colour
-            data[4] = (byte)MPP_Update[2];
-            data[5] = (byte)(MPP_Update[3] >> 24); // BSN
-            data[6] = (byte)(MPP_Update[3] >> 16);
-            data[7] = (byte)(MPP_Update[3] >> 8);
-            data[8] = (byte)MPP_Update[3];
-            data[9] = (byte)MPP_Update[4];  // Tracek
-            data[10] = (byte)MPP_Update[5];  //Roof
-            data[11] = (byte)MPP_Update[6]; // HoD
-            data[12] = (byte)MPP_Update[7];  //Spare
+            if (ctlr.InvokeRequired)
+                ctlr.BeginInvoke(new SetControlText(SetCtrlText), ctlr, text);
+            else
+                ctlr.Text = text;         
+        }
+
+        public void UpdateERPExternal(byte[] data)
+        {
+            //string str =string.Format("{0:X2}{1:X2}{2:X2}{3:X2}", data[3], data[4], data[5], data[6]);
+            Array.Reverse(data, 3, 4);
+            int j = BitConverter.ToInt32(data, 3);
+            //SetCtrlText(tMfp_Body, (string.Format("{0:X2}{1:X2}{2:X2}{3:X2}", data[3], data[4], data[5], data[6])));
+            SetCtrlText(tMfp_Body, (string.Format("{0}",j)));
+
+
+        //    tMfp_Body.Text = string.Format("{0:X2}{1:X2}{2:X2}{3:X2}", data[3], data[4], data[5], data[6]);
+            //(tMfp_Body.Text) += data[4].ToString();
+            //(tMfp_Body.Text) += data[5].ToString();
+            //(tMfp_Body.Text) += data[6].ToString();
+
+            //bw.Write((byte)(Erpdataset.BSN >> 24));
+            //bw.Write((byte)(Erpdataset.BSN >> 16));
+            //bw.Write((byte)(Erpdataset.BSN >> 8));
+            //bw.Write((byte)Erpdataset.BSN);
+
+            //bw.Write((byte)(Erpdataset.DerivativeCode >> 8));
+            //bw.Write((byte)(Erpdataset.DerivativeCode));
+
+            //bw.Write((byte)(Erpdataset.Colour >> 8));
+            //bw.Write((byte)(Erpdataset.Colour));
+
+            //bw.Write((byte)Erpdataset.Track);
+
+            //bw.Write((byte)Erpdataset.Roof);
+
+            //bw.Write((byte)Erpdataset.HoD);
+
+            ////as spare 2xBytes!
+            //bw.Write((byte)(RequestLocalnID >> 8));
+            //bw.Write((byte)(RequestLocalnID));
+
+            ////additional foreign skid as spare 2xBytes
+            //bw.Write((byte)(Erpdataset.SkidID >> 8));
+            //bw.Write((byte)Erpdataset.SkidID);
+
+
+
+        ////    MPP_Update[0] = data[0];  // skid id
+        //    data[1] = (byte)MPP_Update[0];
+        //    data[2] = (byte)MPP_Update[1];  // derivate code
+        //    data[3] = (byte)(MPP_Update[2] >> 8); //colour
+        //    data[4] = (byte)MPP_Update[2];
+        //    data[5] = (byte)(MPP_Update[3] >> 24); // BSN
+        //    data[6] = (byte)(MPP_Update[3] >> 16);
+        //    data[7] = (byte)(MPP_Update[3] >> 8);
+        //    data[8] = (byte)MPP_Update[3];
+        //    data[9] = (byte)MPP_Update[4];  // Tracek
+        //    data[10] = (byte)MPP_Update[5];  //Roof
+        //    data[11] = (byte)MPP_Update[6]; // HoD
+        //    data[12] = (byte)MPP_Update[7];  //Spare
         }
 
         private void bUpdateMfp_Click(object sender, EventArgs e)
@@ -589,18 +662,18 @@ namespace PLCSimUDP
                 MPP_Update[6] = Convert.ToInt32(tMfp_Hod.Text);
                 MPP_Update[7] = Convert.ToInt32(tMfp_Spare.Text);
 
-                ErpDataset ErpDs = new ErpDataset()
-                {
+                //ErpDataset ErpDs = new ErpDataset()
+                //{
 
-                    SkidID = Convert.ToInt32(tMfp_skid.Text),
-                    DerivativeCode = Convert.ToInt32(tMfp_Code.Text),
-                    Colour = Convert.ToInt32(tMfp_Code.Text),
-                    BSN = Convert.ToInt32(tMfp_Body.Text),
-                    Track = Convert.ToInt32(tMfp_Track.Text),
-                    Roof = Convert.ToInt32(tMfp_Roof.Text),
-                    HoD = Convert.ToInt32(tMfp_Hod.Text),
-                    Spare = Convert.ToInt32(tMfp_Spare.Text),
-                };
+                //    SkidID = Convert.ToInt32(tMfp_skid.Text),
+                //    DerivativeCode = Convert.ToInt32(tMfp_Code.Text),
+                //    Colour = Convert.ToInt32(tMfp_Code.Text),
+                //    BSN = Convert.ToInt32(tMfp_Body.Text),
+                //    Track = Convert.ToInt32(tMfp_Track.Text),
+                //    Roof = Convert.ToInt32(tMfp_Roof.Text),
+                //    HoD = Convert.ToInt32(tMfp_Hod.Text),
+                //    Spare = Convert.ToInt32(tMfp_Spare.Text),
+                //};
 
             }
             byte[] sendbyte = new byte[13];

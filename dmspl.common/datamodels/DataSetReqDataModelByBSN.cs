@@ -23,7 +23,7 @@ namespace dmspl.common.datamodels
             DataSetReceived = dataSetReceived;
         }
 
-        public void OnDataSetReceived(ErpDataset dataset)
+        public void ResponseReady(ErpDataset dataset)
         {
             if (DataSetReceived != null)
             {

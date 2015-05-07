@@ -10,6 +10,7 @@ using System.Threading;
 using System.Data;
 using System.IO;
 using System.Data.Objects;
+using dmspl.common.log;
 
 namespace dmspl.datastorage
 {
@@ -24,15 +25,17 @@ namespace dmspl.datastorage
             set
             {
                 state = value;
-                System.Diagnostics.Debug.WriteLine("{1} :: {0}", state, DateTime.Now.ToString("yyyy:MM:dd HH:mm:ss:fffffff"));
+                DataLog.Log(DateTime.Now, Module.DataBase, EvType.Info, Level.Main, state);
                 OnDataStorageModeReport(state);
             }
         }
 
         DmsDataset dmsDataset;
 
-        DmsDataset.DMS_ERPDataTable DMS_ERP;
+        //DmsDataset.DMS_ERPDataTable DMS_ERP;
         DmsDatasetTableAdapters.DMS_ERPTableAdapter erp_DataAdapter;
+
+        DmsDatasetTableAdapters.DMS_MarriageTableAdapter marriage_DataAdapter;
 
         DmsDataset.DMS_MFPDataTable DMS_MFP;
         DmsDatasetTableAdapters.DMS_MFPTableAdapter mfp_DataAdapter;
@@ -41,8 +44,6 @@ namespace dmspl.datastorage
         Thread queueworker;
 
         AuthData ad;
-
-        dmspl.common.log.IDataLog LogObj;
 
         #region Constructor
         public DataStorageSQL()
@@ -53,6 +54,7 @@ namespace dmspl.datastorage
 
             mfp_DataAdapter = new DmsDatasetTableAdapters.DMS_MFPTableAdapter();
             erp_DataAdapter = new DmsDatasetTableAdapters.DMS_ERPTableAdapter();
+            marriage_DataAdapter = new DmsDatasetTableAdapters.DMS_MarriageTableAdapter();
 
             //InitAdapters();
 
@@ -60,7 +62,7 @@ namespace dmspl.datastorage
             //if (!userManager.Login("sli", "sli"))
             //    throw new InvalidOperationException("login failed");
 
-            state = DataStorageState.Initializing;
+            State = DataStorageState.Initializing;
 
             //processedqueue = new List<FileInfo>();
 
@@ -87,13 +89,13 @@ namespace dmspl.datastorage
             }
             catch (SqlException sqlex)
             {
-                System.Diagnostics.Debug.WriteLine("SqlException, Class:{0:D2}", sqlex.Class, null);
+                DataLog.Log(Module.DataBase, EvType.Error, Level.Details, string.Format("SqlException, Class:{0:D2}, Msg:\r\n{1}", sqlex.Class, sqlex.Message));
                 if (sqlex.Class >= 20)
                     State = DataStorageState.Offline;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("Exception", ex.Message, null);
+                DataLog.Log(Module.DataBase, EvType.Error, Level.Debug, string.Format("Exception, Msg:\r\n{1}", ex.Message, null));
             }
         }
         #endregion
@@ -107,6 +109,7 @@ namespace dmspl.datastorage
             if (collection == null || collection.Count == 0)
             {
                 OnDataStorageImportResult(string.Format("No Data To Import"));
+                DataLog.Log(Module.DataBase, EvType.Info, Level.Main, "No Data To Import");
                 return;
             }
 
@@ -153,9 +156,9 @@ namespace dmspl.datastorage
                         continue;
                     }
 
-                    int? checkedForeignSkid = erp_DataAdapter.CheckExistForeignSkid(ForeignSkid);
+                    int? checkedSkid = erp_DataAdapter.CheckExistsSkid(ForeignSkid);
 
-                    if (!checkedForeignSkid.HasValue)
+                    if (!checkedSkid.HasValue)
                     {
                         erp_DataAdapter.Insert(
                             ForeignSkid,
@@ -170,10 +173,12 @@ namespace dmspl.datastorage
                             User,
                             null);
                         ok++;
+                        DataLog.Log(Module.DataBase, EvType.Info, Level.Main, string.Format("dataset imported: {0}", datatoimport));
                     }
                     else
                     {
                         nok++;
+                        DataLog.Log(Module.DataBase, EvType.Warning, Level.Main, string.Format("dataset exists: {0}", datatoimport));
                         //string msg = string.Format("{0}, {1}, {2}, {3}", ok, nok, ok + nok, all);
                         //OnDataStorageImportUpdate(new DelegateCollection.Classes.ImportUpdateData(msg, ok, nok, ok + nok, all));
                         //Thread.Sleep(1);
@@ -188,31 +193,29 @@ namespace dmspl.datastorage
                 //OnDataStorageErpUpdateEvent();
                 //OnDataStorageImportResult("datastorageimportresult");
             }
-            catch (SqlException sqlEx)
+            catch (SqlException sqlex)
             {
-                OnDataStorageImportResult("data import unsuccessful!", collection.Count);
-                System.Diagnostics.Debug.WriteLine("catched: {0}", sqlEx.Message, null);
-                if (sqlEx.Class >= 20)
+                DataLog.Log(Module.DataBase, EvType.Error, Level.Details, string.Format("SqlException, Class:{0:D2}, Msg:\r\n{1}", sqlex.Class, sqlex.Message));
+                if (sqlex.Class >= 20)
                     State = DataStorageState.Offline;
             }
-            catch (Exception allEx)
+            catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("catched: {0}", allEx.Message, null);
+                DataLog.Log(Module.DataBase, EvType.Error, Level.Debug, string.Format("Exception, Msg:\r\n{1}", ex.Message, null));
             }
             finally
             {
-                OnDataStorageImportResult("");
+                OnDataStorageImportResult("finally");
             }
         }
-        //public async Task UpdateMFPAsync(List<int> data)
-        //{
-        //    //if (connection.State != ConnectionState.Open)
-        //    //    return;
-        //    await Task.Run(() => UpdateMFP(data));
-        //}
 
         public void UpdateMFP(List<int> data)
         {
+            if (DMS_MFP == null)
+            {
+                DataLog.Log(Module.DataBase, EvType.Error, Level.Debug, "DMS_MFP == null during UpdateMFP()");
+                return;
+            }
             lock (DMS_MFP)
             {
                 try
@@ -245,13 +248,13 @@ namespace dmspl.datastorage
                 }
                 catch (SqlException sqlex)
                 {
-                    System.Diagnostics.Debug.WriteLine("SqlException, Class:{0:D2}", sqlex.Class, null);
+                    DataLog.Log(Module.DataBase, EvType.Error, Level.Details, string.Format("SqlException, Class:{0:D2}, Msg:\r\n{1}", sqlex.Class, sqlex.Message));
                     if (sqlex.Class >= 20)
                         State = DataStorageState.Offline;
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine("Exception", ex.Message, null);
+                    DataLog.Log(Module.DataBase, EvType.Error, Level.Debug, string.Format("Exception, Msg:\r\n{1}", ex.Message, null));
                 }
             }
             OnDataStorageMfpUpdateEvent();
@@ -262,6 +265,7 @@ namespace dmspl.datastorage
             if (queueworker != null && queueworker.ThreadState.HasFlag(ThreadState.Unstarted))
                 queueworker.Start();
         }
+
         public void PauseResumeThread()
         {
             pauseThread = !pauseThread;
@@ -300,61 +304,6 @@ namespace dmspl.datastorage
             }
         }
 
-        private void FinalizeCommit(SqlCommand cmd)
-        {
-            try
-            {
-                cmd.Transaction.Commit();
-                OnDataStorageImportResult(string.Format("ERP Import Commit OK"));
-            }
-            catch (Exception ex)
-            {
-                OnDataStorageImportResult(string.Format("ERP Import Commit error"));
-            }
-        }
-        private bool ExecuteQuery(SqlCommand cmd, string sql)
-        {
-            try
-            {
-                cmd.CommandText = sql;
-                int i = cmd.ExecuteNonQuery();
-                if (i <= 0)
-                {
-                    //OnDataStorageImportUpdate(string.Format("problems with execution: {0}", sql));
-                    return false;
-                }
-                else
-                {
-                    //OnDataStorageImportUpdate(string.Format("executed: {0}", sql));
-                    //System.Diagnostics.Debug.WriteLine(string.Format("\t{0}", sql));
-                    return true;
-                }
-
-                //if (commitcounter++ == COMMITLIMIT)
-                //{
-                //    commitcounter = 0;
-                //    cmd.Transaction.Commit();
-                //    OnDataStorageImportResult(string.Format("commited"));
-                //    cmd.Transaction = connection.BeginTransaction();
-                //}
-
-            }
-            catch (Exception ex)
-            {
-                try
-                {
-                    OnDataStorageImportResult(string.Format("{0}", ex.GetType()));
-                    cmd.Transaction.Rollback();
-                    return false;
-                }
-                catch (Exception ex2)
-                {
-                    OnDataStorageImportResult(string.Format("{0}", ex2.GetType()));
-                    return false;
-                }
-            }
-        }
-
         public void ProcessModel(DataModel ReceivedDataModel)
         {
             if (ReceivedDataModel is MFPDataModel)
@@ -363,83 +312,44 @@ namespace dmspl.datastorage
                 GetDataSetByBSN(ReceivedDataModel as DataSetReqDataModelByBSN);
         }
 
-        void GetDataSetByBSN(DataSetReqDataModelByBSN ReceivedDataModel)
+        void GetDataSetByBSN(DataSetReqDataModelByBSN Request)
         {
-            ReceivedDataModel.OnDataSetReceived(new ErpDataset() { BSN = ReceivedDataModel.RequestBSN, SkidID = 1234, Colour = 20, DerivativeCode = 10, HoD = 5, Roof = 30, Track = 99 });
+            try
+            {
+                //var row = erp_DataAdapter.GetData().First(p => p.BSN == Request.RequestBSN);
+                var collection = erp_DataAdapter.GetErpDataTableByBSN(Request.RequestBSN);
+                if (collection.Count == 1)
+                {
+                    var row = collection[0];
+                    ErpDataset eds = new ErpDataset()
+                    {
+                        BSN = row.BSN,
+                        Colour = row.Colour,
+                        DerivativeCode = row.DerivativeCode,
+                        HoD = row.Door,
+                        Roof = row.Roof,
+                        SkidID = row.ForeignSkid,
+                        Track = row.Track
+                    };
+                    marriage_DataAdapter.Insert(Request.RequestLocalnID, row.fk_ErpHistId);
+                    Request.ResponseReady(eds);
+                }
+                else
+                {
+                    Request.ResponseReady(new ErpDataset() { BSN = Request.RequestBSN, SkidID = int.MaxValue, Colour = int.MaxValue, DerivativeCode = int.MaxValue, HoD = int.MaxValue, Roof = int.MaxValue, Track = int.MaxValue });
+                }
+            }
+            catch (SqlException sqlex)
+            {
+                DataLog.Log(Module.DataBase, EvType.Error, Level.Details, string.Format("SqlException, Class:{0:D2}, Msg:\r\n{1}", sqlex.Class, sqlex.Message));
+                if (sqlex.Class >= 20)
+                    State = DataStorageState.Offline;
+            }
+            catch (Exception ex)
+            {
+                DataLog.Log(Module.DataBase, EvType.Error, Level.Debug, string.Format("Exception, Msg:\r\n{1}", ex.Message, null));
+            }
         }
-
-        //private void GetDataSetBySkid(DataSetReqDataModel dataSetReqDataModel)
-        //{
-        //    try
-        //    {
-        //        using (var erp = erp_DataAdapter.GetData())
-        //        {
-        //            var row = erp.FindBySkidID(dataSetReqDataModel.RequestForeignID);
-        //            if (row == null)
-        //                dataSetReqDataModel.OnDataSetReceived(null);
-        //            else
-        //            {
-        //                dataSetReqDataModel.OnDataSetReceived(new ErpDataset()
-        //                    {
-        //                        BSN = row.BSN,
-        //                        Colour = row.Colour,
-        //                        DerivativeCode = row.DerivativeCode,
-        //                        HoD = row.Door,
-        //                        Roof = row.Roof,
-        //                        SkidID = row.SkidID,
-        //                        Track = row.Track,
-        //                        Spare = row.Spare
-        //                    }
-        //                );
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        System.Diagnostics.Debug.WriteLine("{1}\r\n{0}", ex.Message, ex.Source);
-        //    }
-        //}
-
-        //private void GetDataSetByBSN(DataSetReqDataModel dataSetReqDataModel)
-        //{
-        //    try
-        //    {
-        //        using (var erp = erp_DataAdapter.GetData())
-        //        {
-        //            var q = (from r in erp
-        //                     where r.BSN == dataSetReqDataModel.RequestForeignID
-        //                     select r);
-        //            if (q.Count() != 1)
-        //                dataSetReqDataModel.OnDataSetReceived(null);
-        //            else
-        //            {
-        //                var row = q.First();
-        //                dataSetReqDataModel.OnDataSetReceived(new ErpDataset()
-        //                {
-        //                    BSN = row.BSN,
-        //                    Colour = row.Colour,
-        //                    DerivativeCode = row.DerivativeCode,
-        //                    HoD = row.Door,
-        //                    Roof = row.Roof,
-        //                    SkidID = row.SkidID,
-        //                    Track = row.Track,
-        //                    Spare = row.Spare
-        //                }
-        //                );
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        System.Diagnostics.Debug.WriteLine("{1}\r\n{0}", ex.Message, ex.Source);
-        //    }
-        //}
-
-        //public async Task<bool> Login(string u, string p)
-        //{
-        //    bool success = await Task<bool>.Run(() => { return userManager.Login(u, p); });
-        //    return success;
-        //}
 
         #region Delegates/Events
 

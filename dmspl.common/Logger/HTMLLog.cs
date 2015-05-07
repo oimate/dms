@@ -26,7 +26,7 @@ namespace dmspl.common.log
             Write("<!doctype html>\r\n", mod);
             Write("<html>\r\n", mod);
             Write("<head>\r\n", mod);
-            Write(string.Format("<title>RFID LOG: {0:yyyy-MM-dd hh:mm:ss}</title>\r\n", DateTime.Now), mod);
+            Write(string.Format("<title>LOG: {0:yyyy-MM-dd hh:mm:ss}</title>\r\n", DateTime.Now), mod);
             Write("<meta charset=\"UTF-8\"/>\r\n", mod);
             Write(Properties.Resource.HTMLStyle, mod);
             Write("\r\n", mod);

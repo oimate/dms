@@ -316,7 +316,6 @@ namespace dmspl.datastorage
         {
             try
             {
-                //var row = erp_DataAdapter.GetData().First(p => p.BSN == Request.RequestBSN);
                 var collection = erp_DataAdapter.GetErpDataTableByBSN(Request.RequestBSN);
                 if (collection.Count == 1)
                 {

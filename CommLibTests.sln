@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dmspl.wpfgui", "dmspl.wpfgu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PLCSimUDP", "PLCSimUDP\PLCSimUDP.csproj", "{271AEC33-2A41-4843-8ECE-1A4ED23A693E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "metrostylegui", "..\tryingmetroframework\metrostylegui\metrostylegui.csproj", "{2F98E048-F46E-4B1E-BFDA-CB784C1D7FC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,6 +109,16 @@ Global
 		{271AEC33-2A41-4843-8ECE-1A4ED23A693E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{271AEC33-2A41-4843-8ECE-1A4ED23A693E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{271AEC33-2A41-4843-8ECE-1A4ED23A693E}.Release|x86.ActiveCfg = Release|Any CPU
+		{2F98E048-F46E-4B1E-BFDA-CB784C1D7FC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F98E048-F46E-4B1E-BFDA-CB784C1D7FC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F98E048-F46E-4B1E-BFDA-CB784C1D7FC0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{2F98E048-F46E-4B1E-BFDA-CB784C1D7FC0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{2F98E048-F46E-4B1E-BFDA-CB784C1D7FC0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2F98E048-F46E-4B1E-BFDA-CB784C1D7FC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F98E048-F46E-4B1E-BFDA-CB784C1D7FC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F98E048-F46E-4B1E-BFDA-CB784C1D7FC0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{2F98E048-F46E-4B1E-BFDA-CB784C1D7FC0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{2F98E048-F46E-4B1E-BFDA-CB784C1D7FC0}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

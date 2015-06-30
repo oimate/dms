@@ -12,7 +12,7 @@ namespace dmspl.common.datamodels
         public MFPDataModel(short size, byte type, System.IO.BinaryReader br) : base(size, type)
         {
             Mfps = new List<int>();
-            int count = (Size - 4) / 2;
+            int count = Size / 2;
             for (int i = 0; i < count; i++)
             {
                 Mfps.Add(System.Net.IPAddress.NetworkToHostOrder(br.ReadInt16()));

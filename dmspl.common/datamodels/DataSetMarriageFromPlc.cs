@@ -7,35 +7,44 @@ using dmspl.common.BigEndianExtension;
 
 namespace dmspl.common.datamodels
 {
-    public class DataSetReqDataModelByBSN : DataModel
+    public class DataSetMarriageFromPlc : DataModel
     {
-        public int RequestBSN { get; set; }
-        public int RequestLocalnID { get; set; }
-        public string ResponseDataSet { get; set; }
-        public byte[] Dataset { get; set; }
         public ErpDataset Erpdataset { get; set; }
 
-        public DataSetReqDataModelByBSN(short size, byte type, System.IO.BinaryReader br, DataSetReceivedDelegate dataSetReceived = null)
+        public DataSetMarriageFromPlc(short size, byte type, System.IO.BinaryReader br)
             : base(size, type)
         {
-            RequestBSN = System.Net.IPAddress.NetworkToHostOrder(br.ReadInt32());
-            RequestLocalnID = System.Net.IPAddress.NetworkToHostOrder(br.ReadInt16());
-            DataSetReceived = dataSetReceived;
-        }
+            Erpdataset = new ErpDataset();
+            //
+            //order as in plc:
+            //
 
-        public void ResponseReady(ErpDataset dataset)
-        {
-            if (DataSetReceived != null)
-            {
-                if (dataset == null)
-                {
-                    DataSetReceived(null);
-                    return;
-                }
-                Size = 15;
-                this.Erpdataset = dataset;
-                DataSetReceived(this);
-            }
+            //BSN - 4 Byte
+            Erpdataset.BSN = br.ReadInt32().FromBigEndian();
+
+            //Derivative Code - 2 Byte
+            Erpdataset.DerivativeCode = br.ReadInt16().FromBigEndian();
+
+            //Color - 2 Byte
+            Erpdataset.Colour = br.ReadInt16().FromBigEndian();
+
+            //Track - 1 Byte
+            Erpdataset.Track = br.ReadByte();
+
+            //Roof - 1 Byte
+            Erpdataset.Roof = br.ReadByte();
+
+            //Hood - 1 Byte
+            Erpdataset.Hood = br.ReadByte();
+
+            //siemens gap or fill between byte and following int
+            br.ReadByte();
+
+            //SkidNr - 2 Byte
+            Erpdataset.SkidID = br.ReadInt16().FromBigEndian();
+
+            //Spare - 2 Byte
+            Erpdataset.Spare = br.ReadInt16().FromBigEndian();
         }
 
         public override void GetRawData(System.IO.BinaryWriter bw)
@@ -60,9 +69,8 @@ namespace dmspl.common.datamodels
             bw.Write((byte)Erpdataset.Track);
             bw.Write((byte)Erpdataset.Roof);
             bw.Write((byte)Erpdataset.Hood);
-            bw.Write(((short)RequestLocalnID).ToBigEndian());
             bw.Write(((short)Erpdataset.SkidID).ToBigEndian());
-
+            bw.Write(((short)Erpdataset.Spare).ToBigEndian());
         }
     }
 }

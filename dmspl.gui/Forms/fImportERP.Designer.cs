@@ -1,4 +1,4 @@
-﻿namespace dmspl
+﻿namespace dmspl.Forms
 {
     partial class fImportERP
     {

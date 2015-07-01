@@ -9,7 +9,8 @@ namespace dmspl.common.datamodels
     {
         public List<int> Mfps { get; private set; }
 
-        public MFPDataModel(short size, byte type, System.IO.BinaryReader br) : base(size, type)
+        public MFPDataModel(short size, byte type, System.IO.BinaryReader br)
+            : base(size, type)
         {
             Mfps = new List<int>();
             int count = Size / 2;
@@ -19,8 +20,6 @@ namespace dmspl.common.datamodels
             }
         }
         public override void GetRawData(System.IO.BinaryWriter bw)
-        {
-
-        }
+        { }
     }
 }

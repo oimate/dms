@@ -41,7 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BigEndianExtension\BigEndian.cs" />
+    <Compile Include="datamodels\SkidExitDataModel.cs" />
     <Compile Include="datamodels\DataLifePacket.cs" />
+    <Compile Include="datamodels\DataSetMarriageFromPlc.cs" />
     <Compile Include="datamodels\DataSetReqDataModelByBSN.cs" />
     <Compile Include="DataStorageSourceMode.cs" />
     <Compile Include="DelegateCollection.cs" />

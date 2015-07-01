@@ -10,7 +10,7 @@ namespace dmspl.common
     public interface IDataStorage
     {
         //responsible for inserting provided data to database------------
-        void StoreProductionData(List<string> collection);
+        //void StoreProductionData(List<string> collection);
         void StartThread();
         //---------------------------------------------------------------
 

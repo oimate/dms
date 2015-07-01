@@ -25,7 +25,8 @@ namespace dmspl.datastorage
             set
             {
                 state = value;
-                DataLog.Log(DateTime.Now, Module.DataBase, EvType.Info, Level.Main, state);
+                //dbg:dsstat
+                DataLog.Log(DateTime.Now, Module.DataBase, EvType.Info, Level.Main, "dbg:dsstat|" + state);
                 OnDataStorageModeReport(state);
             }
         }
@@ -100,114 +101,114 @@ namespace dmspl.datastorage
         }
         #endregion
 
-        public void StoreProductionData(List<string> collection)
-        {
-            int all, ok, nok;
-            all = collection.Count;
-            ok = nok = 0;
+        //public void StoreProductionData(List<string> collection)
+        //{
+        //    int all, ok, nok;
+        //    all = collection.Count;
+        //    ok = nok = 0;
 
-            if (collection == null || collection.Count == 0)
-            {
-                OnDataStorageImportResult(string.Format("No Data To Import"));
-                DataLog.Log(Module.DataBase, EvType.Info, Level.Main, "No Data To Import");
-                return;
-            }
+        //    if (collection == null || collection.Count == 0)
+        //    {
+        //        OnDataStorageImportResult(string.Format("No Data To Import"));
+        //        DataLog.Log(Module.DataBase, EvType.Info, Level.Main, "No Data To Import");
+        //        return;
+        //    }
 
-            DelegateCollection.Classes.ImportUpdateData iud = new DelegateCollection.Classes.ImportUpdateData("", 0, 0, 0, collection.Count);
-            string sql = string.Empty;
-            try
-            {
-                foreach (string datatoimport in collection)
-                {
-                    bool fail = false;
-                    if (datatoimport.Length != 21) fail = true;
+        //    DelegateCollection.Classes.ImportUpdateData iud = new DelegateCollection.Classes.ImportUpdateData("", 0, 0, 0, collection.Count);
+        //    string sql = string.Empty;
+        //    try
+        //    {
+        //        foreach (string datatoimport in collection)
+        //        {
+        //            bool fail = false;
+        //            if (datatoimport.Length != 21) fail = true;
 
-                    int ForeignSkid;
-                    if (!int.TryParse(datatoimport.Substring(0, 4), out ForeignSkid)) fail = true;
+        //            int ForeignSkid;
+        //            if (!int.TryParse(datatoimport.Substring(0, 4), out ForeignSkid)) fail = true;
 
-                    int DerivativeCode;
-                    if (!int.TryParse(datatoimport.Substring(4, 3), out DerivativeCode)) fail = true;
+        //            int DerivativeCode;
+        //            if (!int.TryParse(datatoimport.Substring(4, 3), out DerivativeCode)) fail = true;
 
-                    int Colour;
-                    if (!int.TryParse(datatoimport.Substring(7, 3), out Colour)) fail = true;
+        //            int Colour;
+        //            if (!int.TryParse(datatoimport.Substring(7, 3), out Colour)) fail = true;
 
-                    int BSN;
-                    if (!int.TryParse(datatoimport.Substring(10, 6), out BSN)) fail = true;
+        //            int BSN;
+        //            if (!int.TryParse(datatoimport.Substring(10, 6), out BSN)) fail = true;
 
-                    int Track;
-                    if (!int.TryParse(datatoimport.Substring(16, 1), out Track)) fail = true;
+        //            int Track;
+        //            if (!int.TryParse(datatoimport.Substring(16, 1), out Track)) fail = true;
 
-                    int Roof;
-                    if (!int.TryParse(datatoimport.Substring(17, 1), out Roof)) fail = true;
+        //            int Roof;
+        //            if (!int.TryParse(datatoimport.Substring(17, 1), out Roof)) fail = true;
 
-                    int HoD;
-                    if (!int.TryParse(datatoimport.Substring(18, 1), out HoD)) fail = true;
+        //            int HoD;
+        //            if (!int.TryParse(datatoimport.Substring(18, 1), out HoD)) fail = true;
 
-                    int Spare;
-                    if (!int.TryParse(datatoimport.Substring(19, 2), out Spare)) fail = true;
+        //            int Spare;
+        //            if (!int.TryParse(datatoimport.Substring(19, 2), out Spare)) fail = true;
 
-                    DateTime Timestamp = DateTime.Now;
+        //            DateTime Timestamp = DateTime.Now;
 
-                    long User = 0;
+        //            long User = 0;
 
-                    if (fail)
-                    {
-                        nok++;
-                        continue;
-                    }
+        //            if (fail)
+        //            {
+        //                nok++;
+        //                continue;
+        //            }
 
-                    int? checkedSkid = erp_DataAdapter.CheckExistsSkid(ForeignSkid);
+        //            int? checkedSkid = erp_DataAdapter.CheckExistsSkid(ForeignSkid);
 
-                    if (!checkedSkid.HasValue)
-                    {
-                        erp_DataAdapter.Insert(
-                            ForeignSkid,
-                            DerivativeCode,
-                            Colour,
-                            BSN,
-                            Track,
-                            Roof,
-                            HoD,
-                            Spare,
-                            Timestamp,
-                            User,
-                            null);
-                        ok++;
-                        DataLog.Log(Module.DataBase, EvType.Info, Level.Main, string.Format("dataset imported: {0}", datatoimport));
-                    }
-                    else
-                    {
-                        nok++;
-                        DataLog.Log(Module.DataBase, EvType.Warning, Level.Main, string.Format("dataset exists: {0}", datatoimport));
-                        //string msg = string.Format("{0}, {1}, {2}, {3}", ok, nok, ok + nok, all);
-                        //OnDataStorageImportUpdate(new DelegateCollection.Classes.ImportUpdateData(msg, ok, nok, ok + nok, all));
-                        //Thread.Sleep(1);
-                    }
-                    iud.Msg = datatoimport;
-                    iud.OK = ok;
-                    iud.NOK = nok;
-                    iud.IST = ok + nok;
-                    OnDataStorageImportUpdate(iud);
-                }
-                //erp_DataAdapter.Update(dmsDataset.DMS_ERP);
-                //OnDataStorageErpUpdateEvent();
-                //OnDataStorageImportResult("datastorageimportresult");
-            }
-            catch (SqlException sqlex)
-            {
-                DataLog.Log(Module.DataBase, EvType.Error, Level.Details, string.Format("SqlException, Class:{0:D2}, Msg:\r\n{1}", sqlex.Class, sqlex.Message));
-                if (sqlex.Class >= 20)
-                    State = DataStorageState.Offline;
-            }
-            catch (Exception ex)
-            {
-                DataLog.Log(Module.DataBase, EvType.Error, Level.Debug, string.Format("Exception, Msg:\r\n{1}", ex.Message, null));
-            }
-            finally
-            {
-                OnDataStorageImportResult("finally");
-            }
-        }
+        //            if (!checkedSkid.HasValue)
+        //            {
+        //                erp_DataAdapter.Insert(
+        //                    ForeignSkid,
+        //                    DerivativeCode,
+        //                    Colour,
+        //                    BSN,
+        //                    Track,
+        //                    Roof,
+        //                    HoD,
+        //                    Spare,
+        //                    Timestamp,
+        //                    User,
+        //                    null);
+        //                ok++;
+        //                DataLog.Log(Module.DataBase, EvType.Info, Level.Main, string.Format("dataset imported: {0}", datatoimport));
+        //            }
+        //            else
+        //            {
+        //                nok++;
+        //                DataLog.Log(Module.DataBase, EvType.Warning, Level.Main, string.Format("dataset exists: {0}", datatoimport));
+        //                //string msg = string.Format("{0}, {1}, {2}, {3}", ok, nok, ok + nok, all);
+        //                //OnDataStorageImportUpdate(new DelegateCollection.Classes.ImportUpdateData(msg, ok, nok, ok + nok, all));
+        //                //Thread.Sleep(1);
+        //            }
+        //            iud.Msg = datatoimport;
+        //            iud.OK = ok;
+        //            iud.NOK = nok;
+        //            iud.IST = ok + nok;
+        //            OnDataStorageImportUpdate(iud);
+        //        }
+        //        //erp_DataAdapter.Update(dmsDataset.DMS_ERP);
+        //        //OnDataStorageErpUpdateEvent();
+        //        //OnDataStorageImportResult("datastorageimportresult");
+        //    }
+        //    catch (SqlException sqlex)
+        //    {
+        //        DataLog.Log(Module.DataBase, EvType.Error, Level.Details, string.Format("SqlException, Class:{0:D2}, Msg:\r\n{1}", sqlex.Class, sqlex.Message));
+        //        if (sqlex.Class >= 20)
+        //            State = DataStorageState.Offline;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        DataLog.Log(Module.DataBase, EvType.Error, Level.Debug, string.Format("Exception, Msg:\r\n{1}", ex.Message, null));
+        //    }
+        //    finally
+        //    {
+        //        OnDataStorageImportResult("finally");
+        //    }
+        //}
 
         public void UpdateMFP(List<int> data)
         {
@@ -308,47 +309,96 @@ namespace dmspl.datastorage
         {
             if (ReceivedDataModel is MFPDataModel)
                 UpdateMFP(((MFPDataModel)ReceivedDataModel).Mfps);
-            if (ReceivedDataModel is DataSetReqDataModelByBSN)
-                GetDataSetByBSN(ReceivedDataModel as DataSetReqDataModelByBSN);
+            //if (ReceivedDataModel is DataSetReqDataModelByBSN)
+            //    GetDataSetByBSN(ReceivedDataModel as DataSetReqDataModelByBSN);
+            if (ReceivedDataModel is DataSetMarriageFromPlc)
+                MarriageFromPlc(ReceivedDataModel as DataSetMarriageFromPlc);
+            if (ReceivedDataModel is SkidExitDataModel)
+                SkidExit(ReceivedDataModel as SkidExitDataModel);
         }
 
-        void GetDataSetByBSN(DataSetReqDataModelByBSN Request)
+        private void SkidExit(SkidExitDataModel skidExitDataModel)
+        {
+            var id = erp_DataAdapter.CheckExistsSkid(skidExitDataModel.Skid);
+            if (id != null)
+            {
+                //dbg:exitok
+                DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:exitok|removed " + skidExitDataModel.Skid.ToString());
+                erp_DataAdapter.UpdateLeftPlantById(true, id.Value);
+            }
+            else
+            {
+                //dbg:exitnok
+                DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:exitnok|not removed " + skidExitDataModel.Skid.ToString());
+            }
+        }
+
+        private void MarriageFromPlc(DataSetMarriageFromPlc dataSetMarriageFromPlc)
         {
             try
             {
-                var collection = erp_DataAdapter.GetErpDataTableByBSN(Request.RequestBSN);
-                if (collection.Count == 1)
+                ErpDataset eds = dataSetMarriageFromPlc.Erpdataset;
+
+                var Id = erp_DataAdapter.FindSkidByDataset(eds.SkidID, eds.DerivativeCode, eds.Colour, eds.BSN, eds.Track, eds.Roof, eds.Hood, eds.Spare, false);
+
+                if (Id == null)
                 {
-                    var row = collection[0];
-                    ErpDataset eds = new ErpDataset()
-                    {
-                        BSN = row.BSN,
-                        Colour = row.Colour,
-                        DerivativeCode = row.DerivativeCode,
-                        HoD = row.Door,
-                        Roof = row.Roof,
-                        SkidID = row.ForeignSkid,
-                        Track = row.Track
-                    };
-                    marriage_DataAdapter.Insert(Request.RequestLocalnID, row.fk_ErpHistId);
-                    Request.ResponseReady(eds);
+                    var y = erp_DataAdapter.Insert(eds.SkidID, eds.DerivativeCode, eds.Colour, eds.BSN, eds.Track, eds.Roof, eds.Hood, eds.Spare, false, DateTime.Now, 0);
+                    //dbg:marrok
+                    DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:marrok|added " + dataSetMarriageFromPlc.Erpdataset.ToString());
                 }
                 else
                 {
-                    Request.ResponseReady(new ErpDataset() { BSN = Request.RequestBSN, SkidID = int.MaxValue, Colour = int.MaxValue, DerivativeCode = int.MaxValue, HoD = int.MaxValue, Roof = int.MaxValue, Track = int.MaxValue });
+                    //dbg:marrnok
+                    DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:marrnok|already exists (skid " + Id.Value + ") " + dataSetMarriageFromPlc.Erpdataset.ToString());
                 }
             }
-            catch (SqlException sqlex)
+            catch (Exception e)
             {
-                DataLog.Log(Module.DataBase, EvType.Error, Level.Details, string.Format("SqlException, Class:{0:D2}, Msg:\r\n{1}", sqlex.Class, sqlex.Message));
-                if (sqlex.Class >= 20)
-                    State = DataStorageState.Offline;
-            }
-            catch (Exception ex)
-            {
-                DataLog.Log(Module.DataBase, EvType.Error, Level.Debug, string.Format("Exception, Msg:\r\n{1}", ex.Message, null));
+                //dbg:marrexc
+                DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:marrexc|problem with " + dataSetMarriageFromPlc.Erpdataset.ToString());
+                //dbg:mafrpl
+                DataLog.Log(Module.DataBase, EvType.Error, Level.Main, "dbg:mafrpl|" + e.Message);
             }
         }
+
+        //private void GetDataSetByBSN(DataSetReqDataModelByBSN Request)
+        //{
+        //    try
+        //    {
+        //        var collection = erp_DataAdapter.GetErpDataTableByBSN(Request.RequestBSN);
+        //        if (collection.Count == 1)
+        //        {
+        //            var row = collection[0];
+        //            ErpDataset eds = new ErpDataset()
+        //            {
+        //                BSN = row.BSN,
+        //                Colour = row.Colour,
+        //                DerivativeCode = row.DerivativeCode,
+        //                Hood = row.Door,
+        //                Roof = row.Roof,
+        //                SkidID = row.ForeignSkid,
+        //                Track = row.Track
+        //            };
+        //            marriage_DataAdapter.Insert(Request.RequestLocalnID, row.fk_ErpHistId);
+        //            Request.ResponseReady(eds);
+        //        }
+        //        else
+        //        {
+        //            Request.ResponseReady(new ErpDataset() { BSN = Request.RequestBSN, SkidID = int.MaxValue, Colour = int.MaxValue, DerivativeCode = int.MaxValue, Hood = int.MaxValue, Roof = int.MaxValue, Track = int.MaxValue });
+        //        }
+        //    }
+        //    catch (SqlException sqlex)
+        //    {
+        //        DataLog.Log(Module.DataBase, EvType.Error, Level.Details, string.Format("SqlException, Class:{0:D2}, Msg:\r\n{1}", sqlex.Class, sqlex.Message));
+        //        if (sqlex.Class >= 20)
+        //            State = DataStorageState.Offline;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        DataLog.Log(Module.DataBase, EvType.Error, Level.Debug, string.Format("Exception, Msg:\r\n{1}", ex.Message, null));
+        //    }
+        //}
 
         #region Delegates/Events
 

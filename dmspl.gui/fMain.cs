@@ -16,9 +16,9 @@ namespace dmspl
 {
     public partial class fMain : Form
     {
-        fImportERP ImportPopUp;
-        fMfpTab MfpDTPopUp;
-        fErpTab ErpDTPopUp;
+        Forms.fImportERP ImportPopUp;
+        Forms.fMfpTab MfpDTPopUp;
+        Forms.fErpTab ErpDTPopUp;
 
         IDataStorage datastorage;
         DataSimulator ds;
@@ -76,7 +76,7 @@ namespace dmspl
             UDPComm ret =null;
             try
             {
-                ret = new UDPComm(9001);
+                ret = new UDPComm(2002);
                 ret.ReferencjaDoFunkcjiWyswietlajacejText = refdofwystekst;
                 ret.DataStorage = datastorage;
                 ret.StatusChanged += StatChanged;
@@ -141,7 +141,7 @@ namespace dmspl
             openfile.Filter = "Text files (*.txt)|*.txt|Excel files (*.xlsx)|*.xlsx";
             if (openfile.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
             string filepath = openfile.FileName;
-            ImportPopUp = new fImportERP(filepath, ImporterType.txt, datastorage);
+            ImportPopUp = new dmspl.Forms.fImportERP(filepath, ImporterType.txt, datastorage);
             if (ErpDTPopUp != null && !ErpDTPopUp.IsDisposed) ErpDTPopUp.Hide();
             ImportPopUp.StartPosition = FormStartPosition.Manual;
             ImportPopUp.Top = this.Top;

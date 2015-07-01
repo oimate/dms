@@ -419,6 +419,8 @@ namespace dmspl.datastorage {
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
         public partial class DMS_ERPDataTable : global::System.Data.TypedTableBase<DMS_ERPRow> {
             
+            private global::System.Data.DataColumn columnId;
+            
             private global::System.Data.DataColumn columnForeignSkid;
             
             private global::System.Data.DataColumn columnDerivativeCode;
@@ -435,11 +437,11 @@ namespace dmspl.datastorage {
             
             private global::System.Data.DataColumn columnSpare;
             
+            private global::System.Data.DataColumn columnLeftPlant;
+            
             private global::System.Data.DataColumn columnTimestamp;
             
             private global::System.Data.DataColumn columnfk_User;
-            
-            private global::System.Data.DataColumn columnfk_ErpHistId;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
@@ -472,6 +474,14 @@ namespace dmspl.datastorage {
             protected DMS_ERPDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn IdColumn {
+                get {
+                    return this.columnId;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -540,6 +550,14 @@ namespace dmspl.datastorage {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn LeftPlantColumn {
+                get {
+                    return this.columnLeftPlant;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public global::System.Data.DataColumn TimestampColumn {
                 get {
                     return this.columnTimestamp;
@@ -551,14 +569,6 @@ namespace dmspl.datastorage {
             public global::System.Data.DataColumn fk_UserColumn {
                 get {
                     return this.columnfk_User;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn fk_ErpHistIdColumn {
-                get {
-                    return this.columnfk_ErpHistId;
                 }
             }
             
@@ -599,9 +609,10 @@ namespace dmspl.datastorage {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public DMS_ERPRow AddDMS_ERPRow(int ForeignSkid, int DerivativeCode, int Colour, int BSN, int Track, int Roof, int Door, int Spare, System.DateTime Timestamp, long fk_User, int fk_ErpHistId) {
+            public DMS_ERPRow AddDMS_ERPRow(int ForeignSkid, int DerivativeCode, int Colour, int BSN, int Track, int Roof, int Door, int Spare, bool LeftPlant, System.DateTime Timestamp, long fk_User) {
                 DMS_ERPRow rowDMS_ERPRow = ((DMS_ERPRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
+                        null,
                         ForeignSkid,
                         DerivativeCode,
                         Colour,
@@ -610,19 +621,12 @@ namespace dmspl.datastorage {
                         Roof,
                         Door,
                         Spare,
+                        LeftPlant,
                         Timestamp,
-                        fk_User,
-                        fk_ErpHistId};
+                        fk_User};
                 rowDMS_ERPRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowDMS_ERPRow);
                 return rowDMS_ERPRow;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public DMS_ERPRow FindByForeignSkid(int ForeignSkid) {
-                return ((DMS_ERPRow)(this.Rows.Find(new object[] {
-                            ForeignSkid})));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -642,6 +646,7 @@ namespace dmspl.datastorage {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             internal void InitVars() {
+                this.columnId = base.Columns["Id"];
                 this.columnForeignSkid = base.Columns["ForeignSkid"];
                 this.columnDerivativeCode = base.Columns["DerivativeCode"];
                 this.columnColour = base.Columns["Colour"];
@@ -650,14 +655,16 @@ namespace dmspl.datastorage {
                 this.columnRoof = base.Columns["Roof"];
                 this.columnDoor = base.Columns["Door"];
                 this.columnSpare = base.Columns["Spare"];
+                this.columnLeftPlant = base.Columns["LeftPlant"];
                 this.columnTimestamp = base.Columns["Timestamp"];
                 this.columnfk_User = base.Columns["fk_User"];
-                this.columnfk_ErpHistId = base.Columns["fk_ErpHistId"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             private void InitClass() {
+                this.columnId = new global::System.Data.DataColumn("Id", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnId);
                 this.columnForeignSkid = new global::System.Data.DataColumn("ForeignSkid", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnForeignSkid);
                 this.columnDerivativeCode = new global::System.Data.DataColumn("DerivativeCode", typeof(int), null, global::System.Data.MappingType.Element);
@@ -674,16 +681,18 @@ namespace dmspl.datastorage {
                 base.Columns.Add(this.columnDoor);
                 this.columnSpare = new global::System.Data.DataColumn("Spare", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSpare);
+                this.columnLeftPlant = new global::System.Data.DataColumn("LeftPlant", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnLeftPlant);
                 this.columnTimestamp = new global::System.Data.DataColumn("Timestamp", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnTimestamp);
                 this.columnfk_User = new global::System.Data.DataColumn("fk_User", typeof(long), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnfk_User);
-                this.columnfk_ErpHistId = new global::System.Data.DataColumn("fk_ErpHistId", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnfk_ErpHistId);
-                this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
-                                this.columnForeignSkid}, true));
+                this.columnId.AutoIncrement = true;
+                this.columnId.AutoIncrementSeed = -1;
+                this.columnId.AutoIncrementStep = -1;
+                this.columnId.AllowDBNull = false;
+                this.columnId.ReadOnly = true;
                 this.columnForeignSkid.AllowDBNull = false;
-                this.columnForeignSkid.Unique = true;
                 this.columnDerivativeCode.AllowDBNull = false;
                 this.columnColour.AllowDBNull = false;
                 this.columnBSN.AllowDBNull = false;
@@ -691,6 +700,7 @@ namespace dmspl.datastorage {
                 this.columnRoof.AllowDBNull = false;
                 this.columnDoor.AllowDBNull = false;
                 this.columnSpare.AllowDBNull = false;
+                this.columnLeftPlant.AllowDBNull = false;
                 this.columnTimestamp.AllowDBNull = false;
                 this.columnfk_User.AllowDBNull = false;
             }
@@ -2098,6 +2108,17 @@ namespace dmspl.datastorage {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int Id {
+                get {
+                    return ((int)(this[this.tableDMS_ERP.IdColumn]));
+                }
+                set {
+                    this[this.tableDMS_ERP.IdColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int ForeignSkid {
                 get {
                     return ((int)(this[this.tableDMS_ERP.ForeignSkidColumn]));
@@ -2186,6 +2207,17 @@ namespace dmspl.datastorage {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool LeftPlant {
+                get {
+                    return ((bool)(this[this.tableDMS_ERP.LeftPlantColumn]));
+                }
+                set {
+                    this[this.tableDMS_ERP.LeftPlantColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public System.DateTime Timestamp {
                 get {
                     return ((global::System.DateTime)(this[this.tableDMS_ERP.TimestampColumn]));
@@ -2204,34 +2236,6 @@ namespace dmspl.datastorage {
                 set {
                     this[this.tableDMS_ERP.fk_UserColumn] = value;
                 }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public int fk_ErpHistId {
-                get {
-                    try {
-                        return ((int)(this[this.tableDMS_ERP.fk_ErpHistIdColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'fk_ErpHistId\' in table \'DMS_ERP\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableDMS_ERP.fk_ErpHistIdColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool Isfk_ErpHistIdNull() {
-                return this.IsNull(this.tableDMS_ERP.fk_ErpHistIdColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void Setfk_ErpHistIdNull() {
-                this[this.tableDMS_ERP.fk_ErpHistIdColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -2878,6 +2882,7 @@ namespace dmspl.datastorage.DmsDatasetTableAdapters {
             global::System.Data.Common.DataTableMapping tableMapping = new global::System.Data.Common.DataTableMapping();
             tableMapping.SourceTable = "Table";
             tableMapping.DataSetTable = "DMS_ERP";
+            tableMapping.ColumnMappings.Add("Id", "Id");
             tableMapping.ColumnMappings.Add("ForeignSkid", "ForeignSkid");
             tableMapping.ColumnMappings.Add("DerivativeCode", "DerivativeCode");
             tableMapping.ColumnMappings.Add("Colour", "Colour");
@@ -2886,30 +2891,13 @@ namespace dmspl.datastorage.DmsDatasetTableAdapters {
             tableMapping.ColumnMappings.Add("Roof", "Roof");
             tableMapping.ColumnMappings.Add("Door", "Door");
             tableMapping.ColumnMappings.Add("Spare", "Spare");
+            tableMapping.ColumnMappings.Add("LeftPlant", "LeftPlant");
             tableMapping.ColumnMappings.Add("Timestamp", "Timestamp");
             tableMapping.ColumnMappings.Add("fk_User", "fk_User");
-            tableMapping.ColumnMappings.Add("fk_ErpHistId", "fk_ErpHistId");
             this._adapter.TableMappings.Add(tableMapping);
-            this._adapter.DeleteCommand = new global::System.Data.SqlClient.SqlCommand();
-            this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = @"DELETE FROM [dbo].[DMS_ERP] WHERE (([ForeignSkid] = @Original_ForeignSkid) AND ([DerivativeCode] = @Original_DerivativeCode) AND ([Colour] = @Original_Colour) AND ([BSN] = @Original_BSN) AND ([Track] = @Original_Track) AND ([Roof] = @Original_Roof) AND ([Door] = @Original_Door) AND ([Spare] = @Original_Spare) AND ([Timestamp] = @Original_Timestamp) AND ([fk_User] = @Original_fk_User) AND ((@IsNull_fk_ErpHistId = 1 AND [fk_ErpHistId] IS NULL) OR ([fk_ErpHistId] = @Original_fk_ErpHistId)))";
-            this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_ForeignSkid", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "ForeignSkid", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_DerivativeCode", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "DerivativeCode", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Colour", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Colour", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_BSN", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "BSN", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Track", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Track", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Roof", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Roof", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Door", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Door", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Spare", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Spare", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Timestamp", global::System.Data.SqlDbType.DateTime2, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Timestamp", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_fk_User", global::System.Data.SqlDbType.BigInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "fk_User", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_fk_ErpHistId", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "fk_ErpHistId", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_fk_ErpHistId", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "fk_ErpHistId", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = @"INSERT INTO [dbo].[DMS_ERP] ([ForeignSkid], [DerivativeCode], [Colour], [BSN], [Track], [Roof], [Door], [Spare], [Timestamp], [fk_User], [fk_ErpHistId]) VALUES (@ForeignSkid, @DerivativeCode, @Colour, @BSN, @Track, @Roof, @Door, @Spare, @Timestamp, @fk_User, @fk_ErpHistId);
-SELECT ForeignSkid, DerivativeCode, Colour, BSN, Track, Roof, Door, Spare, Timestamp, fk_User, fk_ErpHistId FROM DMS_ERP WHERE (ForeignSkid = @ForeignSkid)";
+            this._adapter.InsertCommand.CommandText = @"INSERT INTO [DMS_ERP] ([ForeignSkid], [DerivativeCode], [Colour], [BSN], [Track], [Roof], [Door], [Spare], [LeftPlant], [Timestamp], [fk_User]) VALUES (@ForeignSkid, @DerivativeCode, @Colour, @BSN, @Track, @Roof, @Door, @Spare, @LeftPlant, @Timestamp, @fk_User)";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@ForeignSkid", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "ForeignSkid", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@DerivativeCode", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "DerivativeCode", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
@@ -2919,37 +2907,9 @@ SELECT ForeignSkid, DerivativeCode, Colour, BSN, Track, Roof, Door, Spare, Times
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Roof", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Roof", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Door", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Door", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Spare", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Spare", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@LeftPlant", global::System.Data.SqlDbType.Bit, 0, global::System.Data.ParameterDirection.Input, 0, 0, "LeftPlant", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Timestamp", global::System.Data.SqlDbType.DateTime2, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Timestamp", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@fk_User", global::System.Data.SqlDbType.BigInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "fk_User", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@fk_ErpHistId", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "fk_ErpHistId", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.UpdateCommand = new global::System.Data.SqlClient.SqlCommand();
-            this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE [dbo].[DMS_ERP] SET [ForeignSkid] = @ForeignSkid, [DerivativeCode] = @DerivativeCode, [Colour] = @Colour, [BSN] = @BSN, [Track] = @Track, [Roof] = @Roof, [Door] = @Door, [Spare] = @Spare, [Timestamp] = @Timestamp, [fk_User] = @fk_User, [fk_ErpHistId] = @fk_ErpHistId WHERE (([ForeignSkid] = @Original_ForeignSkid) AND ([DerivativeCode] = @Original_DerivativeCode) AND ([Colour] = @Original_Colour) AND ([BSN] = @Original_BSN) AND ([Track] = @Original_Track) AND ([Roof] = @Original_Roof) AND ([Door] = @Original_Door) AND ([Spare] = @Original_Spare) AND ([Timestamp] = @Original_Timestamp) AND ([fk_User] = @Original_fk_User) AND ((@IsNull_fk_ErpHistId = 1 AND [fk_ErpHistId] IS NULL) OR ([fk_ErpHistId] = @Original_fk_ErpHistId)));
-SELECT ForeignSkid, DerivativeCode, Colour, BSN, Track, Roof, Door, Spare, Timestamp, fk_User, fk_ErpHistId FROM DMS_ERP WHERE (ForeignSkid = @ForeignSkid)";
-            this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@ForeignSkid", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "ForeignSkid", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@DerivativeCode", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "DerivativeCode", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Colour", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Colour", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@BSN", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "BSN", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Track", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Track", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Roof", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Roof", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Door", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Door", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Spare", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Spare", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Timestamp", global::System.Data.SqlDbType.DateTime2, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Timestamp", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@fk_User", global::System.Data.SqlDbType.BigInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "fk_User", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@fk_ErpHistId", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "fk_ErpHistId", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_ForeignSkid", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "ForeignSkid", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_DerivativeCode", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "DerivativeCode", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Colour", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Colour", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_BSN", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "BSN", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Track", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Track", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Roof", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Roof", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Door", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Door", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Spare", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Spare", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Timestamp", global::System.Data.SqlDbType.DateTime2, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Timestamp", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_fk_User", global::System.Data.SqlDbType.BigInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "fk_User", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_fk_ErpHistId", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "fk_ErpHistId", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_fk_ErpHistId", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "fk_ErpHistId", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2962,25 +2922,47 @@ SELECT ForeignSkid, DerivativeCode, Colour, BSN, Track, Roof, Door, Spare, Times
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitCommandCollection() {
-            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[3];
+            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[5];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT ForeignSkid, DerivativeCode, Colour, BSN, Track, Roof, Door, Spare, Timest" +
-                "amp, fk_User, fk_ErpHistId FROM dbo.DMS_ERP";
+            this._commandCollection[0].CommandText = "SELECT        *\r\nFROM            DMS_ERP";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[1].Connection = this.Connection;
-            this._commandCollection[1].CommandText = "SELECT        ForeignSkid\r\nFROM            DMS_ERP\r\nWHERE        (ForeignSkid = @" +
-                "Skid)";
+            this._commandCollection[1].CommandText = "SELECT        TOP (1) ForeignSkid\r\nFROM            DMS_ERP\r\nWHERE        (Foreign" +
+                "Skid = @Skid)\r\nORDER BY Timestamp DESC";
             this._commandCollection[1].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Skid", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "ForeignSkid", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[2] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[2].Connection = this.Connection;
-            this._commandCollection[2].CommandText = "SELECT top 1       ForeignSkid, DerivativeCode, Colour, BSN, Track, Roof, Door, S" +
-                "pare, Timestamp, fk_User, fk_ErpHistId\r\nFROM            DMS_ERP\r\nWHERE        (B" +
-                "SN = @BSN)\r\nORDER BY Timestamp DESC";
+            this._commandCollection[2].CommandText = @"SELECT        Id
+FROM            DMS_ERP
+WHERE        (ForeignSkid = @ForeignSkid) AND (DerivativeCode = @DerivativeCode) AND (Colour = @Colour) AND (BSN = @BSN) AND (Track = @Track) AND (Roof = @Roof) AND 
+                         (Door = @Door) AND (Spare = @Spare) AND (LeftPlant = @LeftPlant)";
             this._commandCollection[2].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@ForeignSkid", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "ForeignSkid", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@DerivativeCode", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "DerivativeCode", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Colour", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "Colour", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@BSN", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "BSN", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Track", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "Track", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Roof", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "Roof", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Door", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "Door", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Spare", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "Spare", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@LeftPlant", global::System.Data.SqlDbType.Bit, 1, global::System.Data.ParameterDirection.Input, 0, 0, "LeftPlant", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[3] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[3].Connection = this.Connection;
+            this._commandCollection[3].CommandText = "SELECT TOP (1) BSN, Colour, DerivativeCode, Door, ForeignSkid, Id, LeftPlant, Roo" +
+                "f, Spare, Timestamp, Track, fk_User FROM DMS_ERP WHERE (BSN = @BSN) ORDER BY Tim" +
+                "estamp DESC";
+            this._commandCollection[3].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[3].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@BSN", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "BSN", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[4] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[4].Connection = this.Connection;
+            this._commandCollection[4].CommandText = "UPDATE       DMS_ERP\r\nSET                LeftPlant = @LeftPlant\r\nWHERE        (Id" +
+                " = @Id)";
+            this._commandCollection[4].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[4].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@LeftPlant", global::System.Data.SqlDbType.Bit, 1, global::System.Data.ParameterDirection.Input, 0, 0, "LeftPlant", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[4].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Id", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "Id", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3012,7 +2994,7 @@ SELECT ForeignSkid, DerivativeCode, Colour, BSN, Track, Roof, Door, Spare, Times
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
         public virtual DmsDataset.DMS_ERPDataTable GetErpDataTableByBSN(int BSN) {
-            this.Adapter.SelectCommand = this.CommandCollection[2];
+            this.Adapter.SelectCommand = this.CommandCollection[3];
             this.Adapter.SelectCommand.Parameters[0].Value = ((int)(BSN));
             DmsDataset.DMS_ERPDataTable dataTable = new DmsDataset.DMS_ERPDataTable();
             this.Adapter.Fill(dataTable);
@@ -3051,47 +3033,8 @@ SELECT ForeignSkid, DerivativeCode, Colour, BSN, Track, Roof, Door, Spare, Times
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
-        public virtual int Delete(int Original_ForeignSkid, int Original_DerivativeCode, int Original_Colour, int Original_BSN, int Original_Track, int Original_Roof, int Original_Door, int Original_Spare, System.DateTime Original_Timestamp, long Original_fk_User, global::System.Nullable<int> Original_fk_ErpHistId) {
-            this.Adapter.DeleteCommand.Parameters[0].Value = ((int)(Original_ForeignSkid));
-            this.Adapter.DeleteCommand.Parameters[1].Value = ((int)(Original_DerivativeCode));
-            this.Adapter.DeleteCommand.Parameters[2].Value = ((int)(Original_Colour));
-            this.Adapter.DeleteCommand.Parameters[3].Value = ((int)(Original_BSN));
-            this.Adapter.DeleteCommand.Parameters[4].Value = ((int)(Original_Track));
-            this.Adapter.DeleteCommand.Parameters[5].Value = ((int)(Original_Roof));
-            this.Adapter.DeleteCommand.Parameters[6].Value = ((int)(Original_Door));
-            this.Adapter.DeleteCommand.Parameters[7].Value = ((int)(Original_Spare));
-            this.Adapter.DeleteCommand.Parameters[8].Value = ((System.DateTime)(Original_Timestamp));
-            this.Adapter.DeleteCommand.Parameters[9].Value = ((long)(Original_fk_User));
-            if ((Original_fk_ErpHistId.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[10].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[11].Value = ((int)(Original_fk_ErpHistId.Value));
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[10].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[11].Value = global::System.DBNull.Value;
-            }
-            global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
-            if (((this.Adapter.DeleteCommand.Connection.State & global::System.Data.ConnectionState.Open) 
-                        != global::System.Data.ConnectionState.Open)) {
-                this.Adapter.DeleteCommand.Connection.Open();
-            }
-            try {
-                int returnValue = this.Adapter.DeleteCommand.ExecuteNonQuery();
-                return returnValue;
-            }
-            finally {
-                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
-                    this.Adapter.DeleteCommand.Connection.Close();
-                }
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(int ForeignSkid, int DerivativeCode, int Colour, int BSN, int Track, int Roof, int Door, int Spare, System.DateTime Timestamp, long fk_User, global::System.Nullable<int> fk_ErpHistId) {
+        public virtual int Insert(int ForeignSkid, int DerivativeCode, int Colour, int BSN, int Track, int Roof, int Door, int Spare, bool LeftPlant, System.DateTime Timestamp, long fk_User) {
             this.Adapter.InsertCommand.Parameters[0].Value = ((int)(ForeignSkid));
             this.Adapter.InsertCommand.Parameters[1].Value = ((int)(DerivativeCode));
             this.Adapter.InsertCommand.Parameters[2].Value = ((int)(Colour));
@@ -3100,14 +3043,9 @@ SELECT ForeignSkid, DerivativeCode, Colour, BSN, Track, Roof, Door, Spare, Times
             this.Adapter.InsertCommand.Parameters[5].Value = ((int)(Roof));
             this.Adapter.InsertCommand.Parameters[6].Value = ((int)(Door));
             this.Adapter.InsertCommand.Parameters[7].Value = ((int)(Spare));
-            this.Adapter.InsertCommand.Parameters[8].Value = ((System.DateTime)(Timestamp));
-            this.Adapter.InsertCommand.Parameters[9].Value = ((long)(fk_User));
-            if ((fk_ErpHistId.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[10].Value = ((int)(fk_ErpHistId.Value));
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[10].Value = global::System.DBNull.Value;
-            }
+            this.Adapter.InsertCommand.Parameters[8].Value = ((bool)(LeftPlant));
+            this.Adapter.InsertCommand.Parameters[9].Value = ((System.DateTime)(Timestamp));
+            this.Adapter.InsertCommand.Parameters[10].Value = ((long)(fk_User));
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
             if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -3127,113 +3065,7 @@ SELECT ForeignSkid, DerivativeCode, Colour, BSN, Track, Roof, Door, Spare, Times
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(
-                    int ForeignSkid, 
-                    int DerivativeCode, 
-                    int Colour, 
-                    int BSN, 
-                    int Track, 
-                    int Roof, 
-                    int Door, 
-                    int Spare, 
-                    System.DateTime Timestamp, 
-                    long fk_User, 
-                    global::System.Nullable<int> fk_ErpHistId, 
-                    int Original_ForeignSkid, 
-                    int Original_DerivativeCode, 
-                    int Original_Colour, 
-                    int Original_BSN, 
-                    int Original_Track, 
-                    int Original_Roof, 
-                    int Original_Door, 
-                    int Original_Spare, 
-                    System.DateTime Original_Timestamp, 
-                    long Original_fk_User, 
-                    global::System.Nullable<int> Original_fk_ErpHistId) {
-            this.Adapter.UpdateCommand.Parameters[0].Value = ((int)(ForeignSkid));
-            this.Adapter.UpdateCommand.Parameters[1].Value = ((int)(DerivativeCode));
-            this.Adapter.UpdateCommand.Parameters[2].Value = ((int)(Colour));
-            this.Adapter.UpdateCommand.Parameters[3].Value = ((int)(BSN));
-            this.Adapter.UpdateCommand.Parameters[4].Value = ((int)(Track));
-            this.Adapter.UpdateCommand.Parameters[5].Value = ((int)(Roof));
-            this.Adapter.UpdateCommand.Parameters[6].Value = ((int)(Door));
-            this.Adapter.UpdateCommand.Parameters[7].Value = ((int)(Spare));
-            this.Adapter.UpdateCommand.Parameters[8].Value = ((System.DateTime)(Timestamp));
-            this.Adapter.UpdateCommand.Parameters[9].Value = ((long)(fk_User));
-            if ((fk_ErpHistId.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[10].Value = ((int)(fk_ErpHistId.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[10].Value = global::System.DBNull.Value;
-            }
-            this.Adapter.UpdateCommand.Parameters[11].Value = ((int)(Original_ForeignSkid));
-            this.Adapter.UpdateCommand.Parameters[12].Value = ((int)(Original_DerivativeCode));
-            this.Adapter.UpdateCommand.Parameters[13].Value = ((int)(Original_Colour));
-            this.Adapter.UpdateCommand.Parameters[14].Value = ((int)(Original_BSN));
-            this.Adapter.UpdateCommand.Parameters[15].Value = ((int)(Original_Track));
-            this.Adapter.UpdateCommand.Parameters[16].Value = ((int)(Original_Roof));
-            this.Adapter.UpdateCommand.Parameters[17].Value = ((int)(Original_Door));
-            this.Adapter.UpdateCommand.Parameters[18].Value = ((int)(Original_Spare));
-            this.Adapter.UpdateCommand.Parameters[19].Value = ((System.DateTime)(Original_Timestamp));
-            this.Adapter.UpdateCommand.Parameters[20].Value = ((long)(Original_fk_User));
-            if ((Original_fk_ErpHistId.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[21].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[22].Value = ((int)(Original_fk_ErpHistId.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[21].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[22].Value = global::System.DBNull.Value;
-            }
-            global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
-            if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
-                        != global::System.Data.ConnectionState.Open)) {
-                this.Adapter.UpdateCommand.Connection.Open();
-            }
-            try {
-                int returnValue = this.Adapter.UpdateCommand.ExecuteNonQuery();
-                return returnValue;
-            }
-            finally {
-                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
-                    this.Adapter.UpdateCommand.Connection.Close();
-                }
-            }
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(
-                    int DerivativeCode, 
-                    int Colour, 
-                    int BSN, 
-                    int Track, 
-                    int Roof, 
-                    int Door, 
-                    int Spare, 
-                    System.DateTime Timestamp, 
-                    long fk_User, 
-                    global::System.Nullable<int> fk_ErpHistId, 
-                    int Original_ForeignSkid, 
-                    int Original_DerivativeCode, 
-                    int Original_Colour, 
-                    int Original_BSN, 
-                    int Original_Track, 
-                    int Original_Roof, 
-                    int Original_Door, 
-                    int Original_Spare, 
-                    System.DateTime Original_Timestamp, 
-                    long Original_fk_User, 
-                    global::System.Nullable<int> Original_fk_ErpHistId) {
-            return this.Update(Original_ForeignSkid, DerivativeCode, Colour, BSN, Track, Roof, Door, Spare, Timestamp, fk_User, fk_ErpHistId, Original_ForeignSkid, Original_DerivativeCode, Original_Colour, Original_BSN, Original_Track, Original_Roof, Original_Door, Original_Spare, Original_Timestamp, Original_fk_User, Original_fk_ErpHistId);
-        }
-        
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        public virtual global::System.Nullable<int> CheckExistsSkid(int Skid) {
+        public virtual int? CheckExistsSkid(int Skid) {
             global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[1];
             command.Parameters[0].Value = ((int)(Skid));
             global::System.Data.ConnectionState previousConnectionState = command.Connection.State;
@@ -3241,9 +3073,9 @@ SELECT ForeignSkid, DerivativeCode, Colour, BSN, Track, Roof, Door, Spare, Times
                         != global::System.Data.ConnectionState.Open)) {
                 command.Connection.Open();
             }
-            object returnValue;
+            int? returnValue;
             try {
-                returnValue = command.ExecuteScalar();
+                returnValue = (int?)command.ExecuteScalar();
             }
             finally {
                 if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
@@ -3252,11 +3084,73 @@ SELECT ForeignSkid, DerivativeCode, Colour, BSN, Track, Roof, Door, Spare, Times
             }
             if (((returnValue == null) 
                         || (returnValue.GetType() == typeof(global::System.DBNull)))) {
-                return new global::System.Nullable<int>();
+                return null;
             }
             else {
-                return new global::System.Nullable<int>(((int)(returnValue)));
+                return (returnValue);
             }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual int? FindSkidByDataset(int ForeignSkid, int DerivativeCode, int Colour, int BSN, int Track, int Roof, int Door, int Spare, bool LeftPlant) {
+            global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[2];
+            command.Parameters[0].Value = ((int)(ForeignSkid));
+            command.Parameters[1].Value = ((int)(DerivativeCode));
+            command.Parameters[2].Value = ((int)(Colour));
+            command.Parameters[3].Value = ((int)(BSN));
+            command.Parameters[4].Value = ((int)(Track));
+            command.Parameters[5].Value = ((int)(Roof));
+            command.Parameters[6].Value = ((int)(Door));
+            command.Parameters[7].Value = ((int)(Spare));
+            command.Parameters[8].Value = ((bool)(LeftPlant));
+            global::System.Data.ConnectionState previousConnectionState = command.Connection.State;
+            if (((command.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                command.Connection.Open();
+            }
+            int? returnValue;
+            try {
+                returnValue = (int?)command.ExecuteScalar();
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    command.Connection.Close();
+                }
+            }
+            if (((returnValue == null) 
+                        || (returnValue.GetType() == typeof(global::System.DBNull)))) {
+                return null;
+            }
+            else {
+                return (returnValue);
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, false)]
+        public virtual int UpdateLeftPlantById(bool LeftPlant, int Id) {
+            global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[4];
+            command.Parameters[0].Value = ((bool)(LeftPlant));
+            command.Parameters[1].Value = ((int)(Id));
+            global::System.Data.ConnectionState previousConnectionState = command.Connection.State;
+            if (((command.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                command.Connection.Open();
+            }
+            int returnValue;
+            try {
+                returnValue = command.ExecuteNonQuery();
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    command.Connection.Close();
+                }
+            }
+            return returnValue;
         }
     }
     

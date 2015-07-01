@@ -16,7 +16,7 @@ namespace dmspl.datahandler
             IDataImporter importer = DataImporterFactory.CreateImporter(ImporterType.txt);
             await importer.ImportDataFromFileAsync(filepath);
             List<string> costam = importer.ImportedData;
-            await Task.Run( () => datastorage.StoreProductionData(costam));
+            //await Task.Run( () => datastorage.StoreProductionData(costam));
         }
     }
 }

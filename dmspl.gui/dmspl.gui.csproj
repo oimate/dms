@@ -46,20 +46,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="fErpTab.cs">
+    <Compile Include="Forms\fErpTab.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="fErpTab.Designer.cs">
+    <Compile Include="Forms\fErpTab.Designer.cs">
       <DependentUpon>fErpTab.cs</DependentUpon>
     </Compile>
     <Compile Include="datahandler\ProductionPlan.cs" />
     <Compile Include="datahandler\TestManyUpdates.cs" />
     <Compile Include="DMSSession.cs" />
     <Compile Include="DMSSessionStatus.cs" />
-    <Compile Include="fMfpTab.cs">
+    <Compile Include="Forms\fMfpTab.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="fMfpTab.Designer.cs">
+    <Compile Include="Forms\fMfpTab.Designer.cs">
       <DependentUpon>fMfpTab.cs</DependentUpon>
     </Compile>
     <Compile Include="fMain.cs">
@@ -68,24 +68,24 @@
     <Compile Include="fMain.Designer.cs">
       <DependentUpon>fMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="fImportERP.cs">
+    <Compile Include="Forms\fImportERP.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="fImportERP.Designer.cs">
+    <Compile Include="Forms\fImportERP.Designer.cs">
       <DependentUpon>fImportERP.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="fErpTab.resx">
+    <EmbeddedResource Include="Forms\fErpTab.resx">
       <DependentUpon>fErpTab.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="fMain.resx">
       <DependentUpon>fMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="fImportERP.resx">
+    <EmbeddedResource Include="Forms\fImportERP.resx">
       <DependentUpon>fImportERP.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="fMfpTab.resx">
+    <EmbeddedResource Include="Forms\fMfpTab.resx">
       <DependentUpon>fMfpTab.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -98,7 +98,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

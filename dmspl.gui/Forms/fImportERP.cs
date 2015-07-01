@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using dmspl.common;
 using dmspl.datahandler;
 
-namespace dmspl
+namespace dmspl.Forms
 {
     public partial class fImportERP : Form
     {

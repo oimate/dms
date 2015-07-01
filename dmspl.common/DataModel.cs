@@ -53,6 +53,14 @@ namespace dmspl.common
                     datasize -= 4;
                     Data = new MFPDataModel(datasize, datatype, br);
                     break;
+                case 7: //skid+dataset marriage
+                    datasize -= 4;
+                    Data = new DataSetMarriageFromPlc(datasize, datatype, br);
+                    break;
+                case 2: //skid exit
+                    datasize -= 4;
+                    Data = new SkidExitDataModel(datasize, datatype, br);
+                    break;
                 case 4: //request type
                     datasize -= 4;
                     Data = new DataSetReqDataModelByBSN(datasize, datatype, br);

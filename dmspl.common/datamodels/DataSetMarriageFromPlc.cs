@@ -45,6 +45,9 @@ namespace dmspl.common.datamodels
 
             //Spare - 2 Byte
             Erpdataset.Spare = br.ReadInt16().FromBigEndian();
+
+            //Datetime from server
+            Erpdataset.Timestamp = DateTime.Now;
         }
 
         public override void GetRawData(System.IO.BinaryWriter bw)

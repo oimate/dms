@@ -26,7 +26,7 @@ namespace dmspl.common.log
             Write("<!doctype html>\r\n", mod);
             Write("<html>\r\n", mod);
             Write("<head>\r\n", mod);
-            Write(string.Format("<title>LOG: {0:yyyy-MM-dd hh:mm:ss}</title>\r\n", DateTime.Now), mod);
+            Write(string.Format("<title>LOG: {0:yyyy-MM-dd HH:mm:ss}</title>\r\n", DateTime.Now), mod);
             Write("<meta charset=\"UTF-8\"/>\r\n", mod);
             Write(Properties.Resource.HTMLStyle, mod);
             Write("\r\n", mod);
@@ -129,7 +129,7 @@ namespace dmspl.common.log
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(string.Format("<tr class=\"{0}\">", mod));
-            sb.Append(string.Format("<td class=\"c{0}\">{1:yy-MM-dd hh:mm:ss}</td>", 0, dt));
+            sb.Append(string.Format("<td class=\"c{0}\">{1:yy-MM-dd HH:mm:ss}</td>", 0, dt));
             sb.Append(string.Format("<td class=\"c{0}\">{1}</td>", 1, mod));
             sb.Append(string.Format("<td class=\"c{0}\">{1}</td>", 2, typ));
             sb.Append(string.Format("<td class=\"c{0}\">{1}</td>", 3, lv));

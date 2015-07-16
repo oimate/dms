@@ -119,7 +119,7 @@ namespace UDP_RXTX
                     using (System.IO.BinaryReader br = new System.IO.BinaryReader(ms))
                     {
                         DataModel RecievedDataModel = DataHeader.GetModel(br);
-                        RecievedDataModel.DataSetReceived = (dm) => { SendData(dm); };
+                        //RecievedDataModel.DataSetReceived = (dm) => { SendData(dm); };
                         if (RecievedDataModel == null)
                             continue;
                         if (RecievedDataModel is DataLifePacket)

@@ -33,10 +33,7 @@ namespace dmspl.datastorage
 
         DmsDataset dmsDataset;
 
-        //DmsDataset.DMS_ERPDataTable DMS_ERP;
         DmsDatasetTableAdapters.DMS_ERPTableAdapter erp_DataAdapter;
-
-        DmsDatasetTableAdapters.DMS_MarriageTableAdapter marriage_DataAdapter;
 
         DmsDataset.DMS_MFPDataTable DMS_MFP;
         DmsDatasetTableAdapters.DMS_MFPTableAdapter mfp_DataAdapter;
@@ -51,23 +48,14 @@ namespace dmspl.datastorage
         {
             ad = RegAuth.GetRegData();
 
+            Properties.Settings.Default.EMOS_WEBConnectionString = ad.ConnectionString;
+
             dmsDataset = new DmsDataset();
 
             mfp_DataAdapter = new DmsDatasetTableAdapters.DMS_MFPTableAdapter();
             erp_DataAdapter = new DmsDatasetTableAdapters.DMS_ERPTableAdapter();
-            marriage_DataAdapter = new DmsDatasetTableAdapters.DMS_MarriageTableAdapter();
-
-            //InitAdapters();
-
-            //userManager = new usermanager.UserManager(dmsDataset);
-            //if (!userManager.Login("sli", "sli"))
-            //    throw new InvalidOperationException("login failed");
 
             State = DataStorageState.Initializing;
-
-            //processedqueue = new List<FileInfo>();
-
-            //CreateDataAdapters(connection);
 
             cancelThread = false;
             pauseThread = false;
@@ -319,7 +307,7 @@ namespace dmspl.datastorage
 
         private void SkidExit(SkidExitDataModel skidExitDataModel)
         {
-            var id = erp_DataAdapter.CheckExistsSkid(skidExitDataModel.Skid);
+            var id = (int?)erp_DataAdapter.CheckExistsSkid(skidExitDataModel.Skid);
             if (id != null)
             {
                 //dbg:exitok
@@ -339,11 +327,11 @@ namespace dmspl.datastorage
             {
                 ErpDataset eds = dataSetMarriageFromPlc.Erpdataset;
 
-                var Id = erp_DataAdapter.FindSkidByDataset(eds.SkidID, eds.DerivativeCode, eds.Colour, eds.BSN, eds.Track, eds.Roof, eds.Hood, eds.Spare, false);
+                var Id = (int?)erp_DataAdapter.FindSkidByDataset(eds.SkidID, eds.DerivativeCode, eds.Colour, eds.BSN, eds.Track, eds.Roof, eds.Hood, eds.Spare, false);
 
                 if (Id == null)
                 {
-                    var y = erp_DataAdapter.Insert(eds.SkidID, eds.DerivativeCode, eds.Colour, eds.BSN, eds.Track, eds.Roof, eds.Hood, eds.Spare, false, DateTime.Now, 0);
+                    var y = erp_DataAdapter.Insert(eds.SkidID, eds.DerivativeCode, eds.Colour, eds.BSN, eds.Track, eds.Roof, eds.Hood, eds.Spare, false, eds.Timestamp, 0);
                     //dbg:marrok
                     DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:marrok|added " + dataSetMarriageFromPlc.Erpdataset.ToString());
                 }

@@ -25,12 +25,10 @@ namespace dmspl.gui.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=dbmachine\\durr_systems;Initial Catalog=EMOS_WEB;Persist Security Info" +
-            "=True;User ID=user;Password=user;Connect Timeout=5")]
-        public string EMOS_WEBConnectionString {
+        [global::System.Configuration.DefaultSettingValueAttribute("dupa")]
+        public string test {
             get {
-                return ((string)(this["EMOS_WEBConnectionString"]));
+                return ((string)(this["test"]));
             }
         }
     }

@@ -2,14 +2,14 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="UDP_RXTX.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="Ajpi" Type="System.String" Scope="User">
+    <Setting Name="Ajpi" Type="System.String" Scope="Application">
       <Value Profile="(Default)">192.168.2.25</Value>
     </Setting>
-    <Setting Name="LocalPort" Type="System.Int32" Scope="User">
+    <Setting Name="LocalPort" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">2002</Value>
     </Setting>
-    <Setting Name="TimeSF" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1000</Value>
+    <Setting Name="TimeSF" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">200</Value>
     </Setting>
   </Settings>
 </SettingsFile>

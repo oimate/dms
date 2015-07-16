@@ -54,8 +54,6 @@
     </Compile>
     <Compile Include="datahandler\ProductionPlan.cs" />
     <Compile Include="datahandler\TestManyUpdates.cs" />
-    <Compile Include="DMSSession.cs" />
-    <Compile Include="DMSSessionStatus.cs" />
     <Compile Include="Forms\fMfpTab.cs">
       <SubType>Form</SubType>
     </Compile>

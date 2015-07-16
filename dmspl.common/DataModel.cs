@@ -110,8 +110,8 @@ namespace dmspl.common
         public int Size { get; set; }
         public byte Type { get; private set; }
         public byte CRC { get; private set; }
-        public delegate void DataSetReceivedDelegate(DataModel dm);
-        public DataSetReceivedDelegate DataSetReceived { get; set; }
+        //public delegate void DataSetReceivedDelegate(DataModel dm);
+        //public DataSetReceivedDelegate DataSetReceived { get; set; }
 
         public DataModel(short size, byte type)
         {

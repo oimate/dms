@@ -82,5 +82,14 @@ namespace dmspl.common
             Password = p;
             Database = d;
         }
+
+        public override string ToString()
+        {
+            return string.Format("Server:{0}, User:{1}, Pwd:{2}, Database:{3}"
+                , Server
+                , User
+                , Password
+                , Database);
+        }
     }
 }

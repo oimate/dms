@@ -23,39 +23,30 @@ namespace UDP_RXTX.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("192.168.2.25")]
         public string Ajpi {
             get {
                 return ((string)(this["Ajpi"]));
             }
-            set {
-                this["Ajpi"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("2002")]
         public int LocalPort {
             get {
                 return ((int)(this["LocalPort"]));
             }
-            set {
-                this["LocalPort"] = value;
-            }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
         public int TimeSF {
             get {
                 return ((int)(this["TimeSF"]));
-            }
-            set {
-                this["TimeSF"] = value;
             }
         }
     }

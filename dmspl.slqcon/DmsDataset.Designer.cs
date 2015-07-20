@@ -336,7 +336,7 @@ namespace dmspl.datastorage {
             
             private global::System.Data.DataColumn columnTimestamp;
             
-            private global::System.Data.DataColumn columnfk_User;
+            private global::System.Data.DataColumn columnUpdatedOnMfp;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
@@ -461,9 +461,9 @@ namespace dmspl.datastorage {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn fk_UserColumn {
+            public global::System.Data.DataColumn UpdatedOnMfpColumn {
                 get {
-                    return this.columnfk_User;
+                    return this.columnUpdatedOnMfp;
                 }
             }
             
@@ -504,7 +504,7 @@ namespace dmspl.datastorage {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public DMS_ERPRow AddDMS_ERPRow(int ForeignSkid, int DerivativeCode, int Colour, int BSN, int Track, int Roof, int Door, int Spare, bool LeftPlant, System.DateTime Timestamp, long fk_User) {
+            public DMS_ERPRow AddDMS_ERPRow(int ForeignSkid, int DerivativeCode, int Colour, int BSN, int Track, int Roof, int Door, int Spare, bool LeftPlant, System.DateTime Timestamp, int UpdatedOnMfp) {
                 DMS_ERPRow rowDMS_ERPRow = ((DMS_ERPRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -518,7 +518,7 @@ namespace dmspl.datastorage {
                         Spare,
                         LeftPlant,
                         Timestamp,
-                        fk_User};
+                        UpdatedOnMfp};
                 rowDMS_ERPRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowDMS_ERPRow);
                 return rowDMS_ERPRow;
@@ -552,7 +552,7 @@ namespace dmspl.datastorage {
                 this.columnSpare = base.Columns["Spare"];
                 this.columnLeftPlant = base.Columns["LeftPlant"];
                 this.columnTimestamp = base.Columns["Timestamp"];
-                this.columnfk_User = base.Columns["fk_User"];
+                this.columnUpdatedOnMfp = base.Columns["UpdatedOnMfp"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -580,8 +580,8 @@ namespace dmspl.datastorage {
                 base.Columns.Add(this.columnLeftPlant);
                 this.columnTimestamp = new global::System.Data.DataColumn("Timestamp", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnTimestamp);
-                this.columnfk_User = new global::System.Data.DataColumn("fk_User", typeof(long), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnfk_User);
+                this.columnUpdatedOnMfp = new global::System.Data.DataColumn("UpdatedOnMfp", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnUpdatedOnMfp);
                 this.columnId.AutoIncrement = true;
                 this.columnId.AutoIncrementSeed = -1;
                 this.columnId.AutoIncrementStep = -1;
@@ -597,7 +597,6 @@ namespace dmspl.datastorage {
                 this.columnSpare.AllowDBNull = false;
                 this.columnLeftPlant.AllowDBNull = false;
                 this.columnTimestamp.AllowDBNull = false;
-                this.columnfk_User.AllowDBNull = false;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -733,8 +732,6 @@ namespace dmspl.datastorage {
             
             private global::System.Data.DataColumn columnMfpPos;
             
-            private global::System.Data.DataColumn columnDescription;
-            
             private global::System.Data.DataColumn columnfk_LocalSkidNr;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -775,14 +772,6 @@ namespace dmspl.datastorage {
             public global::System.Data.DataColumn MfpPosColumn {
                 get {
                     return this.columnMfpPos;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn DescriptionColumn {
-                get {
-                    return this.columnDescription;
                 }
             }
             
@@ -831,11 +820,10 @@ namespace dmspl.datastorage {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public DMS_MFPRow AddDMS_MFPRow(int MfpPos, string Description, int fk_LocalSkidNr) {
+            public DMS_MFPRow AddDMS_MFPRow(int MfpPos, int fk_LocalSkidNr) {
                 DMS_MFPRow rowDMS_MFPRow = ((DMS_MFPRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         MfpPos,
-                        Description,
                         fk_LocalSkidNr};
                 rowDMS_MFPRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowDMS_MFPRow);
@@ -867,7 +855,6 @@ namespace dmspl.datastorage {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             internal void InitVars() {
                 this.columnMfpPos = base.Columns["MfpPos"];
-                this.columnDescription = base.Columns["Description"];
                 this.columnfk_LocalSkidNr = base.Columns["fk_LocalSkidNr"];
             }
             
@@ -876,15 +863,13 @@ namespace dmspl.datastorage {
             private void InitClass() {
                 this.columnMfpPos = new global::System.Data.DataColumn("MfpPos", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnMfpPos);
-                this.columnDescription = new global::System.Data.DataColumn("Description", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnDescription);
                 this.columnfk_LocalSkidNr = new global::System.Data.DataColumn("fk_LocalSkidNr", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnfk_LocalSkidNr);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnMfpPos}, true));
                 this.columnMfpPos.AllowDBNull = false;
                 this.columnMfpPos.Unique = true;
-                this.columnDescription.MaxLength = 255;
+                this.columnfk_LocalSkidNr.AllowDBNull = false;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1148,13 +1133,30 @@ namespace dmspl.datastorage {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public long fk_User {
+            public int UpdatedOnMfp {
                 get {
-                    return ((long)(this[this.tableDMS_ERP.fk_UserColumn]));
+                    try {
+                        return ((int)(this[this.tableDMS_ERP.UpdatedOnMfpColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'UpdatedOnMfp\' in table \'DMS_ERP\' is DBNull.", e);
+                    }
                 }
                 set {
-                    this[this.tableDMS_ERP.fk_UserColumn] = value;
+                    this[this.tableDMS_ERP.UpdatedOnMfpColumn] = value;
                 }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsUpdatedOnMfpNull() {
+                return this.IsNull(this.tableDMS_ERP.UpdatedOnMfpColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetUpdatedOnMfpNull() {
+                this[this.tableDMS_ERP.UpdatedOnMfpColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -1185,58 +1187,13 @@ namespace dmspl.datastorage {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string Description {
-                get {
-                    if (this.IsDescriptionNull()) {
-                        return string.Empty;
-                    }
-                    else {
-                        return ((string)(this[this.tableDMS_MFP.DescriptionColumn]));
-                    }
-                }
-                set {
-                    this[this.tableDMS_MFP.DescriptionColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int fk_LocalSkidNr {
                 get {
-                    try {
-                        return ((int)(this[this.tableDMS_MFP.fk_LocalSkidNrColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'fk_LocalSkidNr\' in table \'DMS_MFP\' is DBNull.", e);
-                    }
+                    return ((int)(this[this.tableDMS_MFP.fk_LocalSkidNrColumn]));
                 }
                 set {
                     this[this.tableDMS_MFP.fk_LocalSkidNrColumn] = value;
                 }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsDescriptionNull() {
-                return this.IsNull(this.tableDMS_MFP.DescriptionColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetDescriptionNull() {
-                this[this.tableDMS_MFP.DescriptionColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool Isfk_LocalSkidNrNull() {
-                return this.IsNull(this.tableDMS_MFP.fk_LocalSkidNrColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void Setfk_LocalSkidNrNull() {
-                this[this.tableDMS_MFP.fk_LocalSkidNrColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -1444,11 +1401,11 @@ namespace dmspl.datastorage.DmsDatasetTableAdapters {
             tableMapping.ColumnMappings.Add("Spare", "Spare");
             tableMapping.ColumnMappings.Add("LeftPlant", "LeftPlant");
             tableMapping.ColumnMappings.Add("Timestamp", "Timestamp");
-            tableMapping.ColumnMappings.Add("fk_User", "fk_User");
+            tableMapping.ColumnMappings.Add("UpdatedOnMfp", "UpdatedOnMfp");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = @"INSERT INTO [DMS_ERP] ([ForeignSkid], [DerivativeCode], [Colour], [BSN], [Track], [Roof], [Door], [Spare], [LeftPlant], [Timestamp], [fk_User]) VALUES (@ForeignSkid, @DerivativeCode, @Colour, @BSN, @Track, @Roof, @Door, @Spare, @LeftPlant, @Timestamp, @fk_User)";
+            this._adapter.InsertCommand.CommandText = @"INSERT INTO [DMS_ERP] ([ForeignSkid], [DerivativeCode], [Colour], [BSN], [Track], [Roof], [Door], [Spare], [LeftPlant], [Timestamp], [UpdatedOnMfp]) VALUES (@ForeignSkid, @DerivativeCode, @Colour, @BSN, @Track, @Roof, @Door, @Spare, @LeftPlant, @Timestamp, @UpdatedOnMfp)";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@ForeignSkid", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "ForeignSkid", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@DerivativeCode", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "DerivativeCode", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
@@ -1460,7 +1417,7 @@ namespace dmspl.datastorage.DmsDatasetTableAdapters {
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Spare", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Spare", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@LeftPlant", global::System.Data.SqlDbType.Bit, 0, global::System.Data.ParameterDirection.Input, 0, 0, "LeftPlant", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Timestamp", global::System.Data.SqlDbType.DateTime2, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Timestamp", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@fk_User", global::System.Data.SqlDbType.BigInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "fk_User", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@UpdatedOnMfp", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "UpdatedOnMfp", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1473,23 +1430,23 @@ namespace dmspl.datastorage.DmsDatasetTableAdapters {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitCommandCollection() {
-            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[5];
+            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[7];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT        *\r\nFROM            DMS_ERP";
+            this._commandCollection[0].CommandText = "SELECT * FROM DMS_ERP";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[1].Connection = this.Connection;
-            this._commandCollection[1].CommandText = "SELECT        TOP (1) Id\r\nFROM            DMS_ERP\r\nWHERE        (ForeignSkid = @S" +
-                "kid)\r\nORDER BY Timestamp DESC";
+            this._commandCollection[1].CommandText = "SELECT TOP (1) Id FROM DMS_ERP WHERE (ForeignSkid = @Skid) ORDER BY Timestamp DES" +
+                "C";
             this._commandCollection[1].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Skid", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "ForeignSkid", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[2] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[2].Connection = this.Connection;
-            this._commandCollection[2].CommandText = @"SELECT        Id
-FROM            DMS_ERP
-WHERE        (ForeignSkid = @ForeignSkid) AND (DerivativeCode = @DerivativeCode) AND (Colour = @Colour) AND (BSN = @BSN) AND (Track = @Track) AND (Roof = @Roof) AND 
-                         (Door = @Door) AND (Spare = @Spare) AND (LeftPlant = @LeftPlant)";
+            this._commandCollection[2].CommandText = "SELECT count(Id) FROM DMS_ERP WHERE (ForeignSkid = @ForeignSkid) AND (DerivativeC" +
+                "ode = @DerivativeCode) AND (Colour = @Colour) AND (BSN = @BSN) AND (Track = @Tra" +
+                "ck) AND (Roof = @Roof) AND (Door = @Door) AND (Spare = @Spare) AND (LeftPlant = " +
+                "@LeftPlant)";
             this._commandCollection[2].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@ForeignSkid", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "ForeignSkid", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[2].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@DerivativeCode", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "DerivativeCode", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
@@ -1503,17 +1460,45 @@ WHERE        (ForeignSkid = @ForeignSkid) AND (DerivativeCode = @DerivativeCode)
             this._commandCollection[3] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[3].Connection = this.Connection;
             this._commandCollection[3].CommandText = "SELECT TOP (1) BSN, Colour, DerivativeCode, Door, ForeignSkid, Id, LeftPlant, Roo" +
-                "f, Spare, Timestamp, Track, fk_User FROM DMS_ERP WHERE (BSN = @BSN) ORDER BY Tim" +
-                "estamp DESC";
+                "f, Spare, Timestamp, Track, UpdatedOnMfp FROM DMS_ERP WHERE (BSN = @BSN) ORDER B" +
+                "Y Timestamp DESC";
             this._commandCollection[3].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[3].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@BSN", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "BSN", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[4] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[4].Connection = this.Connection;
-            this._commandCollection[4].CommandText = "UPDATE       DMS_ERP\r\nSET                LeftPlant = @LeftPlant\r\nWHERE        (Id" +
-                " = @Id)";
+            this._commandCollection[4].CommandText = @"UPDATE       DMS_ERP
+SET                BSN = @Bsn, Colour = @Colour, DerivativeCode = @Dc, Door = @Door, ForeignSkid = @Skid, LeftPlant = @LeftPlant, Roof = @Roof, Spare = @Spare, 
+                         Timestamp = @Timestamp, Track = @Track
+WHERE        (Id = @Id)";
             this._commandCollection[4].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[4].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Bsn", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "BSN", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[4].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Colour", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "Colour", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[4].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Dc", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "DerivativeCode", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[4].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Door", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "Door", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[4].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Skid", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "ForeignSkid", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[4].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@LeftPlant", global::System.Data.SqlDbType.Bit, 1, global::System.Data.ParameterDirection.Input, 0, 0, "LeftPlant", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[4].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Roof", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "Roof", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[4].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Spare", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "Spare", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[4].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Timestamp", global::System.Data.SqlDbType.DateTime2, 8, global::System.Data.ParameterDirection.Input, 0, 0, "Timestamp", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[4].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Track", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "Track", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[4].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Id", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "Id", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._commandCollection[5] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[5].Connection = this.Connection;
+            this._commandCollection[5].CommandText = "UPDATE       DMS_ERP\r\nSET                UpdatedOnMfp = @Mfp, LeftPlant = @LeftPl" +
+                "ant, Timestamp = @Timestamp\r\nWHERE        (Id = @Id)";
+            this._commandCollection[5].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Mfp", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "UpdatedOnMfp", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@LeftPlant", global::System.Data.SqlDbType.Bit, 1, global::System.Data.ParameterDirection.Input, 0, 0, "LeftPlant", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Timestamp", global::System.Data.SqlDbType.DateTime2, 8, global::System.Data.ParameterDirection.Input, 0, 0, "Timestamp", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[5].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Id", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "Id", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._commandCollection[6] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[6].Connection = this.Connection;
+            this._commandCollection[6].CommandText = "UPDATE       DMS_ERP\r\nSET                LeftPlant = @LeftPlant, Timestamp = @Tim" +
+                "estamp\r\nWHERE        (ForeignSkid = @Skid)";
+            this._commandCollection[6].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[6].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@LeftPlant", global::System.Data.SqlDbType.Bit, 1, global::System.Data.ParameterDirection.Input, 0, 0, "LeftPlant", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[6].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Timestamp", global::System.Data.SqlDbType.DateTime2, 8, global::System.Data.ParameterDirection.Input, 0, 0, "Timestamp", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[6].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Skid", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "ForeignSkid", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1585,7 +1570,7 @@ WHERE        (ForeignSkid = @ForeignSkid) AND (DerivativeCode = @DerivativeCode)
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(int ForeignSkid, int DerivativeCode, int Colour, int BSN, int Track, int Roof, int Door, int Spare, bool LeftPlant, System.DateTime Timestamp, long fk_User) {
+        public virtual int Insert(int ForeignSkid, int DerivativeCode, int Colour, int BSN, int Track, int Roof, int Door, int Spare, bool LeftPlant, System.DateTime Timestamp, global::System.Nullable<int> UpdatedOnMfp) {
             this.Adapter.InsertCommand.Parameters[0].Value = ((int)(ForeignSkid));
             this.Adapter.InsertCommand.Parameters[1].Value = ((int)(DerivativeCode));
             this.Adapter.InsertCommand.Parameters[2].Value = ((int)(Colour));
@@ -1596,7 +1581,12 @@ WHERE        (ForeignSkid = @ForeignSkid) AND (DerivativeCode = @DerivativeCode)
             this.Adapter.InsertCommand.Parameters[7].Value = ((int)(Spare));
             this.Adapter.InsertCommand.Parameters[8].Value = ((bool)(LeftPlant));
             this.Adapter.InsertCommand.Parameters[9].Value = ((System.DateTime)(Timestamp));
-            this.Adapter.InsertCommand.Parameters[10].Value = ((long)(fk_User));
+            if ((UpdatedOnMfp.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[10].Value = ((int)(UpdatedOnMfp.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[10].Value = global::System.DBNull.Value;
+            }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
             if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -1645,7 +1635,7 @@ WHERE        (ForeignSkid = @ForeignSkid) AND (DerivativeCode = @DerivativeCode)
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
-        public virtual object FindSkidByDataset(int ForeignSkid, int DerivativeCode, int Colour, int BSN, int Track, int Roof, int Door, int Spare, bool LeftPlant) {
+        public virtual object CountDatasets(int ForeignSkid, int DerivativeCode, int Colour, int BSN, int Track, int Roof, int Door, int Spare, bool LeftPlant) {
             global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[2];
             command.Parameters[0].Value = ((int)(ForeignSkid));
             command.Parameters[1].Value = ((int)(DerivativeCode));
@@ -1683,10 +1673,77 @@ WHERE        (ForeignSkid = @ForeignSkid) AND (DerivativeCode = @DerivativeCode)
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, false)]
-        public virtual int UpdateLeftPlantById(bool LeftPlant, int Id) {
+        public virtual int UpdateById(int Bsn, int Colour, int Dc, int Door, int Skid, bool LeftPlant, int Roof, int Spare, System.DateTime Timestamp, int Track, int Id) {
             global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[4];
+            command.Parameters[0].Value = ((int)(Bsn));
+            command.Parameters[1].Value = ((int)(Colour));
+            command.Parameters[2].Value = ((int)(Dc));
+            command.Parameters[3].Value = ((int)(Door));
+            command.Parameters[4].Value = ((int)(Skid));
+            command.Parameters[5].Value = ((bool)(LeftPlant));
+            command.Parameters[6].Value = ((int)(Roof));
+            command.Parameters[7].Value = ((int)(Spare));
+            command.Parameters[8].Value = ((System.DateTime)(Timestamp));
+            command.Parameters[9].Value = ((int)(Track));
+            command.Parameters[10].Value = ((int)(Id));
+            global::System.Data.ConnectionState previousConnectionState = command.Connection.State;
+            if (((command.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                command.Connection.Open();
+            }
+            int returnValue;
+            try {
+                returnValue = command.ExecuteNonQuery();
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    command.Connection.Close();
+                }
+            }
+            return returnValue;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, false)]
+        public virtual int UpdateEditOnMfpById(global::System.Nullable<int> Mfp, bool LeftPlant, System.DateTime Timestamp, int Id) {
+            global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[5];
+            if ((Mfp.HasValue == true)) {
+                command.Parameters[0].Value = ((int)(Mfp.Value));
+            }
+            else {
+                command.Parameters[0].Value = global::System.DBNull.Value;
+            }
+            command.Parameters[1].Value = ((bool)(LeftPlant));
+            command.Parameters[2].Value = ((System.DateTime)(Timestamp));
+            command.Parameters[3].Value = ((int)(Id));
+            global::System.Data.ConnectionState previousConnectionState = command.Connection.State;
+            if (((command.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                command.Connection.Open();
+            }
+            int returnValue;
+            try {
+                returnValue = command.ExecuteNonQuery();
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    command.Connection.Close();
+                }
+            }
+            return returnValue;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, false)]
+        public virtual int UpdateLeftPlantBySkd(bool LeftPlant, System.DateTime Timestamp, int Skid) {
+            global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[6];
             command.Parameters[0].Value = ((bool)(LeftPlant));
-            command.Parameters[1].Value = ((int)(Id));
+            command.Parameters[1].Value = ((System.DateTime)(Timestamp));
+            command.Parameters[2].Value = ((int)(Skid));
             global::System.Data.ConnectionState previousConnectionState = command.Connection.State;
             if (((command.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -1827,39 +1884,31 @@ WHERE        (ForeignSkid = @ForeignSkid) AND (DerivativeCode = @DerivativeCode)
             tableMapping.SourceTable = "Table";
             tableMapping.DataSetTable = "DMS_MFP";
             tableMapping.ColumnMappings.Add("MfpPos", "MfpPos");
-            tableMapping.ColumnMappings.Add("Description", "Description");
             tableMapping.ColumnMappings.Add("fk_LocalSkidNr", "fk_LocalSkidNr");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = @"DELETE FROM [dbo].[DMS_MFP] WHERE (([MfpPos] = @Original_MfpPos) AND ((@IsNull_Description = 1 AND [Description] IS NULL) OR ([Description] = @Original_Description)) AND ((@IsNull_fk_LocalSkidNr = 1 AND [fk_LocalSkidNr] IS NULL) OR ([fk_LocalSkidNr] = @Original_fk_LocalSkidNr)))";
+            this._adapter.DeleteCommand.CommandText = "DELETE FROM [dbo].[DMS_MFP] WHERE (([MfpPos] = @Original_MfpPos) AND ([fk_LocalSk" +
+                "idNr] = @Original_fk_LocalSkidNr))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_MfpPos", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "MfpPos", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_Description", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Description", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Description", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Description", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_fk_LocalSkidNr", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "fk_LocalSkidNr", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_fk_LocalSkidNr", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "fk_LocalSkidNr", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = "INSERT INTO [dbo].[DMS_MFP] ([MfpPos], [Description], [fk_LocalSkidNr]) VALUES (@" +
-                "MfpPos, @Description, @fk_LocalSkidNr);\r\nSELECT MfpPos, Description, fk_LocalSki" +
-                "dNr FROM DMS_MFP WHERE (MfpPos = @MfpPos)";
+            this._adapter.InsertCommand.CommandText = "INSERT INTO [dbo].[DMS_MFP] ([MfpPos], [fk_LocalSkidNr]) VALUES (@MfpPos, @fk_Loc" +
+                "alSkidNr);\r\nSELECT MfpPos, fk_LocalSkidNr FROM DMS_MFP WHERE (MfpPos = @MfpPos)";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@MfpPos", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "MfpPos", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Description", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Description", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@fk_LocalSkidNr", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "fk_LocalSkidNr", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE [dbo].[DMS_MFP] SET [MfpPos] = @MfpPos, [Description] = @Description, [fk_LocalSkidNr] = @fk_LocalSkidNr WHERE (([MfpPos] = @Original_MfpPos) AND ((@IsNull_Description = 1 AND [Description] IS NULL) OR ([Description] = @Original_Description)) AND ((@IsNull_fk_LocalSkidNr = 1 AND [fk_LocalSkidNr] IS NULL) OR ([fk_LocalSkidNr] = @Original_fk_LocalSkidNr)));
-SELECT MfpPos, Description, fk_LocalSkidNr FROM DMS_MFP WHERE (MfpPos = @MfpPos)";
+            this._adapter.UpdateCommand.CommandText = "UPDATE [dbo].[DMS_MFP] SET [MfpPos] = @MfpPos, [fk_LocalSkidNr] = @fk_LocalSkidNr" +
+                " WHERE (([MfpPos] = @Original_MfpPos) AND ([fk_LocalSkidNr] = @Original_fk_Local" +
+                "SkidNr));\r\nSELECT MfpPos, fk_LocalSkidNr FROM DMS_MFP WHERE (MfpPos = @MfpPos)";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@MfpPos", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "MfpPos", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Description", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Description", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@fk_LocalSkidNr", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "fk_LocalSkidNr", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_MfpPos", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "MfpPos", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_Description", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Description", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Description", global::System.Data.SqlDbType.NVarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Description", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_fk_LocalSkidNr", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "fk_LocalSkidNr", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_fk_LocalSkidNr", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "fk_LocalSkidNr", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
         }
         
@@ -1873,11 +1922,17 @@ SELECT MfpPos, Description, fk_LocalSkidNr FROM DMS_MFP WHERE (MfpPos = @MfpPos)
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitCommandCollection() {
-            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
+            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[2];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT MfpPos, Description, fk_LocalSkidNr FROM dbo.DMS_MFP";
+            this._commandCollection[0].CommandText = "SELECT * FROM dbo.DMS_MFP";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[1].Connection = this.Connection;
+            this._commandCollection[1].CommandText = "SELECT        MfpPos\r\nFROM            DMS_MFP\r\nWHERE        (fk_LocalSkidNr = @Sk" +
+                "id)";
+            this._commandCollection[1].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Skid", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "fk_LocalSkidNr", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1937,24 +1992,9 @@ SELECT MfpPos, Description, fk_LocalSkidNr FROM DMS_MFP WHERE (MfpPos = @MfpPos)
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
-        public virtual int Delete(int Original_MfpPos, string Original_Description, global::System.Nullable<int> Original_fk_LocalSkidNr) {
+        public virtual int Delete(int Original_MfpPos, int Original_fk_LocalSkidNr) {
             this.Adapter.DeleteCommand.Parameters[0].Value = ((int)(Original_MfpPos));
-            if ((Original_Description == null)) {
-                this.Adapter.DeleteCommand.Parameters[1].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[2].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[1].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[2].Value = ((string)(Original_Description));
-            }
-            if ((Original_fk_LocalSkidNr.HasValue == true)) {
-                this.Adapter.DeleteCommand.Parameters[3].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[4].Value = ((int)(Original_fk_LocalSkidNr.Value));
-            }
-            else {
-                this.Adapter.DeleteCommand.Parameters[3].Value = ((object)(1));
-                this.Adapter.DeleteCommand.Parameters[4].Value = global::System.DBNull.Value;
-            }
+            this.Adapter.DeleteCommand.Parameters[1].Value = ((int)(Original_fk_LocalSkidNr));
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
             if (((this.Adapter.DeleteCommand.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -1975,20 +2015,9 @@ SELECT MfpPos, Description, fk_LocalSkidNr FROM DMS_MFP WHERE (MfpPos = @MfpPos)
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(int MfpPos, string Description, global::System.Nullable<int> fk_LocalSkidNr) {
+        public virtual int Insert(int MfpPos, int fk_LocalSkidNr) {
             this.Adapter.InsertCommand.Parameters[0].Value = ((int)(MfpPos));
-            if ((Description == null)) {
-                this.Adapter.InsertCommand.Parameters[1].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[1].Value = ((string)(Description));
-            }
-            if ((fk_LocalSkidNr.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[2].Value = ((int)(fk_LocalSkidNr.Value));
-            }
-            else {
-                this.Adapter.InsertCommand.Parameters[2].Value = global::System.DBNull.Value;
-            }
+            this.Adapter.InsertCommand.Parameters[1].Value = ((int)(fk_LocalSkidNr));
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.InsertCommand.Connection.State;
             if (((this.Adapter.InsertCommand.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -2009,37 +2038,11 @@ SELECT MfpPos, Description, fk_LocalSkidNr FROM DMS_MFP WHERE (MfpPos = @MfpPos)
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(int MfpPos, string Description, global::System.Nullable<int> fk_LocalSkidNr, int Original_MfpPos, string Original_Description, global::System.Nullable<int> Original_fk_LocalSkidNr) {
+        public virtual int Update(int MfpPos, int fk_LocalSkidNr, int Original_MfpPos, int Original_fk_LocalSkidNr) {
             this.Adapter.UpdateCommand.Parameters[0].Value = ((int)(MfpPos));
-            if ((Description == null)) {
-                this.Adapter.UpdateCommand.Parameters[1].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[1].Value = ((string)(Description));
-            }
-            if ((fk_LocalSkidNr.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[2].Value = ((int)(fk_LocalSkidNr.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[2].Value = global::System.DBNull.Value;
-            }
-            this.Adapter.UpdateCommand.Parameters[3].Value = ((int)(Original_MfpPos));
-            if ((Original_Description == null)) {
-                this.Adapter.UpdateCommand.Parameters[4].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[5].Value = global::System.DBNull.Value;
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[4].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[5].Value = ((string)(Original_Description));
-            }
-            if ((Original_fk_LocalSkidNr.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[6].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[7].Value = ((int)(Original_fk_LocalSkidNr.Value));
-            }
-            else {
-                this.Adapter.UpdateCommand.Parameters[6].Value = ((object)(1));
-                this.Adapter.UpdateCommand.Parameters[7].Value = global::System.DBNull.Value;
-            }
+            this.Adapter.UpdateCommand.Parameters[1].Value = ((int)(fk_LocalSkidNr));
+            this.Adapter.UpdateCommand.Parameters[2].Value = ((int)(Original_MfpPos));
+            this.Adapter.UpdateCommand.Parameters[3].Value = ((int)(Original_fk_LocalSkidNr));
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
             if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -2060,8 +2063,37 @@ SELECT MfpPos, Description, fk_LocalSkidNr FROM DMS_MFP WHERE (MfpPos = @MfpPos)
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(string Description, global::System.Nullable<int> fk_LocalSkidNr, int Original_MfpPos, string Original_Description, global::System.Nullable<int> Original_fk_LocalSkidNr) {
-            return this.Update(Original_MfpPos, Description, fk_LocalSkidNr, Original_MfpPos, Original_Description, Original_fk_LocalSkidNr);
+        public virtual int Update(int fk_LocalSkidNr, int Original_MfpPos, int Original_fk_LocalSkidNr) {
+            return this.Update(Original_MfpPos, fk_LocalSkidNr, Original_MfpPos, Original_fk_LocalSkidNr);
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        public virtual global::System.Nullable<int> SelectMfpBySkid(int Skid) {
+            global::System.Data.SqlClient.SqlCommand command = this.CommandCollection[1];
+            command.Parameters[0].Value = ((int)(Skid));
+            global::System.Data.ConnectionState previousConnectionState = command.Connection.State;
+            if (((command.Connection.State & global::System.Data.ConnectionState.Open) 
+                        != global::System.Data.ConnectionState.Open)) {
+                command.Connection.Open();
+            }
+            object returnValue;
+            try {
+                returnValue = command.ExecuteScalar();
+            }
+            finally {
+                if ((previousConnectionState == global::System.Data.ConnectionState.Closed)) {
+                    command.Connection.Close();
+                }
+            }
+            if (((returnValue == null) 
+                        || (returnValue.GetType() == typeof(global::System.DBNull)))) {
+                return new global::System.Nullable<int>();
+            }
+            else {
+                return new global::System.Nullable<int>(((int)(returnValue)));
+            }
         }
     }
     

@@ -7,7 +7,7 @@ using dmspl.common.BigEndianExtension;
 
 namespace dmspl.common.datamodels
 {
-    public class DataSetReqDataModelByBSN : DataModel
+    public class DM_DataSetReqDataModelByBSN : DataModel
     {
         public int RequestBSN { get; set; }
         public int RequestLocalnID { get; set; }
@@ -15,7 +15,7 @@ namespace dmspl.common.datamodels
         public byte[] Dataset { get; set; }
         public ErpDataset Erpdataset { get; set; }
 
-        public DataSetReqDataModelByBSN(short size, byte type, System.IO.BinaryReader br)
+        public DM_DataSetReqDataModelByBSN(short size, byte type, System.IO.BinaryReader br)
             : base(size, type)
         {
             RequestBSN = System.Net.IPAddress.NetworkToHostOrder(br.ReadInt32());

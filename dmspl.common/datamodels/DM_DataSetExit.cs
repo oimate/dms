@@ -7,11 +7,11 @@ using dmspl.common.BigEndianExtension;
 
 namespace dmspl.common.datamodels
 {
-    public class SkidExitDataModel : DataModel
+    public class DM_DataSetExit : DataModel
     {
         public int Skid { get; set; }
 
-        public SkidExitDataModel(short size, byte type, System.IO.BinaryReader br)
+        public DM_DataSetExit(short size, byte type, System.IO.BinaryReader br)
             : base(size, type)
         {
             Skid = br.ReadInt16().FromBigEndian();

@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace dmspl.common.datamodels
 {
-    public class DataLifePacket : DataModel
+    public class DM_LifePacket : DataModel
     {
         byte[] data;
-        public DataLifePacket()
+        public DM_LifePacket()
             : base(4, 254)
         {
             data = new byte[4];
@@ -18,7 +18,7 @@ namespace dmspl.common.datamodels
             data[2] = 255;
             data[3] = 255;
         }
-        public DataLifePacket(short size, byte type, System.IO.BinaryReader reader)
+        public DM_LifePacket(short size, byte type, System.IO.BinaryReader reader)
             : base(size, type)
         {
             data = reader.ReadBytes(4);

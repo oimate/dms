@@ -295,56 +295,87 @@ namespace dmspl.datastorage
 
         public void ProcessModel(DataModel ReceivedDataModel)
         {
-            if (ReceivedDataModel is MFPDataModel)
-                UpdateMFP(((MFPDataModel)ReceivedDataModel).Mfps);
+            if (ReceivedDataModel is DM_DataSetMfp)
+                UpdateMFP(((DM_DataSetMfp)ReceivedDataModel).Mfps);
             //if (ReceivedDataModel is DataSetReqDataModelByBSN)
             //    GetDataSetByBSN(ReceivedDataModel as DataSetReqDataModelByBSN);
-            if (ReceivedDataModel is DataSetMarriageFromPlc)
-                MarriageFromPlc(ReceivedDataModel as DataSetMarriageFromPlc);
-            if (ReceivedDataModel is SkidExitDataModel)
-                SkidExit(ReceivedDataModel as SkidExitDataModel);
+            if (ReceivedDataModel is DM_DataSetEntry)
+                DataSetEntry(ReceivedDataModel as DM_DataSetEntry);
+            if (ReceivedDataModel is DM_DataSetExit)
+                DataSetExit(ReceivedDataModel as DM_DataSetExit);
+            if (ReceivedDataModel is DM_DataSetUpdate)
+                DataSetUpdate(ReceivedDataModel as DM_DataSetUpdate);
         }
 
-        private void SkidExit(SkidExitDataModel skidExitDataModel)
+        private void DataSetUpdate(DM_DataSetUpdate data)
         {
-            var id = (int?)erp_DataAdapter.CheckExistsSkid(skidExitDataModel.Skid);
+            try
+            {
+                ErpDataset eds = data.Erpdataset;
+                var id = (int?)erp_DataAdapter.CheckExistsSkid(eds.SkidID);
+                var mfp = (int?)mfp_DataAdapter.SelectMfpBySkid(eds.SkidID);
+                if (!id.HasValue)
+                {
+                    var y = erp_DataAdapter.Insert(eds.SkidID, eds.DerivativeCode, eds.Colour, eds.BSN, eds.Track, eds.Roof, eds.Hood, eds.Spare, false, eds.Timestamp, mfp);
+                    //dbg:updnew
+                    DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:updnew|updated " + data.Erpdataset.ToString());
+                }
+                else
+                {
+                    erp_DataAdapter.UpdateEditOnMfpById(mfp, true, DateTime.Now, id.Value);
+                    //dbg:updold
+                    DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:updold|exists" + data.Erpdataset.ToString());
+                }
+            }
+            catch (Exception e)
+            {
+                //dbg:updexc
+                DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:updexc|problem with " + data.Erpdataset.ToString());
+                //dbg:updfrpl
+                DataLog.Log(Module.DataBase, EvType.Error, Level.Main, "dbg:updfrpl|" + e.Message);
+            }
+        }
+
+        private void DataSetExit(DM_DataSetExit data)
+        {
+            var id = (int?)erp_DataAdapter.CheckExistsSkid(data.Skid);
             if (id != null)
             {
                 //dbg:exitok
-                DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:exitok|removed " + skidExitDataModel.Skid.ToString());
-                erp_DataAdapter.UpdateLeftPlantById(true, id.Value);
+                DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:exitok|removed " + data.Skid.ToString());
+                erp_DataAdapter.UpdateLeftPlantBySkd(true, DateTime.Now, id.Value);
             }
             else
             {
                 //dbg:exitnok
-                DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:exitnok|not removed " + skidExitDataModel.Skid.ToString());
+                DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:exitnok|not removed " + data.Skid.ToString());
             }
         }
 
-        private void MarriageFromPlc(DataSetMarriageFromPlc dataSetMarriageFromPlc)
+        private void DataSetEntry(DM_DataSetEntry data)
         {
             try
             {
-                ErpDataset eds = dataSetMarriageFromPlc.Erpdataset;
+                ErpDataset eds = data.Erpdataset;
 
-                var Id = (int?)erp_DataAdapter.FindSkidByDataset(eds.SkidID, eds.DerivativeCode, eds.Colour, eds.BSN, eds.Track, eds.Roof, eds.Hood, eds.Spare, false);
+                var cnt = (int?)erp_DataAdapter.CountDatasets(eds.SkidID, eds.DerivativeCode, eds.Colour, eds.BSN, eds.Track, eds.Roof, eds.Hood, eds.Spare, false);
 
-                if (Id == null)
+                if (cnt == null)
                 {
-                    var y = erp_DataAdapter.Insert(eds.SkidID, eds.DerivativeCode, eds.Colour, eds.BSN, eds.Track, eds.Roof, eds.Hood, eds.Spare, false, eds.Timestamp, 0);
+                    var y = erp_DataAdapter.Insert(eds.SkidID, eds.DerivativeCode, eds.Colour, eds.BSN, eds.Track, eds.Roof, eds.Hood, eds.Spare, false, eds.Timestamp, null);
                     //dbg:marrok
-                    DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:marrok|added " + dataSetMarriageFromPlc.Erpdataset.ToString());
+                    DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:marrok|added " + data.Erpdataset.ToString());
                 }
                 else
                 {
                     //dbg:marrnok
-                    DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:marrnok|already exists (skid " + Id.Value + ") " + dataSetMarriageFromPlc.Erpdataset.ToString());
+                    DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:marrnok|already exists " + data.Erpdataset.ToString());
                 }
             }
             catch (Exception e)
             {
                 //dbg:marrexc
-                DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:marrexc|problem with " + dataSetMarriageFromPlc.Erpdataset.ToString());
+                DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:marrexc|problem with " + data.Erpdataset.ToString());
                 //dbg:mafrpl
                 DataLog.Log(Module.DataBase, EvType.Error, Level.Main, "dbg:mafrpl|" + e.Message);
             }

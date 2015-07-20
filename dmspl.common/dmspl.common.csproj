@@ -41,17 +41,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BigEndianExtension\BigEndian.cs" />
-    <Compile Include="datamodels\SkidExitDataModel.cs" />
-    <Compile Include="datamodels\DataLifePacket.cs" />
-    <Compile Include="datamodels\DataSetMarriageFromPlc.cs" />
-    <Compile Include="datamodels\DataSetReqDataModelByBSN.cs" />
+    <Compile Include="datamodels\DM_DataSetExit.cs" />
+    <Compile Include="datamodels\DM_LifePacket.cs" />
+    <Compile Include="datamodels\DM_DataSetEntry.cs" />
+    <Compile Include="datamodels\DM_DataSetReqDataModelByBSN.cs" />
     <Compile Include="DataStorageSourceMode.cs" />
     <Compile Include="DelegateCollection.cs" />
     <Compile Include="DataStorageType.cs" />
     <Compile Include="DataModel.cs" />
+    <Compile Include="datamodels\DM_DataSetUpdate.cs" />
     <Compile Include="ErpDataset.cs" />
     <Compile Include="IUDPComm.cs" />
-    <Compile Include="datamodels\MFPDataModel.cs" />
+    <Compile Include="datamodels\DM_DataSetMfp.cs" />
     <Compile Include="Logger\FileLog.cs" />
     <Compile Include="Logger\HTMLLog.cs" />
     <Compile Include="Logger\IDataLog.cs" />

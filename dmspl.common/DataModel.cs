@@ -25,11 +25,11 @@ namespace dmspl.common
         public DataHeader(DataModel dm)
         {
             Data = dm;
-            if (dm is MFPDataModel)
+            if (dm is DM_DataSetMfp)
                 datatype = 9;
-            else if (dm is DataLifePacket)
+            else if (dm is DM_LifePacket)
                 datatype = 254;
-            else if (dm is DataSetReqDataModelByBSN)
+            else if (dm is DM_DataSetReqDataModelByBSN)
                 datatype = 4;
             datasize = (short)dm.Size;
         }
@@ -51,23 +51,27 @@ namespace dmspl.common
             {
                 case 9: //mfp type
                     datasize -= 4;
-                    Data = new MFPDataModel(datasize, datatype, br);
+                    Data = new DM_DataSetMfp(datasize, datatype, br);
                     break;
                 case 7: //skid+dataset marriage
                     datasize -= 4;
-                    Data = new DataSetMarriageFromPlc(datasize, datatype, br);
+                    Data = new DM_DataSetEntry(datasize, datatype, br);
                     break;
                 case 2: //skid exit
                     datasize -= 4;
-                    Data = new SkidExitDataModel(datasize, datatype, br);
+                    Data = new DM_DataSetExit(datasize, datatype, br);
                     break;
                 case 4: //request type
                     datasize -= 4;
-                    Data = new DataSetReqDataModelByBSN(datasize, datatype, br);
+                    Data = new DM_DataSetReqDataModelByBSN(datasize, datatype, br);
+                    break;
+                case 6: //data update
+                    datasize -= 4;
+                    Data = new datamodels.DM_DataSetUpdate(datasize, datatype, br);
                     break;
                 case 254:
                     datasize -= 4;
-                    Data = new DataLifePacket(datasize, datatype, br);
+                    Data = new DM_LifePacket(datasize, datatype, br);
                     break;
                 default:
                     {

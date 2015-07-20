@@ -5,11 +5,11 @@ using System.Text;
 
 namespace dmspl.common.datamodels
 {
-    public class MFPDataModel : DataModel
+    public class DM_DataSetMfp : DataModel
     {
         public List<int> Mfps { get; private set; }
 
-        public MFPDataModel(short size, byte type, System.IO.BinaryReader br)
+        public DM_DataSetMfp(short size, byte type, System.IO.BinaryReader br)
             : base(size, type)
         {
             Mfps = new List<int>();

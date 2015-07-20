@@ -122,8 +122,8 @@ namespace UDP_RXTX
                         //RecievedDataModel.DataSetReceived = (dm) => { SendData(dm); };
                         if (RecievedDataModel == null)
                             continue;
-                        if (RecievedDataModel is DataLifePacket)
-                            ProcessLifePacket((DataLifePacket)RecievedDataModel, buffer);
+                        if (RecievedDataModel is DM_LifePacket)
+                            ProcessLifePacket((DM_LifePacket)RecievedDataModel, buffer);
                         else
                         {
                             if (DataStorage != null)
@@ -134,7 +134,7 @@ namespace UDP_RXTX
             }
         }
 
-        private void ProcessLifePacket(DataLifePacket pack, byte[] buffer)
+        private void ProcessLifePacket(DM_LifePacket pack, byte[] buffer)
         {
             byte[] comparebyte = new byte[] { 0, 8, 254, 255, 255, 255, 255, 1 };
             if (ArraysEqual(buffer, comparebyte))
@@ -168,7 +168,7 @@ namespace UDP_RXTX
             {
                 try
                 {
-                    SendData(new DataLifePacket());
+                    SendData(new DM_LifePacket());
                     if (ConnReqCnt > 1)
                     {
                         SetServiceStatus(Status.Disconnected);

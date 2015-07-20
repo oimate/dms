@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using dmspl.common.BigEndianExtension;
 
 namespace dmspl.common.datamodels
 {
-    public class DataSetMarriageFromPlc : DataModel
+    public class DM_DataSetUpdate : DataModel
     {
         public ErpDataset Erpdataset { get; set; }
 
-        public DataSetMarriageFromPlc(short size, byte type, System.IO.BinaryReader br)
+        public DM_DataSetUpdate(short size, byte type, System.IO.BinaryReader br)
             : base(size, type)
         {
             Erpdataset = new ErpDataset();

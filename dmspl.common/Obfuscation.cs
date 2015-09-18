@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace dmspl.common
 {
-    static public class Obfuscation
+    public static class Obfuscation
     {
         public static string Code(string u, string p)
         {

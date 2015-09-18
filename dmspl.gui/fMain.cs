@@ -1,7 +1,5 @@
 ﻿using dmspl.common;
 using dmspl.datahandler;
-using dmspl.dataimporter;
-using dmspl.dataprovider;
 using dmspl.datastorage;
 using System;
 using System.Collections.Generic;
@@ -11,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using UDP_RXTX;
 using dmspl.common.log;
+using System.IO;
 
 namespace dmspl
 {
@@ -18,6 +17,7 @@ namespace dmspl
     {
         IDataStorage datastorage;
         UDPComm comm;
+        TCP.TCP_MasterSlave serverinfo;
 
         public string bTime { set { button1.Text = value; } }
 
@@ -25,18 +25,36 @@ namespace dmspl
         public fMain()
         {
             InitializeComponent();
+
             InitDms();
 
             dmspl.gui.Properties.Settings.Default.Save();
 
-            this.FormClosed += FormGui_FormClosed;
+            this.FormClosed += fMain_FormClosed;
 
             timer1.Start();
+        }
+
+        private void InitTcpIp()
+        {
+            try
+            {
+                serverinfo = new TCP.TCP_MasterSlave(TCP.ServerType.Server, "0.0.0.0", 4242, "dmsTcpSrv");
+                serverinfo.ReceiveData = TCP.TCP_RequestHandler.ReceiveData;
+                TCP.TCP_RequestHandler.ServerInfo = serverinfo;
+                serverinfo.Open();
+            }
+            catch (Exception ex)
+            {
+                DataLog.Log(Module.TcpIp, EvType.Error, Level.Debug, ex.Message);
+            }
         }
 
         private void InitDms()
         {
             StartLog();
+
+            InitTcpIp();
 
             comm = InitCommunication();
 
@@ -96,14 +114,21 @@ namespace dmspl
 
         #endregion
 
-        void FormGui_FormClosed(object sender, FormClosedEventArgs e)
+        void fMain_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (datastorage != null) ((IDisposable)datastorage).Dispose();
+        }
+
+        private void fMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (serverinfo != null) serverinfo.Close();
+            serverinfo = null;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
             bTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }
+
     }
 }

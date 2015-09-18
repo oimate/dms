@@ -316,15 +316,16 @@ namespace dmspl.datastorage
                 var mfp = (int?)mfp_DataAdapter.SelectMfpBySkid(eds.SkidID);
                 if (!id.HasValue)
                 {
-                    var y = erp_DataAdapter.Insert(eds.SkidID, eds.DerivativeCode, eds.Colour, eds.BSN, eds.Track, eds.Roof, eds.Hood, eds.Spare, false, eds.Timestamp, mfp);
+                    erp_DataAdapter.Insert(eds.SkidID, eds.DerivativeCode, eds.Colour, eds.BSN, eds.Track, eds.Roof, eds.Hood, eds.Spare, false, eds.Timestamp, mfp);
                     //dbg:updnew
                     DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:updnew|updated " + data.Erpdataset.ToString());
                 }
                 else
                 {
                     erp_DataAdapter.UpdateEditOnMfpById(mfp, true, DateTime.Now, id.Value);
+                    erp_DataAdapter.Insert(eds.SkidID, eds.DerivativeCode, eds.Colour, eds.BSN, eds.Track, eds.Roof, eds.Hood, eds.Spare, false, eds.Timestamp, mfp);
                     //dbg:updold
-                    DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:updold|exists" + data.Erpdataset.ToString());
+                    DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:updold|exists " + data.Erpdataset.ToString());
                 }
             }
             catch (Exception e)
@@ -332,7 +333,7 @@ namespace dmspl.datastorage
                 //dbg:updexc
                 DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:updexc|problem with " + data.Erpdataset.ToString());
                 //dbg:updfrpl
-                DataLog.Log(Module.DataBase, EvType.Error, Level.Main, "dbg:updfrpl|" + e.Message);
+                DataLog.Log(Module.DataBase, EvType.Error, Level.Main, "dbg:updfrpl| " + e.Message);
             }
         }
 
@@ -343,7 +344,7 @@ namespace dmspl.datastorage
             {
                 //dbg:exitok
                 DataLog.Log(Module.DataBase, EvType.Info, Level.Debug, "dbg:exitok|removed " + data.Skid.ToString());
-                erp_DataAdapter.UpdateLeftPlantBySkd(true, DateTime.Now, id.Value);
+                erp_DataAdapter.UpdateLeftPlantBySkd(true, DateTime.Now, data.Skid);
             }
             else
             {

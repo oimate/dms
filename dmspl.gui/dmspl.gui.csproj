@@ -114,17 +114,13 @@
       <Project>{651db95e-034a-4bc2-9e64-8a00e16a4697}</Project>
       <Name>dmspl.common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\dmspl.dataimport.excel\dmspl.dataimporter.csproj">
-      <Project>{a5877d67-3f90-41e0-8626-8ae3b6aa69d2}</Project>
-      <Name>dmspl.dataimporter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\dmspl.dataprovider\dmspl.dataprovider.csproj">
-      <Project>{6dc4c268-bcb0-4bc8-bc56-d50e0766ca2a}</Project>
-      <Name>dmspl.dataprovider</Name>
-    </ProjectReference>
     <ProjectReference Include="..\dmspl.slqcon\dmspl.datastorage.csproj">
       <Project>{95261ac4-1ae1-4892-8633-ba7f95b7a123}</Project>
       <Name>dmspl.datastorage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TCPIPLib\TCPIPLib.csproj">
+      <Project>{7a7de344-0c3d-400d-a1a4-9a299491b486}</Project>
+      <Name>TCPIPLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\UDP_RXTX\UDP_RXTX.csproj">
       <Project>{7b486c20-ed14-4cbd-8a3a-25fbab68633b}</Project>

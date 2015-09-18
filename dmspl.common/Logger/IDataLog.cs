@@ -43,6 +43,7 @@ namespace dmspl.common.log
         Appl = 1,
         RXTXComm = 1 << 1,
         DataBase = 1 << 2,
+        TcpIp = 1 << 3,
         All = 0x7FFFFFFF,
     }
 

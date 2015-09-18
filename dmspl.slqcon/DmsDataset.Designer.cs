@@ -1437,8 +1437,8 @@ namespace dmspl.datastorage.DmsDatasetTableAdapters {
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[1].Connection = this.Connection;
-            this._commandCollection[1].CommandText = "SELECT TOP (1) Id FROM DMS_ERP WHERE (ForeignSkid = @Skid) ORDER BY Timestamp DES" +
-                "C";
+            this._commandCollection[1].CommandText = "SELECT        TOP (1) Id\r\nFROM            DMS_ERP\r\nWHERE        (ForeignSkid = @S" +
+                "kid) AND (LeftPlant = 0)\r\nORDER BY Timestamp DESC";
             this._commandCollection[1].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Skid", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "ForeignSkid", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[2] = new global::System.Data.SqlClient.SqlCommand();

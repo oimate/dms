@@ -1,72 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
-using System.IO;
-using System.Windows;
-// acttual !!!!!!!!!!!!!!!!!!!!  17.07.2015
+using System.Text;
+using System.Threading;
+
 namespace TCP
 {
-    public delegate void ReceiveDataDelegate(string dane);
+    public delegate void ReceiveDataDelegate(Socket socket, byte[] data);
     public class TCP_MasterSlave
     {
-        #region  public properties
-        public ServerType Type
-        { get; set; }
-
-        public static ReceiveDataDelegate ReceiveData
-        { get; set; }
-
-        public string IP
-        { get; set; }
-
-        public Int16 Port
-        { get; set; }
+        #region Public Properties
 
         public string Name
         { get; set; }
+
+        public ServerType Type
+        { get; set; }
+
+        public ReceiveDataDelegate ReceiveData
+        { get; set; }
+        public EventHandler Disconected { get; set; }
+
+        public string IP
+        { get; set; }
+        public Int16 Port
+        { get; set; }
+
         public ConnStat Status
         { get; private set; }
-
         public ErrorCode Error
         { get; private set; }
         public string ErrorMessage
         { get; private set; }
 
-        private class ConnectionInfo
-        {
-            public Socket Socket;
-            public byte[] Buffer= new byte[2048];
-        }
         private static object serverLock = new object();
         private static List<ConnectionInfo> connections = new List<ConnectionInfo>();
         private static List<ConnectionInfo> socketList = new List<ConnectionInfo>();
-        //   public static Thread thread;
+
+        private Socket socket;
 
         #endregion
-        #region construction
-        public TCP_MasterSlave()
-        {
-            Type = ServerType.Server;
-            IP = "172.0.0.1";
-            Name = "Server";
-            Port = 9000;
-        }
-        // used to pass state information to delegate
-        internal class StateObject
-        {
-            internal byte[] sBuffer;
-            internal Socket sSocket;
-            internal StateObject(int size, Socket sock)
-            {
-                sBuffer = new byte[size];
-                sSocket = sock;
-            }
-        }
+        #region Constructor
         public TCP_MasterSlave(ServerType type, string ip, Int16 slot, string name)
         {
             Type = type;
@@ -74,7 +49,9 @@ namespace TCP
             Port = slot;
             Name = name;
         }
-        public static Socket socket;
+        public TCP_MasterSlave()
+            : this(ServerType.Server, "127.0.0.1", 9000, "Server")
+        { }
         #endregion
         #region Connection (Open, Close)
         public void Open()
@@ -97,9 +74,8 @@ namespace TCP
                     Error = ErrorCode.WrongSlot;
                     return;
                 }
+
                 // Create the socket, bind it, and start listening
-
-
                 socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 try
                 {
@@ -118,35 +94,32 @@ namespace TCP
                             Console.WriteLine("Done. Listening.");
                             break;
                         case ServerType.Client:
-                           ConnectionInfo info = new ConnectionInfo();
-                           info.Socket = socket;
-                           IPEndPoint ipEndPoint = new IPEndPoint(ipAdress, Port);
-                           lock (socketList)
-                           {
-                               socketList.Add(info);
-                           }
-                             Console.Write(" client Connecting... ");
-            try
-            {
-                info.Socket.Connect(ipEndPoint);
-                Console.WriteLine("client conn Done.");
+                            ConnectionInfo info = new ConnectionInfo();
+                            info.Socket = socket;
+                            IPEndPoint ipEndPoint = new IPEndPoint(ipAdress, Port);
+                            lock (socketList)
+                            {
+                                socketList.Add(info);
+                            }
+                            Console.Write("Client Connecting... ");
+                            try
+                            {
+                                info.Socket.Connect(ipEndPoint);
+                                Console.WriteLine("Client conn Done.");
+                                info.Socket.BeginReceive(info.Buffer, 0, info.Buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallback), info);
+                                Status = ConnStat.Connected;
+                            }
+                            catch (Exception e)
+                            {
+                                lock (socketList)
+                                {
+                                    socketList.Remove(info);
+                                }
+                                Console.WriteLine("Fail.");
+                                Console.WriteLine(e);
+                            }
 
-                info.Socket.BeginReceive(info.Buffer, 0, info.Buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallback), info);
-            }
-            catch (Exception e)
-            {
-                lock (socketList)
-                {
-                    socketList.Remove(info);
-                }
-                Console.WriteLine("Fail.");
-                Console.WriteLine(e);
-            }
-        
- 
-                          
-                          //  socket.Connect(ipEndPoint);
-                            Status = ConnStat.Connected;
+                            //  socket.Connect(ipEndPoint);
                             break;
                         default:
                             Error = ErrorCode.WrongConfig;
@@ -164,7 +137,7 @@ namespace TCP
                 Error = ErrorCode.NoError;
             }
         }
-        private static void AcceptCallback(IAsyncResult result)
+        private void AcceptCallback(IAsyncResult result)
         {
             Console.WriteLine("Accept!");
             ConnectionInfo connection = new ConnectionInfo();
@@ -198,7 +171,7 @@ namespace TCP
                 Console.WriteLine("Exception: " + exc);
             }
         }
-        private static void ReceiveCallback(IAsyncResult result)
+        private void ReceiveCallback(IAsyncResult result)
         {
             ConnectionInfo connection = (ConnectionInfo)result.AsyncState;
             try
@@ -211,8 +184,8 @@ namespace TCP
                         //  byte[] = new tabela ;
                         //  string text = GetString(connection.Buffer);
                         string text = Encoding.UTF8.GetString(connection.Buffer, 0, bytesRead);
-                        Console.Write(text);
-                        OnDataReceive(text);
+                        Console.WriteLine(text);
+                        OnDataReceive(connection.Socket, connection.Buffer);
                     }
                     lock (connections)
                     {
@@ -241,47 +214,56 @@ namespace TCP
             }
         }
 
-        private static void OnDataReceive(string text)
+        private void OnDataReceive(Socket socket, byte[] data)
         {
-            if (ReceiveData != null )
+            if (ReceiveData != null)
             {
-                ReceiveData(text);
+                ReceiveData(socket, data);
             }
         }
-        private static void CloseConnection(ConnectionInfo ci)
+        private void CloseConnection(ConnectionInfo ci)
         {
+            System.Diagnostics.Debug.WriteLine("Closing Connection...");
+            if (ci == null) return;
+            if (ci.Socket == null) return;
             ci.Socket.Close();
             lock (connections) connections.Remove(ci);
+            System.Diagnostics.Debug.WriteLine("Connection Closed");
         }
-        
+
         public void Close()
         {
-           
             Status = ConnStat.Disconnected;
             switch (Type)
             {
                 case ServerType.Server:
                     Console.Write("Shutting down server... ");
-      socket.Close();    
-                   return;
-                case ServerType.Client:
-                   Console.Write("Shutting down client... ");
-                     try
-            {
-                lock (socketList)
-                {
-                    for (int i = socketList.Count - 1; i >= 0; i--)
+                    try
                     {
-                        try {
-                            socketList[i].Socket.Close();
-                        } catch {}
-                        socketList.RemoveAt(i);
+                        socket.Close();
                     }
-                }
-            }
-            catch { }
-            Console.WriteLine("Bye.");
-            Thread.Sleep(500);
+                    catch { }
+                    return;
+                case ServerType.Client:
+                    Console.Write("Shutting down client... ");
+                    try
+                    {
+                        lock (socketList)
+                        {
+                            for (int i = socketList.Count - 1; i >= 0; i--)
+                            {
+                                try
+                                {
+                                    socketList[i].Socket.Close();
+                                }
+                                catch { }
+                                socketList.RemoveAt(i);
+                            }
+                        }
+                    }
+                    catch { }
+                    Thread.Sleep(500);
+                    Console.WriteLine("Bye.");
                     return;
                 default:
                     return;
@@ -290,9 +272,44 @@ namespace TCP
         }
 
         #endregion
-
-        #region Data (send,Receive)
-        public void Send(string Name, string Data)
+        #region Data (Send, Receive)
+        public void SendToServer(byte[] data)
+        {
+            switch (Type)
+            {
+                case ServerType.Server:
+                    break;
+                case ServerType.Client:
+                    if (Status == ConnStat.Connected)
+                    {
+                        socket.Send(data, SocketFlags.None);
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("Type");
+            }
+        }
+        public void SendTo(Socket socket, byte[] data)
+        {
+            switch (Type)
+            {
+                case ServerType.Server:
+                    if (Status == ConnStat.Open)
+                    {
+                        socket.Send(data, SocketFlags.None);
+                    }
+                    break;
+                case ServerType.Client:
+                    if (Status == ConnStat.Connected)
+                    {
+                        socket.Send(data, SocketFlags.None);
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("Type");
+            }
+        }
+        public void SendToAll(string Name, string Data)
         {
             lock (connections)
             {
@@ -323,15 +340,15 @@ namespace TCP
             }
         }
         #endregion
-        #region utilities
-        static byte[] GetBytes(string str)
+        #region Utilities
+        private byte[] GetBytes(string str)
         {
             byte[] bytes = new byte[str.Length * sizeof(char)];
             System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
             return bytes;
         }
 
-        static string GetString(byte[] bytes)
+        private static string GetString(byte[] bytes)
         {
             char[] chars = new char[bytes.Length / sizeof(char)];
             System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
@@ -343,6 +360,16 @@ namespace TCP
         //    socket.Close();
         //    thread.Abort();
         //}
+        #endregion
+        #region Classes
+        private class ConnectionInfo
+        {
+            private Socket socket;
+            private byte[] buffer = new byte[2048];
+
+            public Socket Socket { get { return socket; } set { socket = value; } }
+            public byte[] Buffer { get { return buffer; } set { buffer = value; } }
+        }
         #endregion
     }
     #region Enums

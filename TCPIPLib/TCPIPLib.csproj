@@ -7,7 +7,7 @@
     <ProjectGuid>{7A7DE344-0C3D-400D-A1A4-9A299491B486}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TCPIPLib</RootNamespace>
+    <RootNamespace>TCP</RootNamespace>
     <AssemblyName>TCPIPLib</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -41,6 +41,16 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TCP_MasterSlave.cs" />
+    <Compile Include="TCP_RequestHandler.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\dmspl.common\dmspl.common.csproj">
+      <Project>{651db95e-034a-4bc2-9e64-8a00e16a4697}</Project>
+      <Name>dmspl.common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

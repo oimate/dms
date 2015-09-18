@@ -59,6 +59,7 @@
             this.Name = "fMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.fMain_FormClosing);
             this.ResumeLayout(false);
 
         }

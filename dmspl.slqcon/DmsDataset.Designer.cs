@@ -1494,7 +1494,7 @@ WHERE        (Id = @Id)";
             this._commandCollection[6] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[6].Connection = this.Connection;
             this._commandCollection[6].CommandText = "UPDATE       DMS_ERP\r\nSET                LeftPlant = @LeftPlant, Timestamp = @Tim" +
-                "estamp\r\nWHERE        (ForeignSkid = @Skid)";
+                "estamp\r\nWHERE        (ForeignSkid = @Skid) and LeftPlant = 0 ";
             this._commandCollection[6].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[6].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@LeftPlant", global::System.Data.SqlDbType.Bit, 1, global::System.Data.ParameterDirection.Input, 0, 0, "LeftPlant", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[6].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Timestamp", global::System.Data.SqlDbType.DateTime2, 8, global::System.Data.ParameterDirection.Input, 0, 0, "Timestamp", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));

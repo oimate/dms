@@ -31,7 +31,7 @@ namespace dmspl
             dmspl.gui.Properties.Settings.Default.Save();
 
             this.FormClosed += fMain_FormClosed;
-
+            startupapp = DateTime.Now;
             timer1.Start();
         }
 
@@ -127,8 +127,11 @@ namespace dmspl
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            bTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            var a = (DateTime.Now - startupapp);
+            bTime = string.Format("Uptime: {0} days, {1:D2}h {2:D2}min {3:D2}sec", a.Days, a.Hours, a.Minutes, a.Seconds);
         }
 
+
+        public DateTime startupapp { get; set; }
     }
 }

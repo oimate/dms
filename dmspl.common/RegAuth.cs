@@ -46,8 +46,8 @@ namespace dmspl.common
         {
             AuthData ad = new AuthData();
             ad.Server = @"dbmachine\durr_systems";
-            ad.User = "user";
-            ad.Password = "user";
+            ad.User = "root";
+            ad.Password = "some";
             ad.Database = "emos_web";
             return ad;
         }
